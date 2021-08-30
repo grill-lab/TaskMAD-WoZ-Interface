@@ -1,0 +1,111 @@
+/*
+ * Copyright 2018. University of Southern California
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+*{
+  margin: 0;
+  padding: 0;
+  /*color: #333;*/
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 12pt;
+
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+td, th {
+  border: 1px solid rgba(194, 172, 172, 0.31);
+  padding: 0.25rem;
+}
+
+table {
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+p, ul {
+  width: 600px;
+}
+
+img {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 2rem;
+}
+
+h1 {
+  font-size: xx-large;
+}
+
+h2 {
+  font-size: x-large;
+}
+
+h3 {
+  font-size: large;
+}
+
+li {
+  margin-left: 2rem;
+}
+
+.quote {
+  max-width: 550px;
+}
+
+dl {
+  width: 600px;
+  margin-bottom: .5em;
+}
+
+dt {
+  font-weight: bolder;
+  margin-top: .5em;
+}
+
+dd {
+  margin-left: 1em;
+}
+
+code {
+  font-size: smaller;
+  font-family: -moz-fixed, "Courier New", monospace;
+  border-color: #aaaaaa;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 0 2px;
+}

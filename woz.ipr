@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopyrightManager" default="USC/Apache">
+    <copyright>
+      <option name="notice" value="Copyright &amp;#36;today.year. University of Southern California&#10;&#10;Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);&#10;you may not use this file except in compliance with the License.&#10;You may obtain a copy of the License at&#10;&#10;   http://www.apache.org/licenses/LICENSE-2.0&#10;&#10;Unless required by applicable law or agreed to in writing, software&#10;distributed under the License is distributed on an &quot;AS IS&quot; BASIS,&#10;WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.&#10;See the License for the specific language governing permissions and&#10;limitations under the License." />
+      <option name="myName" value="USC/Apache" />
+    </copyright>
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <profile version="1.0">
+      <option name="myName" value="Project Default" />
+      <inspection_tool class="Annotator" enabled="true" level="ERROR" enabled_by_default="false">
+        <scope name="Source files (TS)" level="ERROR" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="AntDuplicateImportedTargetsInspection" enabled="true" level="INFO" enabled_by_default="true" />
+      <inspection_tool class="ES6ConvertVarToLetConst" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="ES6UnusedImports" enabled="true" level="WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSCheckFunctionSignatures" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSRedundantSwitchStatement" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSUnresolvedFunction" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSUnresolvedVariable" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSUnusedAssignment" enabled="true" level="WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSUnusedGlobalSymbols" enabled="true" level="WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSUnusedLocalSymbols" enabled="true" level="WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSValidateJSDoc" enabled="true" level="WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="JSValidateTypes" enabled="true" level="WEAK WARNING" enabled_by_default="false">
+        <scope name="Source files (TS)" level="WEAK WARNING" enabled="true" />
+      </inspection_tool>
+      <inspection_tool class="SpellCheckingInspection" enabled="true" level="TYPO" enabled_by_default="false">
+        <scope name="Source files (TS)" level="TYPO" enabled="true">
+          <option name="processCode" value="true" />
+          <option name="processLiterals" value="true" />
+          <option name="processComments" value="true" />
+        </scope>
+        <option name="processCode" value="true" />
+        <option name="processLiterals" value="true" />
+        <option name="processComments" value="true" />
+      </inspection_tool>
+      <inspection_tool class="TsLint" enabled="true" level="ERROR" enabled_by_default="true" />
+      <inspection_tool class="UnterminatedStatementJS" enabled="false" level="WARNING" enabled_by_default="false">
+        <option name="ignoreSemicolonAtEndOfBlock" value="true" />
+      </inspection_tool>
+    </profile>
+    <version value="1.0" />
+  </component>
+  <component name="JavaScriptLibraryMappings">
+    <includedPredefinedLibrary name="Node.js Core" />
+  </component>
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="JSX" />
+  </component>
+  <component name="ProjectCodeStyleConfiguration">
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+    <code_scheme name="Project" version="173">
+      <option name="USE_SAME_INDENTS" value="true" />
+      <option name="IGNORE_SAME_INDENTS_FOR_LANGUAGES" value="true" />
+      <option name="OTHER_INDENT_OPTIONS">
+        <value>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </value>
+      </option>
+      <option name="FIELD_NAME_PREFIX" value="m" />
+      <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
+      <option name="PARAMETER_NAME_PREFIX" value="in" />
+      <option name="RIGHT_MARGIN" value="80" />
+      <option name="WRAP_COMMENTS" value="true" />
+      <option name="METHOD_BRACE_STYLE" value="5" />
+      <option name="SOFT_MARGINS" value="80" />
+      <JSCodeStyleSettings version="0">
+        <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
+        <option name="FORCE_SEMICOLON_STYLE" value="true" />
+        <option name="FORCE_QUOTE_STYlE" value="true" />
+      </JSCodeStyleSettings>
+      <JavaCodeStyleSettings>
+        <option name="FIELD_NAME_PREFIX" value="m" />
+        <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
+        <option name="PARAMETER_NAME_PREFIX" value="in" />
+        <option name="JD_ADD_BLANK_AFTER_PARM_COMMENTS" value="true" />
+        <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
+      </JavaCodeStyleSettings>
+      <TypeScriptCodeStyleSettings version="0">
+        <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
+        <option name="FORCE_SEMICOLON_STYLE" value="true" />
+        <option name="REFORMAT_C_STYLE_COMMENTS" value="true" />
+        <option name="FORCE_QUOTE_STYlE" value="true" />
+        <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
+        <option name="IMPORT_SORT_MODULE_NAME" value="true" />
+      </TypeScriptCodeStyleSettings>
+      <XML>
+        <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+      </XML>
+      <codeStyleSettings language="CFML">
+        <option name="METHOD_BRACE_STYLE" value="5" />
+      </codeStyleSettings>
+      <codeStyleSettings language="CSS">
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="ECMA Script Level 4">
+        <option name="METHOD_BRACE_STYLE" value="5" />
+        <option name="WRAP_COMMENTS" value="true" />
+        <indentOptions>
+          <option name="USE_TAB_CHARACTER" value="true" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="GSP">
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="Groovy">
+        <option name="METHOD_BRACE_STYLE" value="5" />
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="HTML">
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="JAVA">
+        <option name="METHOD_BRACE_STYLE" value="5" />
+        <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+        <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true" />
+        <option name="ALIGN_GROUP_FIELD_DECLARATIONS" value="true" />
+        <option name="ALIGN_CONSECUTIVE_VARIABLE_DECLARATIONS" value="true" />
+        <option name="ALIGN_SUBSEQUENT_SIMPLE_METHODS" value="true" />
+        <option name="CALL_PARAMETERS_WRAP" value="1" />
+        <option name="METHOD_PARAMETERS_WRAP" value="1" />
+        <option name="RESOURCE_LIST_WRAP" value="1" />
+        <option name="EXTENDS_LIST_WRAP" value="5" />
+        <option name="THROWS_LIST_WRAP" value="5" />
+        <option name="EXTENDS_KEYWORD_WRAP" value="1" />
+        <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
+        <option name="BINARY_OPERATION_WRAP" value="1" />
+        <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
+        <option name="TERNARY_OPERATION_WRAP" value="1" />
+        <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
+        <option name="FOR_STATEMENT_WRAP" value="1" />
+        <option name="ARRAY_INITIALIZER_WRAP" value="1" />
+        <option name="ASSIGNMENT_WRAP" value="1" />
+        <option name="ASSERT_STATEMENT_WRAP" value="1" />
+        <option name="IF_BRACE_FORCE" value="3" />
+        <option name="DOWHILE_BRACE_FORCE" value="3" />
+        <option name="WHILE_BRACE_FORCE" value="3" />
+        <option name="FOR_BRACE_FORCE" value="3" />
+        <option name="ENUM_CONSTANTS_WRAP" value="1" />
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="JSON">
+        <indentOptions>
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="JavaScript">
+        <option name="METHOD_BRACE_STYLE" value="5" />
+        <option name="WRAP_COMMENTS" value="true" />
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="PHP">
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="2" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+      <codeStyleSettings language="TypeScript">
+        <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
+        <option name="BLANK_LINES_AROUND_FIELD" value="1" />
+        <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" />
+        <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="true" />
+        <option name="ALIGN_MULTILINE_TERNARY_OPERATION" value="true" />
+        <option name="ALIGN_MULTILINE_ARRAY_INITIALIZER_EXPRESSION" value="true" />
+        <option name="CALL_PARAMETERS_WRAP" value="1" />
+        <option name="METHOD_PARAMETERS_WRAP" value="5" />
+        <option name="METHOD_PARAMETERS_LPAREN_ON_NEXT_LINE" value="true" />
+        <option name="EXTENDS_LIST_WRAP" value="1" />
+        <option name="EXTENDS_KEYWORD_WRAP" value="1" />
+        <option name="METHOD_CALL_CHAIN_WRAP" value="5" />
+        <option name="BINARY_OPERATION_WRAP" value="1" />
+        <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
+        <option name="TERNARY_OPERATION_WRAP" value="5" />
+        <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
+        <option name="KEEP_SIMPLE_BLOCKS_IN_ONE_LINE" value="true" />
+        <option name="KEEP_SIMPLE_METHODS_IN_ONE_LINE" value="true" />
+        <option name="FOR_STATEMENT_WRAP" value="1" />
+        <option name="ARRAY_INITIALIZER_WRAP" value="5" />
+        <option name="ARRAY_INITIALIZER_LBRACE_ON_NEXT_LINE" value="true" />
+        <option name="ARRAY_INITIALIZER_RBRACE_ON_NEXT_LINE" value="true" />
+        <option name="ASSIGNMENT_WRAP" value="1" />
+        <option name="WRAP_COMMENTS" value="true" />
+        <option name="IF_BRACE_FORCE" value="3" />
+        <option name="DOWHILE_BRACE_FORCE" value="3" />
+        <option name="WHILE_BRACE_FORCE" value="3" />
+        <option name="FOR_BRACE_FORCE" value="3" />
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+        <arrangement>
+          <rules>
+            <section>
+              <rule>
+                <match>
+                  <CONSTRUCTOR>true</CONSTRUCTOR>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PRIVATE>true</PRIVATE>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PRIVATE>true</PRIVATE>
+                    <PROPERTY>true</PROPERTY>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PRIVATE>true</PRIVATE>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PRIVATE>true</PRIVATE>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PRIVATE>true</PRIVATE>
+                    <PROPERTY>true</PROPERTY>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PRIVATE>true</PRIVATE>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PROTECTED>true</PROTECTED>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PROPERTY>true</PROPERTY>
+                    <PROTECTED>true</PROTECTED>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PROTECTED>true</PROTECTED>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PROTECTED>true</PROTECTED>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PROPERTY>true</PROPERTY>
+                    <PROTECTED>true</PROTECTED>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PROTECTED>true</PROTECTED>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PUBLIC>true</PUBLIC>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PROPERTY>true</PROPERTY>
+                    <PUBLIC>true</PUBLIC>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PUBLIC>true</PUBLIC>
+                    <STATIC>true</STATIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <FIELD>true</FIELD>
+                    <PUBLIC>true</PUBLIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <PROPERTY>true</PROPERTY>
+                    <PUBLIC>true</PUBLIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+            <section>
+              <rule>
+                <match>
+                  <AND>
+                    <METHOD>true</METHOD>
+                    <PUBLIC>true</PUBLIC>
+                  </AND>
+                </match>
+              </rule>
+            </section>
+          </rules>
+        </arrangement>
+      </codeStyleSettings>
+      <codeStyleSettings language="XML">
+        <indentOptions>
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="4" />
+          <option name="TAB_SIZE" value="2" />
+        </indentOptions>
+      </codeStyleSettings>
+    </code_scheme>
+  </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="leuski">
+      <words>
+        <w>arraybuffer</w>
+        <w>blankrows</w>
+        <w>coalescer</w>
+        <w>counta</w>
+        <w>datasets</w>
+        <w>defval</w>
+        <w>dialogflow</w>
+        <w>dropdown</w>
+        <w>firebase</w>
+        <w>gapi</w>
+        <w>grpc</w>
+        <w>grpcwebtext</w>
+        <w>kail</w>
+        <w>keydown</w>
+        <w>licensable</w>
+        <w>linkify</w>
+        <w>lowercased</w>
+        <w>lunr</w>
+        <w>mesnil</w>
+        <w>nack</w>
+        <w>nonset</w>
+        <w>notset</w>
+        <w>onclose</w>
+        <w>onerror</w>
+        <w>onload</w>
+        <w>onmessage</w>
+        <w>onopen</w>
+        <w>ontimeout</w>
+        <w>passcode</w>
+        <w>precached</w>
+        <w>protobuf</w>
+        <w>protobuffer</w>
+        <w>protoc</w>
+        <w>quickstart</w>
+        <w>quotemaster</w>
+        <w>replayer</w>
+        <w>screenshot</w>
+        <w>tslint</w>
+        <w>typings</w>
+        <w>unmarshall</w>
+        <w>unmount</w>
+        <w>websocket</w>
+        <w>websockets</w>
+        <w>wozs</w>
+      </words>
+    </dictionary>
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/woz.iml" filepath="$PROJECT_DIR$/woz.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="PublishConfigData">
+    <serverData>
+      <paths name="woz @ nld">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$/dist" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+  <component name="TypeScriptCompiler">
+    <option name="nodeInterpreterTextField" value="$USER_HOME$/.nvm/versions/node/v11.0.0/bin/node" />
+    <option name="recompileOnChanges" value="true" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+  </component>
+</project>

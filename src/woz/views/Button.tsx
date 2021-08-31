@@ -19,10 +19,9 @@ import { Popup } from "semantic-ui-react"
 import { objectMap, styles } from "../../common/util"
 import {
   ButtonIdentifier,
-  MISSING,
   PLACEHOLDER,
 } from "../model/ButtonIdentifier"
-import { ButtonModel, IButtonModel, MODEL } from "../model/ButtonModel"
+import { IButtonModel, MODEL } from "../model/ButtonModel"
 import { IWozContext } from "../model/WozModel"
 import css from "./button.module.css"
 import { Label } from "./Label"

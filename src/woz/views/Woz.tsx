@@ -77,20 +77,20 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
               this.setState({buttonToExpand: undefined})
             }}
             onConfirmEdit={(newTooltip) => {
-              const filledModel = Object
+              if(newTooltip['tooltip'].trim() !== ''){
+                const filledModel = Object
                   .assign({}, this.state.buttonToExpand, newTooltip)
-              this.props.onButtonClick(filledModel)
-              this.setState({buttonToExpand: undefined})
+                this.props.onButtonClick(filledModel)
+                this.setState({buttonToExpand: undefined})
+              }
+              
             }}
             text={this.state.buttonToExpand.tooltip}/>
 
   }
 
   private _handleEditButtonClick = (buttonModel: IButtonModel) => {
-
     this.setState({buttonToExpand: buttonModel})
-    this.props.onButtonClick(buttonModel)
-  
   }
 
   public render() {

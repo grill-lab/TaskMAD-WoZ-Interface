@@ -71,7 +71,6 @@ export class Row extends React.Component<IRowProperties, {}> {
       // the key must be unique among siblings, but we may have the same
       // button added multiple times
       let key = buttonID.id
-      console.log(key)
       while (seenKeys.has(key)) {
         key = key + "_"
       }

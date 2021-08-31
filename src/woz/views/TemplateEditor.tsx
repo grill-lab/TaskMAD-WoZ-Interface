@@ -74,7 +74,7 @@ export class TemplateEditor
     const parts = this.props.text.split(/##/)
     let editedText = this.props.text
 
-    const editButtonText = parts.length == 1 ? true : false
+    const editButtonText = parts.length === 1 ? true : false
 
     const variables: StringMap = {}
     parts.forEach((value, index) => {

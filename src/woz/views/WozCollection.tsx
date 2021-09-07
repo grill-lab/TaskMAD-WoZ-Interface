@@ -22,6 +22,7 @@ import {LunrSearcher} from "../controller/LunrSearcher"
 import {MetaSearcher} from "../controller/MetaSearcher"
 import {RegexSearcher} from "../controller/RegexSearcher"
 import {ISearcher, ISearchResult, ISearchResults} from "../controller/Searcher"
+import { WikiSearcher } from "../controller/WikiSearcher"
 import {
   ButtonIdentifier,
   ButtonPlaceholder,
@@ -119,7 +120,7 @@ export class WozCollection
   constructor(props: IWozCollectionProperties) {
     super(props)
     this.searcher = new MetaSearcher({
-      searchers: [new LunrSearcher(), new RegexSearcher()],
+      searchers: [new LunrSearcher(), new RegexSearcher(), new WikiSearcher()],
     })
     this.state = props.initialState
   }

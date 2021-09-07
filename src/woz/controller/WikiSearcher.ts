@@ -19,38 +19,41 @@ import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
 export class WikiSearcher extends Searcher {
 
-  constructor() {
-    super("Wikipedia Search")
-  }
-
-  protected performSearch = async (request: ISearchRequest): Promise<ISearchResult[] | undefined> => {
-    if (request.data === undefined || request.query.trim().length === 0) {
-      return undefined
+    constructor() {
+        super("Wikipedia Search")
     }
 
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({query: request.query.trim()})
-    };
-    const response = await fetch('http://localhost:5000/search', requestOptions);
-    const dataJson = await response.json();
-
-    if(dataJson != undefined && dataJson['errors'].length !== 0){
-        const documents = dataJson['documents']
-        var results = []
-        for(var document of documents){
-            results.push({buttonID:new ButtonModel({
-                badges: {},
-                color:"",
-                id: document['id'],
-                label: document['title'],
-                tooltip: document['contents'],
-                transitions: {},
-              })})
+    protected performSearch = async (request: ISearchRequest): Promise<ISearchResult[] | undefined> => {
+        if (request.data === undefined || request.query.trim().length === 0) {
+            return undefined
         }
-    }
 
-    return results;
-  }
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: request.query.trim()})
+        };
+        const response = await fetch('http://localhost:5000/search', requestOptions);
+        const dataJson = await response.json();
+
+        let results = [];
+
+        if (dataJson != undefined && dataJson['errors'].length === 0) {
+            const documents = dataJson['documents']
+            for (let document of documents) {
+                results.push({
+                    buttonID: new ButtonModel({
+                        badges: {},
+                        color: "",
+                        id: document['id'],
+                        label: document['title'],
+                        tooltip: document['contents'],
+                        transitions: {},
+                    })
+                })
+            }
+        }
+
+        return results;
+    }
 }

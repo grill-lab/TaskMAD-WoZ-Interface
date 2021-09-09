@@ -17,10 +17,10 @@
 import {ButtonModel} from "../model/ButtonModel"
 import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
-export class WikiSearcher extends Searcher {
+export class SeriousEatsSearcher extends Searcher {
 
     constructor() {
-        super("Wikipedia Search")
+        super("SeriousEats Search")
     }
 
     protected performSearch = async (request: ISearchRequest): Promise<ISearchResult[] | undefined> => {
@@ -33,7 +33,7 @@ export class WikiSearcher extends Searcher {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({query: request.query.trim()})
         };
-        const response = await fetch('http://localhost:5000/search/wiki', requestOptions);
+        const response = await fetch('http://localhost:5000/search/serious_eats', requestOptions);
         const dataJson = await response.json();
 
         let results = [];

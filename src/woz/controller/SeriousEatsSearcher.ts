@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { API_REQUEST_TOKEN, API_ROOT_URL } from "../../common/config"
+import {API_ROOT_URL } from "../../common/config"
 import {ButtonModel} from "../model/ButtonModel"
 import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
@@ -32,7 +32,7 @@ export class SeriousEatsSearcher extends Searcher {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: request.query.trim(), token: API_REQUEST_TOKEN})
+            body: JSON.stringify({query: request.query.trim()})
         };
         let results = [];
 

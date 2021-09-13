@@ -43,7 +43,7 @@ export class Search extends React.Component<ISearchProperties, ISearchState> {
   private readonly coalescer = new Coalescer()
 
   private _setFilter = (text: string, delay: number) => {
-    const value = text.trim()
+    const value = text
 
     this.setState({value})
 
@@ -83,7 +83,7 @@ export class Search extends React.Component<ISearchProperties, ISearchState> {
             // placeholder={defaultValue(this.props.placeholder, "Filter...")}
             value={this.state.value}
             onChange={(_event1, data) => {
-              this._setFilter((data.value as string).trim(), timerDelay)
+              this._setFilter((data.value as string).trimLeft(), timerDelay)
             }}
             onKeyDown={(event: KeyboardEvent) => {
               if (isKeyPressed(event, "Enter")) {

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { API_REQUEST_TOKEN, API_ROOT_URL } from "../../common/config"
 import {ButtonModel} from "../model/ButtonModel"
 import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
@@ -31,27 +32,31 @@ export class SeriousEatsSearcher extends Searcher {
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: request.query.trim()})
+            body: JSON.stringify({query: request.query.trim(), token: API_REQUEST_TOKEN})
         };
-        const response = await fetch('http://localhost:5000/search/serious_eats', requestOptions);
-        const dataJson = await response.json();
-
         let results = [];
 
-        if (dataJson != undefined && dataJson['errors'].length === 0) {
-            const documents = dataJson['documents']
-            for (let document of documents) {
-                results.push({
-                    buttonID: new ButtonModel({
-                        badges: {},
-                        color: "",
-                        id: document['id'],
-                        label: document['title'],
-                        tooltip: document['contents'],
-                        transitions: {},
+        try {
+            const response = await fetch(API_ROOT_URL + '/search/serious_eats', requestOptions);
+            const dataJson = await response.json();
+            if (dataJson != undefined && dataJson['errors'].length === 0) {
+                const documents = dataJson['documents']
+                for (let document of documents) {
+                    results.push({
+                        buttonID: new ButtonModel({
+                            badges: {},
+                            color: "",
+                            id: document['id'],
+                            label: document['title'],
+                            tooltip: document['contents'],
+                            transitions: {},
+                        })
                     })
-                })
+                }
             }
+
+        } catch (error) {
+            console.log(error)
         }
 
         return results;

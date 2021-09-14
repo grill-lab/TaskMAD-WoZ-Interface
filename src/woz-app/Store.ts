@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { SERVER_IP } from "../common/config"
 import {IADConnectorModel} from "./connector/agent-dialogue/ADConnector"
 import {IVHMSGModel, VHMSG} from "./connector/vhmsg/vhmsg"
 
@@ -43,8 +44,8 @@ export class Store implements IStore {
 
     this.defaults = {
       agentDialogue: {
-        conversationId: "test",
-        serverURL: "http://104.198.142.178",
+        conversationId: "ADwizardtest",
+        serverURL: SERVER_IP,
         userId: "test",
       },
       generateScreenNavigation: true,

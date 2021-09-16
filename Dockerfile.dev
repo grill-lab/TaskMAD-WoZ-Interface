@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:latest as builder
+FROM node:latest
 
 # set working directory
 WORKDIR /app
@@ -14,9 +14,8 @@ RUN npm install fetch
 
 # add app
 COPY . ./
-# start app
-CMD ["npm", "run","build"]
 
-FROM nginx:latest
-COPY --from=builder /app/dist/woz /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 3000
+
+# start app
+CMD ["npm", "start"]

@@ -23,6 +23,7 @@ import {
 } from "../woz/views/WozCollection"
 import css from "./App.module.css"
 import {WozConnectors} from "./connector/Connector"
+import {ChatInput} from "../woz/views/ChatInput"
 
 export interface IWoZWithCharCollectionProperties
     extends IWozCollectionProperties {
@@ -53,10 +54,13 @@ class ChatComponent extends React.Component<IChatComponentProperties,
   }
 
   public render() {
-    return <ChatTranscript
+    return <div className={css.chat_input}>
+      <ChatTranscript
         dialogue={this.state.dialogue}
         us={WozConnectors.shared.selectedConnector.chatUserID}
         them={[]}/>
+        <ChatInput/>
+       </div>
   }
 }
 

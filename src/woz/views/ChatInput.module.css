@@ -1,0 +1,15 @@
+:global(#root) i.enterButton {
+  background-color: var(--message-frame)!important;
+}
+
+.entry {
+  flex: 0 0 auto;
+  width: 80%;
+}
+
+.inputField {
+  height: 100px;
+  margin: 10px;
+}
+
+

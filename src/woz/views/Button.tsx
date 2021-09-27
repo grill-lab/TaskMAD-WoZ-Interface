@@ -16,7 +16,7 @@
 
 import * as React from "react"
 import { Popup } from "semantic-ui-react"
-import { objectMap, styles } from "../../common/util"
+import { isStringImagePath, objectMap, styles } from "../../common/util"
 import {
   ButtonIdentifier,
   PLACEHOLDER,
@@ -92,8 +92,8 @@ export class Button extends React.Component<IButtonProperties, {}> {
           background: context.colors[buttonModel.color].css,
         } : {}
 
-        const editButton = this.props.showEditButton ? 
-          <div className={styles(css.customButton)} onClick={(e) => {
+        const editButton = this.props.showEditButton ?
+          <div className={styles(css.customEditButton)} onClick={(e) => {
             e.stopPropagation();
             this.props.onEditButtonClick(buttonModel)
           }}>
@@ -102,7 +102,8 @@ export class Button extends React.Component<IButtonProperties, {}> {
           : undefined
 
 
-        const button = (
+        // We need to check whether the button is an image or a normal paragraph
+        const button = !isStringImagePath(buttonModel.tooltip) ? (
           <div className={styles(css.button, css.selectable)}
             onClick={() => {
               this.props.onButtonClick(buttonModel)
@@ -112,11 +113,19 @@ export class Button extends React.Component<IButtonProperties, {}> {
             <Label model={buttonModel}>{buttonModel.label}</Label>
             {editButton}
           </div>
+        ) : (
+          <div className={styles(css.imageButton)}
+            onClick={() => {
+              this.props.onButtonClick(buttonModel)
+            }}>
+            <img src={buttonModel.tooltip} className={styles(css.imageButtonSrc)}></img>
+          </div>
         )
 
-        return (
+        // Change the popup style based on the type of button (text or image)
+        return !isStringImagePath(buttonModel.tooltip) ? (
           <Popup inverted={true} trigger={button} content={buttonModel.tooltip} />
-        )
+        ) : (<Popup inverted={true} disabled trigger={button} content={buttonModel.tooltip} />)
     }
 
     return null

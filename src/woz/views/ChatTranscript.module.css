@@ -78,3 +78,18 @@ span.them {
   font-weight: bolder;
   font-size: smaller;
 }
+
+
+.imageCell {
+  color: white;
+  padding: 3px;
+  border-radius: 1em;
+  max-width: 70%;
+  display: inline-block;
+  height: 156px;
+}
+.imageCellSrc{
+  height: 150px;
+  width: 150px;
+  border-radius: 1em;
+}

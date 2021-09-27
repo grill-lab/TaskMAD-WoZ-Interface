@@ -149,7 +149,7 @@
   left: 10px;
 }
 
-.customButton{
+.customEditButton{
   height: 18px;
   width: 18px;
   background-color: #FFC107;
@@ -167,5 +167,39 @@
   left: 3px;
   top: -1.5px;
   font-size: 10px !important;
+}
+
+.imageButton{
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  margin: 3px;
+  cursor: pointer;
+  background: #e8e8e8;
+  border: 1px solid #989898; /* update placeholder margin */
+  font-size: 14px;
+}
+
+.imageButton:hover {
+  border: 2px solid #000;
+}
+.imageButton:active{
+  border: 3px solid #f00;
+}
+
+.imageButtonSrc{
+  width: 99px;
+  height: 99px;
+}
+.imageButtonSrc:hover{
+  width: 96px;
+  height: 96px;
+}
+.imageButtonSrc:active{
+  width: 94px;
+  height: 94px;
 }
 

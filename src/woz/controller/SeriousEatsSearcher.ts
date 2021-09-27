@@ -47,7 +47,7 @@ export class SeriousEatsSearcher extends Searcher {
                             badges: {},
                             color: "",
                             id: document['id'],
-                            label: document['title'],
+                            label: document['section_title'],
                             tooltip: document['contents'],
                             transitions: {},
                         })

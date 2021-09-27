@@ -17,18 +17,18 @@
 // noinspection JSUnusedGlobalSymbols
 export const stringEncodingHTML = (s: string): string => {
   return s
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
 }
 
 // noinspection JSUnusedGlobalSymbols
 export const arrayMap = <T, U>(
-    o: ArrayLike<T>,
-    f: (value: T, index: number) => U)
-    : U[] => {
+  o: ArrayLike<T>,
+  f: (value: T, index: number) => U)
+  : U[] => {
   const result: U[] = []
   for (let i = 0; i < o.length; ++i) {
     result.push(f(o[i], i))
@@ -38,9 +38,9 @@ export const arrayMap = <T, U>(
 
 // noinspection JSUnusedGlobalSymbols
 export const arrayCompactMap = <T, U>(
-    o: ArrayLike<T>,
-    f: (value: T, index: number) => U | undefined)
-    : U[] => {
+  o: ArrayLike<T>,
+  f: (value: T, index: number) => U | undefined)
+  : U[] => {
   const result: U[] = []
   for (let i = 0; i < o.length; ++i) {
     const y = f(o[i], i)
@@ -53,17 +53,17 @@ export const arrayCompactMap = <T, U>(
 
 // noinspection JSUnusedGlobalSymbols
 export const objectMap = <T, U>(
-    o: { [s: string]: T },
-    f: (value: [string, T]) => U)
-    : U[] => {
+  o: { [s: string]: T },
+  f: (value: [string, T]) => U)
+  : U[] => {
   return Object.entries(o).map(f)
 }
 
 // noinspection JSUnusedGlobalSymbols
 export const objectCompactMap = <T, U>(
-    o: { [s: string]: T },
-    f: (value: [string, T]) => U | undefined)
-    : U[] => {
+  o: { [s: string]: T },
+  f: (value: [string, T]) => U | undefined)
+  : U[] => {
   const result: U[] = []
   Object.entries(o).forEach((x) => {
     const y = f(x)
@@ -76,15 +76,15 @@ export const objectCompactMap = <T, U>(
 
 // noinspection JSUnusedGlobalSymbols
 export const objectMapValues = <T, U>(
-    o: { [s: string]: T },
-    f: (value: T, key: string) => U): { [s: string]: U } => {
+  o: { [s: string]: T },
+  f: (value: T, key: string) => U): { [s: string]: U } => {
   return Object.assign({}, ...Object.keys(o)
-                                    .map((k: string) => ({[k]: f(o[k], k)})))
+    .map((k: string) => ({ [k]: f(o[k], k) })))
 }
 
 // noinspection JSUnusedGlobalSymbols
 export const objectFromArray = <T>(
-    array: Array<[string, T]>): { [s: string]: T } => {
+  array: Array<[string, T]>): { [s: string]: T } => {
   const result: { [s: string]: T } = {}
   for (const pair of array) {
     result[pair[0]] = pair[1]
@@ -101,8 +101,8 @@ export const removingPathExtension = (aString: string): string => {
 
 // noinspection JSUnusedGlobalSymbols
 export const appendingPathExtension = (
-    aString: string,
-    ext: string): string => {
+  aString: string,
+  ext: string): string => {
   return aString + "." + ext
 }
 
@@ -153,3 +153,12 @@ export const isKeyPressed = (event: KeyboardEvent, key: string) => {
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 // noinspection JSUnusedGlobalSymbols
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+
+// Method used to check if a string path points to an image
+export const isStringImagePath = (image_path: string): boolean => {
+  if ((image_path.startsWith('http://') || image_path.startsWith('https://'))
+  && (image_path.endsWith('.png') || image_path.endsWith('.jpg') || image_path.endsWith('.jpeg')))
+    return true;
+  return false
+}

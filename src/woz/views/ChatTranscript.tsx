@@ -1,5 +1,6 @@
 import * as React from "react"
-import {IDialogue} from "../model/DialogueModel"
+import { isStringImagePath } from "../../common/util"
+import { IDialogue } from "../model/DialogueModel"
 import css from "./ChatTranscript.module.css"
 
 export interface IChatTranscriptProperties {
@@ -9,7 +10,7 @@ export interface IChatTranscriptProperties {
 }
 
 export class ChatTranscript
-    extends React.Component<IChatTranscriptProperties, {}> {
+  extends React.Component<IChatTranscriptProperties, {}> {
 
   private messageList?: HTMLDivElement
 
@@ -35,30 +36,40 @@ export class ChatTranscript
 
     const rows = this.props.dialogue.messages.map((message, index) => {
       const cellClass = message.userID === undefined
-                        ? css.systemCell
-                        : message.userID === this.props.us
-                          ? css.ourCell
-                          : css.theirCell
+        ? css.systemCell
+        : message.userID === this.props.us
+          ? css.ourCell
+          : css.theirCell
       const rowClass = message.userID === undefined
-                       ? css.systemRow
-                       : message.userID === this.props.us
-                         ? css.ourRow
-                         : css.theirRow
+        ? css.systemRow
+        : message.userID === this.props.us
+          ? css.ourRow
+          : css.theirRow
       const visibleUserID = message.userID !== undefined
-                            && message.userID !== this.props.us
-                            && this.props.them.find(
+        && message.userID !== this.props.us
+        && this.props.them.find(
           (id) => (id === message.userID)) === undefined
-                            ? <span className={css.them}>{message.userID}: </span>
-                            : ""
-      return <div className={css.row + " " + rowClass} key={index}>
-        <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
-      </div>
+        ? <span className={css.them}>{message.userID}: </span>
+        : ""
+
+      if (!isStringImagePath(message.text)) {
+        return <div className={css.row + " " + rowClass} key={index}>
+          <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
+        </div>
+      }else{
+        return <div className={css.row + " " + rowClass} key={index}>
+          <div className={css.imageCell + " " + cellClass}>
+            <img src={message.text} className={css.imageCellSrc}/>
+          </div>
+        </div>
+      }
+
     })
 
     return <div className={css.transcript}>
       <div
-          className={css.scrollable}
-          ref={(div) => {this.messageList = div || undefined}}>{rows}</div>
+        className={css.scrollable}
+        ref={(div) => { this.messageList = div || undefined }}>{rows}</div>
     </div>
   }
 }

@@ -35,6 +35,7 @@ interface IButtonProperties {
   onButtonClick: (buttonModel: IButtonModel) => void
   showEditButton?: boolean
   onEditButtonClick: (buttonModel: IButtonModel) => void
+  selectedButtons: Array<IButtonModel>
 }
 
 const BADGE_STYLES = {
@@ -52,7 +53,6 @@ const BADGE_STYLES = {
 export class Button extends React.Component<IButtonProperties, {}> {
 
   public render() {
-
     switch (this.props.identifier.kind) {
       case PLACEHOLDER:
         return (
@@ -102,9 +102,15 @@ export class Button extends React.Component<IButtonProperties, {}> {
           : undefined
 
 
+        // Check if the button should be selected
+        var selectedClass = '';
+        if((this.props.selectedButtons?.filter(button => button.id === buttonModel.id))?.length === 1){
+          selectedClass = css.buttonSelected
+        }
         // We need to check whether the button is an image or a normal paragraph
         const button = !isStringImagePath(buttonModel.tooltip) ? (
-          <div className={styles(css.button, css.selectable)}
+
+          <div className={styles(selectedClass ,css.button, css.selectable)}
             onClick={() => {
               this.props.onButtonClick(buttonModel)
             }}
@@ -118,7 +124,7 @@ export class Button extends React.Component<IButtonProperties, {}> {
             onClick={() => {
               this.props.onButtonClick(buttonModel)
             }}>
-            <img src={buttonModel.tooltip} className={styles(css.imageButtonSrc)}></img>
+            <img src={buttonModel.tooltip} className={styles(css.imageButtonSrc)} alt={buttonModel.label}></img>
           </div>
         )
 

@@ -5,6 +5,10 @@ import {ControlledInput} from "./ValueInput"
 
 export interface IChatInputProperties {
   onEnter?: (text: string) => void
+  onCommit: () => void
+  onChange: (text: string) => void
+  onRevert: () => void
+  wozMessage:string
 }
 
 interface IChatInputState {
@@ -14,40 +18,18 @@ interface IChatInputState {
 export class ChatInput
     extends React.Component<IChatInputProperties, IChatInputState> {
 
-  constructor(props: IChatInputProperties) {
-    super(props)
-    this.state = {value: ""}
-  }
-
-  private onCommit = () => {
-    const value = this.state.value.trim()
-    if (value.length !== 0) {
-      // this.props.onEnter(value)
-    }
-    this.onRevert()
-  }
-
-  private onRevert = () => {
-    this.setState({value: ""})
-  }
-
-  private onChange = (text: string) => {
-    this.setState({value: text})
-  }
-
   public render(): React.ReactNode {
     return <div className={css.entry}>
       <ControlledInput className={css.inputField}
-          value={this.state.value}
-          fluid
-          onCommit={this.onCommit}
-          onRevert={this.onRevert}
-          onUpdate={this.onChange}
+          onCommit={this.props.onCommit}
+          onRevert={this.props.onRevert}
+          onChanget={this.props.onChange}
+          wozMessage={this.props.wozMessage}
           icon={<Icon
               name="send" inverted circular link
               className={css.enterButton}
-              disabled={this.state.value.trim().length === 0}
-              onClick={this.onCommit}
+              disabled={this.props.wozMessage.trim().length === 0}
+              onClick={this.props.onCommit}
           />}
       />
     </div>

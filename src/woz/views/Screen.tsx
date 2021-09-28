@@ -33,6 +33,7 @@ interface IScreenProperties {
   identifier?: string
   onButtonClick: ButtonClickCallback
   onEditButtonClick: (buttonModel: IButtonModel) => void
+  selectedButtons: Array<IButtonModel>
 }
 
 export class Screen extends React.Component<IScreenProperties, {}> {
@@ -65,7 +66,8 @@ export class Screen extends React.Component<IScreenProperties, {}> {
                   label={identifier.label}
                   index={rowIndex}
                   onButtonClick={this.props.onButtonClick}
-                  onEditButtonClick={this.props.onEditButtonClick}/>
+                  onEditButtonClick={this.props.onEditButtonClick}
+                  selectedButtons={this.props.selectedButtons}/>
           )
         case UNDEFINED:
           return null

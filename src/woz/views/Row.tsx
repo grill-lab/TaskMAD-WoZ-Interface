@@ -36,6 +36,7 @@ interface IRowProperties {
   label: string
   onButtonClick: ButtonClickCallback
   onEditButtonClick: (buttonModel: IButtonModel) => void
+  selectedButtons: Array<IButtonModel>
 }
 
 export class Row extends React.Component<IRowProperties, {}> {
@@ -84,7 +85,8 @@ export class Row extends React.Component<IRowProperties, {}> {
           identifier={buttonID}
           onButtonClick={this.props.onButtonClick} 
           showEditButton={false}
-          onEditButtonClick={this.props.onEditButtonClick}/>
+          onEditButtonClick={this.props.onEditButtonClick}
+          selectedButtons={this.props.selectedButtons}/>
       } else {
         button = button = <Button
           key={key}
@@ -92,7 +94,8 @@ export class Row extends React.Component<IRowProperties, {}> {
           identifier={buttonID}
           onButtonClick={this.props.onButtonClick}
           showEditButton={true}
-          onEditButtonClick={this.props.onEditButtonClick}/>
+          onEditButtonClick={this.props.onEditButtonClick}
+          selectedButtons={this.props.selectedButtons}/>
       }
 
       if (this.props.rows === undefined) {

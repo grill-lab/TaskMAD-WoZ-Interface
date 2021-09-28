@@ -15,9 +15,10 @@
  */
 
 import * as React from "react"
-import {log} from "../common/Logger"
-import {objectMap} from "../common/util"
-import {IWozDataSource} from "../woz/model/Model"
+import { log } from "../common/Logger"
+import { isStringImagePath, objectMap } from "../common/util"
+import { IButtonModel } from "../woz/model/ButtonModel"
+import { IWozDataSource } from "../woz/model/Model"
 import {
   collectionLoading,
   WozCollection,
@@ -30,10 +31,10 @@ import {
   dataSourceForURL,
   IConfigurationEditorCallback,
 } from "./ConfigurationEditor"
-import {WozConnectors} from "./connector/Connector"
-import {DataSources} from "./DataSource"
-import {Store} from "./Store"
-import {WoZWithCharCollection} from "./WoZWithChatCollection"
+import { WozConnectors } from "./connector/Connector"
+import { DataSources } from "./DataSource"
+import { Store } from "./Store"
+import { WoZWithCharCollection } from "./WoZWithChatCollection"
 
 type WOZ = "woz"
 const WOZ: WOZ = "woz"
@@ -41,20 +42,26 @@ type CONFIG = "config"
 const CONFIG: CONFIG = "config"
 
 type AppState =
-    {
-      dataSource?: IWozDataSource,
-      kind: CONFIG,
-      wozState?: WozCollectionState,
-    }
+  ({
+    dataSource?: IWozDataSource,
+    kind: CONFIG,
+    wozState?: WozCollectionState,
+  }
     |
-    {
-      dataSource: IWozDataSource,
-      kind: WOZ,
-      wozState: WozCollectionState,
-    }
+  {
+    dataSource: IWozDataSource,
+    kind: WOZ,
+    wozState: WozCollectionState,
+  })
+  &
+  {
+    selected_buttons: Array<IButtonModel>
+    woz_message: string
+  }
+
 
 // tslint:disable-next-line:interface-name
-export interface StringMap {[index: string]: string}
+export interface StringMap { [index: string]: string }
 
 export default class App extends React.Component<{}, AppState> {
 
@@ -62,6 +69,8 @@ export default class App extends React.Component<{}, AppState> {
     super(props)
     this.state = {
       kind: CONFIG,
+      selected_buttons: [],
+      woz_message: ""
     }
 
     localStorage.clear()
@@ -69,9 +78,9 @@ export default class App extends React.Component<{}, AppState> {
     const params: StringMap = {}
 
     new URL(window.location.href)
-        .searchParams.forEach((value, key) => {
-      params[key] = value
-    })
+      .searchParams.forEach((value, key) => {
+        params[key] = value
+      })
 
     const dataSource = DataSources.shared.selectedDataSource
 
@@ -82,25 +91,25 @@ export default class App extends React.Component<{}, AppState> {
         const connectorID = params.connector
         if (connectorID !== undefined) {
           const connector = WozConnectors
-              .shared.all.find((value) => (value.id === connectorID))
+            .shared.all.find((value) => (value.id === connectorID))
           if (connector !== undefined) {
             Store.shared.generateScreenNavigation =
-                (params.generateScreenNavigation || "true")
-                    .toLowerCase() === "true"
+              (params.generateScreenNavigation || "true")
+                .toLowerCase() === "true"
             Store.shared.showChatTranscript =
-                (params.showChatTranscript ||
-                 (connectorID === "ADConnector" ? "true" : "false"))
-                    .toLowerCase() === "true"
+              (params.showChatTranscript ||
+                (connectorID === "ADConnector" ? "true" : "false"))
+                .toLowerCase() === "true"
             WozConnectors.shared.selectedConnectorID = connectorID
             connector.connect(params)
-                     .then((result) => {
-                       // console.log(result)
-                       if (result) {
-                         this.setState(this._newState(urlDataSource))
-                       }
-                     }).catch((error: any) => {
-              console.error(error)
-            })
+              .then((result) => {
+                // console.log(result)
+                if (result) {
+                  this.setState(this._newState(urlDataSource))
+                }
+              }).catch((error: any) => {
+                console.error(error)
+              })
           }
         }
       }
@@ -115,16 +124,20 @@ export default class App extends React.Component<{}, AppState> {
         dataSource,
         kind: WOZ,
         wozState: collectionLoading(
-            {
-              dataSource,
-              options: {
-                generateTabs: Store.shared.generateScreenNavigation,
-              },
-            }),
+          {
+            dataSource,
+            options: {
+              generateTabs: Store.shared.generateScreenNavigation,
+            },
+          }),
+        selected_buttons: this.state.selected_buttons,
+        woz_message: this.state.woz_message
       }
     } else {
       return {
         kind: CONFIG,
+        selected_buttons: this.state.selected_buttons,
+        woz_message: this.state.woz_message
       }
     }
   }
@@ -149,8 +162,8 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     const query = objectMap(
-        props, ([key, value]) => key + "=" + encodeURIComponent(value.toString()))
-        .join("&")
+      props, ([key, value]) => key + "=" + encodeURIComponent(value.toString()))
+      .join("&")
 
     const url = window.location.href + "?" + query
 
@@ -164,7 +177,7 @@ export default class App extends React.Component<{}, AppState> {
 
     try {
       // const successful =
-          document.execCommand("copy")
+      document.execCommand("copy")
       // const msg = successful ? "successful" : "unsuccessful"
       // console.log("Fallback: Copying text command was " + msg)
     } catch (err) {
@@ -192,6 +205,48 @@ export default class App extends React.Component<{}, AppState> {
     })
   }
 
+  private toggleButtons = (buttonClicked: IButtonModel) => {
+    if(isStringImagePath(buttonClicked.tooltip)){
+      WozConnectors.shared.selectedConnector.onButtonClick(buttonClicked);
+      return
+    }
+    if (buttonClicked !== undefined) {
+      if ((this.state.selected_buttons.filter(button => button.id === buttonClicked.id)).length === 1) {
+        this.setState(
+          {
+            selected_buttons: this.state.selected_buttons.filter(button => {
+              return button.id !== buttonClicked.id;
+            })
+          });
+      } else {
+        this.state.selected_buttons.push(buttonClicked);
+        this.setState(
+          {
+            selected_buttons: this.state.selected_buttons,
+            woz_message: this.state.woz_message + ' ' + buttonClicked.tooltip
+          });
+      }
+    }
+    
+  }
+
+  private onCommit = () => {
+    const value = this.state.woz_message.trim()
+    if (value.length !== 0) {
+      WozConnectors.shared.selectedConnector.onMessageSent(value);
+    }
+    this.onRevert()
+  }
+
+  private onRevert = () => {
+    this.setState({woz_message: "", selected_buttons: []})
+    // We also need to clear all the selected buttons
+  }
+
+  private onChange = (text: string) => {
+    this.setState({woz_message: text})
+  }
+
   public render() {
     if (window.localStorage === undefined) {
       log.error("local storage is not supported")
@@ -203,39 +258,49 @@ export default class App extends React.Component<{}, AppState> {
     switch (this.state.kind) {
       case CONFIG:
         content = <ConfigurationEditor
-            dataSource={this.state.dataSource}
-            wozState={this.state.wozState}
-            onCommit={this.displayWoz}/>
+          dataSource={this.state.dataSource}
+          wozState={this.state.wozState}
+          onCommit={this.displayWoz} />
         break
       case WOZ:
         if (Store.shared.showChatTranscript) {
           content = <WoZWithCharCollection
-              onBack={this.displayConfig}
-              onCopyURL={this.copyURL}
-              initialState={this.state.wozState}
-              resultCount={8}
-              onButtonClick={WozConnectors.shared.selectedConnector.onButtonClick}
-              onMount={WozConnectors.shared.selectedConnector.onUIAppear}
-              onError={this.handleError}
+            onBack={this.displayConfig}
+            onCopyURL={this.copyURL}
+            initialState={this.state.wozState}
+            resultCount={8}
+            onButtonClick={this.toggleButtons}
+            onMount={WozConnectors.shared.selectedConnector.onUIAppear}
+            onError={this.handleError}
+            selectedButtons={this.state.selected_buttons}
+            onCommit={this.onCommit}
+            onChange={this.onChange}
+            onRevert={this.onRevert}
+            wozMessage={this.state.woz_message}
           />
         } else {
           content = <WozCollection
-              onBack={this.displayConfig}
-              onCopyURL={this.copyURL}
-              initialState={this.state.wozState}
-              resultCount={8}
-              onButtonClick={WozConnectors.shared.selectedConnector.onButtonClick}
-              onMount={WozConnectors.shared.selectedConnector.onUIAppear}
-              onError={this.handleError}
+            onBack={this.displayConfig}
+            onCopyURL={this.copyURL}
+            initialState={this.state.wozState}
+            resultCount={8}
+            onButtonClick={this.toggleButtons}
+            onMount={WozConnectors.shared.selectedConnector.onUIAppear}
+            onError={this.handleError}
+            selectedButtons={this.state.selected_buttons}
+            onCommit={this.onCommit}
+            onChange={this.onChange}
+            onRevert={this.onRevert}
+            wozMessage={this.state.woz_message}
           />
         }
         break
     }
 
     return (
-        <div className={css.App}>
-          {content}
-        </div>
+      <div className={css.App}>
+        {content}
+      </div>
     )
   }
 }

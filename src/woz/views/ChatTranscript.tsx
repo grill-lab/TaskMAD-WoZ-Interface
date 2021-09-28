@@ -59,7 +59,7 @@ export class ChatTranscript
       }else{
         return <div className={css.row + " " + rowClass} key={index}>
           <div className={css.imageCell + " " + cellClass}>
-            <img src={message.text} className={css.imageCellSrc}/>
+            <img src={message.text} className={css.imageCellSrc} alt={message.text}/>
           </div>
         </div>
       }

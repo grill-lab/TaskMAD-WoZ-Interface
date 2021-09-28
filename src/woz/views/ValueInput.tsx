@@ -1,134 +1,38 @@
 /* tslint:disable:max-classes-per-file */
 import * as React from "react"
-import {Form, Input, InputProps, TextArea} from "semantic-ui-react"
-import {isKeyPressed} from "../../common/util"
+import { Grid, InputProps, TextArea } from "semantic-ui-react"
+import css from "./ChatInput.module.css"
 
-export interface IControlledComponent<Value> {
-  value: Value
-  onUpdate: (newValue: Value) => void
+export interface IControlledComponent {
+  onChanget: (newValue: string) => void
   onCommit: () => void
   onRevert: () => void
+  wozMessage:string
 }
 
 export const ControlledInput
-    : React.FunctionComponent<InputProps & IControlledComponent<string>>
-    = (props) => {
+  : React.FunctionComponent<InputProps & IControlledComponent>
+  = (props) => {
 
-    const {onUpdate, onCommit, onRevert, ...inherited} = props
+    const { onChanget, onCommit, onRevert, wozMessage, ...inherited } = props
 
-    return <div>
-        <form className="ui form">
-          <TextArea placeholder="Type answer here" rows="6"/>
-          <input type="submit" value="Submit" />
-        </form>
-    </div>
-}
+    return (
+      <Grid>
+        <Grid.Column width={13}>
+          <TextArea
+            value={wozMessage}
+            {...inherited}
+            onChange={(_e) => {
+              onChanget(_e.currentTarget.value)
+            }} />
+        </Grid.Column>
+        <Grid.Column width={1}>
+          <div className={css.sendButtonGrid}>
+            <div></div>
+            <div>{props.icon}</div>
+            <div></div>
+          </div>
+        </Grid.Column>
+      </Grid>)
 
-export const ControlledFormInput
-    : React.FunctionComponent<InputProps & IControlledComponent<string>>
-    = (props) => {
-
-  const {onUpdate, onCommit, onRevert, ...inherited} = props
-
-  return <Form.Input
-      {...inherited}
-      onKeyDown={(event: KeyboardEvent) => {
-        if (isKeyPressed(event, "Enter")) {
-          onCommit()
-        } else if (isKeyPressed(event, "Escape")) {
-          onRevert()
-        }
-      }}
-      onChange={(_e, data) => {
-        onUpdate(data.value)
-      }}
-  />
-}
-
-export interface IValueInputProperties extends InputProps {
-  onEnter: (text: string) => void
-}
-
-interface IValueInputState {
-  value: string
-}
-
-// noinspection JSUnusedGlobalSymbols
-export class ValueInput
-    extends React.Component<IValueInputProperties, IValueInputState> {
-
-  constructor(props: IValueInputProperties) {
-    super(props)
-    this.state = { value: props.value || "" }
   }
-
-  private onCommit = () => {
-    const value = this.state.value.trim()
-    if (value.length !== 0) {
-      this.props.onEnter(value)
-    }
-    this.onRevert()
-  }
-
-  private onRevert = () => {
-    this.setState({value: ""})
-  }
-
-  private onChange = (text: string) => {
-    this.setState({value: text})
-  }
-
-  public render(): React.ReactNode {
-
-    // noinspection JSUnusedLocalSymbols
-    const {onEnter, value, ...inherited} = this.props
-
-    return <ControlledInput
-          {...inherited}
-          value={this.state.value}
-          onCommit={this.onCommit}
-          onRevert={this.onRevert}
-          onUpdate={this.onChange}
-      />
-  }
-}
-
-// noinspection JSUnusedGlobalSymbols
-export class ValueFormInput
-    extends React.Component<IValueInputProperties, IValueInputState> {
-
-  constructor(props: IValueInputProperties) {
-    super(props)
-    this.state = { value: props.value || "" }
-  }
-
-  private onCommit = () => {
-    const value = this.state.value.trim()
-    if (value.length !== 0) {
-      this.props.onEnter(value)
-    }
-    this.onRevert()
-  }
-
-  private onRevert = () => {
-    this.setState({value: ""})
-  }
-
-  private onChange = (text: string) => {
-    this.setState({value: text})
-  }
-
-  public render(): React.ReactNode {
-
-    // noinspection JSUnusedLocalSymbols
-    const {onEnter, value, ...inherited} = this.props
-
-    return <ControlledFormInput
-        {...inherited}
-        value={this.state.value}
-        onCommit={this.onCommit}
-        onRevert={this.onRevert}
-        onUpdate={this.onChange}
-    />
-  }
-}

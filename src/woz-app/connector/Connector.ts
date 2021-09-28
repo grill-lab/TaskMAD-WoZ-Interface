@@ -37,6 +37,8 @@ export interface IWozConnector {
   onButtonClick(buttonModel: IButtonModel): void
 
   onUIAppear(): void
+
+  onMessageSent(inputValue: string): void
 }
 
 export class WozConnectors {

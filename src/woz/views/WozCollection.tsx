@@ -54,6 +54,11 @@ export interface IWozCollectionProperties {
   onMount?: () => void
   onUnmount?: (state: WozCollectionState) => void
   onError?: () => void
+  selectedButtons: Array<IButtonModel>
+  onCommit: () => void
+  onChange: (text: string) => void
+  onRevert: () => void
+  wozMessage:string
 }
 
 interface ILoadingCollection {
@@ -359,6 +364,7 @@ export class WozCollection
             persistentRows={this._searchRows(state)}
             woz={state.currentWoz}
             selectedScreenID={state.currentScreenID}
+            selectedButtons={this.props.selectedButtons}
         />
     }
 

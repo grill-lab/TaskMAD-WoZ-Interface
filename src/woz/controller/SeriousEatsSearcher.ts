@@ -39,7 +39,7 @@ export class SeriousEatsSearcher extends Searcher {
         try {
             const response = await fetch(API_ROOT_URL + '/search/serious_eats', requestOptions);
             const dataJson = await response.json();
-            if (dataJson != undefined && dataJson['errors'].length === 0) {
+            if (dataJson !== undefined && dataJson['errors'].length === 0) {
                 const documents = dataJson['documents']
                 for (let document of documents) {
                     results.push({

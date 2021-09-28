@@ -67,4 +67,8 @@ export class ConsoleConnector implements IWozConnector {
   public get chatUserID(): string {
     return ourUserID
   }
+
+  onMessageSent(inputValue: string): void {
+    console.log(inputValue);
+  }
 }

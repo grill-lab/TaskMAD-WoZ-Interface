@@ -172,4 +172,29 @@ export class ADConnector implements IWozConnector {
     }
     return new Promise((resolve) => {resolve(false)})
   }
+
+
+  // noinspection JSUnusedGlobalSymbols
+  public onMessageSent = (inputValue: string) => {
+
+    if (this.model.userId === undefined
+        || this.model.conversationId === undefined) {
+      return
+    }
+
+    const message = new Message({
+      text: inputValue,
+      userID: this.model.userId,
+    })
+
+    if (this.onMessage !== undefined) {
+      this.onMessage(message)
+    }
+
+    this.connection.send(message, {
+      conversationID: this.model.conversationId,
+    })
+
+    log.debug("value:", "'" + inputValue + "'")
+  }
 }

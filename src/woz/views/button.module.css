@@ -67,7 +67,12 @@
   padding: 2px;
 }
 
-.selectable:active {
+.selectable:hover {
+  border: 3px solid #f00;
+  padding: 1px;
+}
+
+.buttonSelected{
   border: 3px solid #f00;
   padding: 1px;
 }
@@ -186,7 +191,7 @@
 .imageButton:hover {
   border: 2px solid #000;
 }
-.imageButton:active{
+.imageButton:hover{
   border: 3px solid #f00;
 }
 
@@ -198,7 +203,7 @@
   width: 96px;
   height: 96px;
 }
-.imageButtonSrc:active{
+.imageButtonSrc:hover{
   width: 94px;
   height: 94px;
 }

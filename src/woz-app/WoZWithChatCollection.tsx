@@ -36,6 +36,10 @@ interface IWoZWithCharCollectionState {
 
 interface IChatComponentProperties {
   dialogue?: Dialogue
+  onCommit: () => void
+  onChange: (text: string) => void
+  onRevert: () => void
+  wozMessage:string
 }
 
 class ChatComponent extends React.Component<IChatComponentProperties,
@@ -59,7 +63,7 @@ class ChatComponent extends React.Component<IChatComponentProperties,
         dialogue={this.state.dialogue}
         us={WozConnectors.shared.selectedConnector.chatUserID}
         them={[]}/>
-        <ChatInput/>
+        <ChatInput {...this.props}/>
        </div>
   }
 }
@@ -72,10 +76,10 @@ export class WoZWithCharCollection
     const { dialogue, ...wozProps } = this.props
 
     return <Grid id={css.appGroupId}>
-      <Grid.Column width={4}>
-        <ChatComponent dialogue={dialogue}/>
+      <Grid.Column width={5}>
+        <ChatComponent dialogue={dialogue} {...this.props}/>
       </Grid.Column>
-      <Grid.Column width={12}>
+      <Grid.Column width={11}>
         <WozCollection {...wozProps}/>
       </Grid.Column>
     </Grid>

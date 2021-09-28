@@ -31,6 +31,7 @@ interface IWozProperties {
   persistentRows: IPersistentRowModel[]
   woz: IWozContext
   selectedScreenID: string
+  selectedButtons: Array<IButtonModel>
 }
 
 interface IWozState {
@@ -46,7 +47,6 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
 
   private _handleClick = (buttonModel: IButtonModel) => {
     let targetID = buttonModel.transitions[this.props.selectedScreenID]
-    console.log(targetID)
     if (targetID === undefined) {
       targetID = buttonModel.transitions._any
     }
@@ -94,7 +94,6 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
   }
 
   public render() {
-
     const extraRows = arrayMap(
         this.props.persistentRows,
         (row: IPersistentRowModel, index: number) => {
@@ -108,6 +107,7 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
                   index={index}
                   onButtonClick={this._handleClick}
                   onEditButtonClick={this._handleEditButtonClick}
+                  selectedButtons={this.props.selectedButtons}
                   />
           )
         })
@@ -121,7 +121,8 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
                 context={this.props.woz}
                 identifier={this.props.selectedScreenID}
                 onButtonClick={this._handleClick}
-                onEditButtonClick={this._handleEditButtonClick}/>
+                onEditButtonClick={this._handleEditButtonClick}
+                selectedButtons={this.props.selectedButtons}/>
           </div>
         </div>
     )

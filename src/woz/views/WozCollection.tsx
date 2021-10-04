@@ -59,6 +59,7 @@ export interface IWozCollectionProperties {
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage:string
+  onParagraphClicked: (buttnClicked: IButtonModel) => void
 }
 
 interface ILoadingCollection {
@@ -359,12 +360,13 @@ export class WozCollection
         }
 
         body = <Woz
-            onButtonClick={this.props.onButtonClick}
-            onScreenChange={onScreenChange}
-            persistentRows={this._searchRows(state)}
-            woz={state.currentWoz}
-            selectedScreenID={state.currentScreenID}
-            selectedButtons={this.props.selectedButtons}
+          onButtonClick={this.props.onButtonClick}
+          onScreenChange={onScreenChange}
+          persistentRows={this._searchRows(state)}
+          woz={state.currentWoz}
+          selectedScreenID={state.currentScreenID}
+          selectedButtons={this.props.selectedButtons} 
+          onParagraphClicked={this.props.onParagraphClicked}            
         />
     }
 

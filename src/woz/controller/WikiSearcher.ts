@@ -15,7 +15,8 @@
  */
 
 import {API_ROOT_URL } from "../../common/config"
-import {ButtonModel} from "../model/ButtonModel"
+import { wordsTrim } from "../../common/util"
+import {ButtonModel, ButtonOrigin} from "../model/ButtonModel"
 import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
 export class WikiSearcher extends Searcher {
@@ -48,9 +49,14 @@ export class WikiSearcher extends Searcher {
                             badges: {},
                             color: "",
                             id: document['id'],
-                            label: document['title'],
+                            label: wordsTrim(document['contents'], 7),
                             tooltip: document['contents'],
                             transitions: {},
+                            buttonOrigin: ButtonOrigin.wikipedia,
+                            pageId: document['page_id'],
+                            paragraphId: document['id'],
+                            pageTitle: document['page_title'],
+                            sectionTitle: document['section_title']
                         })
                     })
                 }

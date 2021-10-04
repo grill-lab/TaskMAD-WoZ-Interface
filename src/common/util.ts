@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import CryptoJS from "crypto-js";
+
 // noinspection JSUnusedGlobalSymbols
 export const stringEncodingHTML = (s: string): string => {
   return s
@@ -157,8 +159,27 @@ export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 // Method used to check if a string path points to an image
 export const isStringImagePath = (image_path: string): boolean => {
+  image_path = image_path.toLowerCase();
   if ((image_path.startsWith('http://') || image_path.startsWith('https://'))
   && (image_path.endsWith('.png') || image_path.endsWith('.jpg') || image_path.endsWith('.jpeg')))
     return true;
   return false
+}
+
+// Function used to generate an MD5 hashtring from text. 
+export const generateHashString = (text:string) => {
+  return text !== undefined ? CryptoJS.MD5(CryptoJS.enc.Utf8.parse(text)).toString() : '';             
+}
+
+
+// Function used to trim down a text by keeping only wordsToKeep word
+// If the number of words in text exceedes wordsToKeep, append ellipses. 
+export const wordsTrim = (text:string, wordsToKeep: number) => {    
+    
+  if(text === undefined || wordsToKeep === undefined || wordsToKeep <= 0){
+    return text;
+  }
+  let splittedString = text.split(' ');
+
+  return splittedString.length <= wordsToKeep ? text : splittedString.slice(0, wordsToKeep).join(' ') + '...'; 
 }

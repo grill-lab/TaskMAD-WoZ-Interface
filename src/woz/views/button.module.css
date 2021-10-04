@@ -198,6 +198,7 @@
 .imageButtonSrc{
   width: 99px;
   height: 99px;
+  object-fit: cover;
 }
 .imageButtonSrc:hover{
   width: 96px;

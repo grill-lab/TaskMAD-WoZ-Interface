@@ -21,7 +21,7 @@ import {
   ButtonIdentifier,
   PLACEHOLDER,
 } from "../model/ButtonIdentifier"
-import { IButtonModel, MODEL } from "../model/ButtonModel"
+import { ButtonOrigin, IButtonModel, MODEL } from "../model/ButtonModel"
 import { IWozContext } from "../model/WozModel"
 import css from "./button.module.css"
 import { Label } from "./Label"
@@ -104,7 +104,14 @@ export class Button extends React.Component<IButtonProperties, {}> {
 
         // Check if the button should be selected
         var selectedClass = '';
-        if((this.props.selectedButtons?.filter(button => button.id === buttonModel.id))?.length === 1){
+
+        // We need to highlight a button only if one of these conditions has been satisfied. 
+        // 1) If the button has been selected (hashedId matches)
+        // 2) Or if, only for the search buttons, any of the paragraphs in the page has been selected (in order to show to the wizard)
+        //    that one of the paragraphs has been selected. 
+        if((this.props.selectedButtons?.filter(button => button.hashedId === buttonModel.hashedId))?.length === 1
+        || (buttonModel.buttonOrigin !== ButtonOrigin.excel 
+          && (this.props.selectedButtons?.filter(button => button.pageId === buttonModel.pageId))?.length !== 0)){
           selectedClass = css.buttonSelected
         }
         // We need to check whether the button is an image or a normal paragraph

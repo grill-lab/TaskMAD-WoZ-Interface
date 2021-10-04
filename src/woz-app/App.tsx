@@ -205,20 +205,25 @@ export default class App extends React.Component<{}, AppState> {
     })
   }
 
-  private toggleButtons = (buttonClicked: IButtonModel) => {
+
+  // Function used in order to handle clicks on buttons. 
+  private onButtonClick = (buttonClicked: IButtonModel) => {
+    // If the button clicked is an image then we simply send the image
     if(isStringImagePath(buttonClicked.tooltip)){
       WozConnectors.shared.selectedConnector.onButtonClick(buttonClicked);
       return
     }
     if (buttonClicked !== undefined) {
-      if ((this.state.selected_buttons.filter(button => button.id === buttonClicked.id)).length === 1) {
+      // If the button clicked is already in our state then it means that we want to remove it (toggle the button)
+      if ((this.state.selected_buttons.filter(button => button.hashedId === buttonClicked.hashedId)).length === 1) {
         this.setState(
           {
             selected_buttons: this.state.selected_buttons.filter(button => {
-              return button.id !== buttonClicked.id;
+              return button.hashedId !== buttonClicked.hashedId;
             })
           });
       } else {
+        // Otherwise, simply add the button to our state
         this.state.selected_buttons.push(buttonClicked);
         this.setState(
           {
@@ -226,11 +231,10 @@ export default class App extends React.Component<{}, AppState> {
             woz_message: this.state.woz_message + ' ' + buttonClicked.tooltip
           });
       }
-    }
-    
+    }    
   }
 
-  private onCommit = () => {
+  private onMessageSent = () => {
     const value = this.state.woz_message.trim()
     if (value.length !== 0) {
       WozConnectors.shared.selectedConnector.onMessageSent(value);
@@ -238,12 +242,17 @@ export default class App extends React.Component<{}, AppState> {
     this.onRevert()
   }
 
+
+  // Simply resets the state
   private onRevert = () => {
     this.setState({woz_message: "", selected_buttons: []})
-    // We also need to clear all the selected buttons
   }
 
-  private onChange = (text: string) => {
+  // Function used to detect when text in the input box changes
+  private onInputBoxChange = (text: string) => {
+    if(text.trim().length === 0){
+      this.setState({selected_buttons: []})
+    }
     this.setState({woz_message: text})
   }
 
@@ -269,14 +278,15 @@ export default class App extends React.Component<{}, AppState> {
             onCopyURL={this.copyURL}
             initialState={this.state.wozState}
             resultCount={8}
-            onButtonClick={this.toggleButtons}
+            onButtonClick={this.onButtonClick}
             onMount={WozConnectors.shared.selectedConnector.onUIAppear}
             onError={this.handleError}
             selectedButtons={this.state.selected_buttons}
-            onCommit={this.onCommit}
-            onChange={this.onChange}
+            onCommit={this.onMessageSent}
+            onChange={this.onInputBoxChange}
             onRevert={this.onRevert}
             wozMessage={this.state.woz_message}
+            onParagraphClicked={this.onButtonClick}
           />
         } else {
           content = <WozCollection
@@ -284,15 +294,15 @@ export default class App extends React.Component<{}, AppState> {
             onCopyURL={this.copyURL}
             initialState={this.state.wozState}
             resultCount={8}
-            onButtonClick={this.toggleButtons}
+            onButtonClick={this.onButtonClick}
             onMount={WozConnectors.shared.selectedConnector.onUIAppear}
             onError={this.handleError}
             selectedButtons={this.state.selected_buttons}
-            onCommit={this.onCommit}
-            onChange={this.onChange}
+            onCommit={this.onMessageSent}
+            onChange={this.onInputBoxChange}
             onRevert={this.onRevert}
-            wozMessage={this.state.woz_message}
-          />
+            wozMessage={this.state.woz_message} 
+            onParagraphClicked={this.onButtonClick} />
         }
         break
     }

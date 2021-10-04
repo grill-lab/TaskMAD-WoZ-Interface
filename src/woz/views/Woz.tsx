@@ -15,15 +15,16 @@
  */
 
 import * as React from "react"
-import {arrayMap} from "../../common/util"
-import {IButtonModel} from "../model/ButtonModel"
-import {IPersistentRowModel} from "../model/RowModel"
-import {IWozContext} from "../model/WozModel"
-import {Row} from "./Row"
-import {Screen} from "./Screen"
-import {TemplateEditor} from "./TemplateEditor"
+import { arrayMap, isStringImagePath } from "../../common/util"
+import { ButtonOrigin, IButtonModel } from "../model/ButtonModel"
+import { IPersistentRowModel } from "../model/RowModel"
+import { IWozContext } from "../model/WozModel"
+import { Row } from "./Row"
+import { Screen } from "./Screen"
+import { SearchResultModal } from "./SearchResultModal"
+import { TemplateEditor } from "./TemplateEditor"
 import css from "./woz.module.css"
-import {ButtonClickCallback} from "./WozCollection"
+import { ButtonClickCallback } from "./WozCollection"
 
 interface IWozProperties {
   onButtonClick: ButtonClickCallback
@@ -32,10 +33,12 @@ interface IWozProperties {
   woz: IWozContext
   selectedScreenID: string
   selectedButtons: Array<IButtonModel>
+  onParagraphClicked: (buttnClicked: IButtonModel) => void
 }
 
 interface IWozState {
   buttonToExpand?: IButtonModel
+  buttonSearchResultModal?: IButtonModel
 }
 
 export class Woz extends React.Component<IWozProperties, IWozState> {
@@ -57,9 +60,19 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
     }
 
     if (buttonModel.tooltip.match(/##.*?##/)) {
-      this.setState({buttonToExpand: buttonModel})
+      this.setState({ buttonToExpand: buttonModel })
     } else {
-      this.props.onButtonClick(buttonModel)
+      // We need to trigger the action based on 2 cases:
+      // 1) If the button comes from the search or if it is not an image, we need to show the modal 
+      // 2) Otherwise, simple call the default OnButtonClick function 
+      if (buttonModel.buttonOrigin !== ButtonOrigin.excel && !isStringImagePath(buttonModel.tooltip)) {
+        this.setState({
+          buttonSearchResultModal: buttonModel
+        });
+      } else {
+        this.props.onButtonClick(buttonModel)
+      }
+
     }
   }
 
@@ -69,62 +82,77 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
     }
 
     return <TemplateEditor
-            onCancel={() => this.setState({buttonToExpand: undefined})}
-            onConfirm={(newTooltip) => {
-              const filledModel = Object
-                  .assign({}, this.state.buttonToExpand, newTooltip)
-              this.props.onButtonClick(filledModel)
-              this.setState({buttonToExpand: undefined})
-            }}
-            onConfirmEdit={(newTooltip) => {
-              if(newTooltip['tooltip'].trim() !== ''){
-                const filledModel = Object
-                  .assign({}, this.state.buttonToExpand, newTooltip)
-                this.props.onButtonClick(filledModel)
-                this.setState({buttonToExpand: undefined})
-              }
-              
-            }}
-            text={this.state.buttonToExpand.tooltip}/>
+      onCancel={() => this.setState({ buttonToExpand: undefined })}
+      onConfirm={(newTooltip) => {
+        const filledModel = Object
+          .assign({}, this.state.buttonToExpand, newTooltip)
+        this.props.onButtonClick(filledModel)
+        this.setState({ buttonToExpand: undefined })
+      }}
+      onConfirmEdit={(newTooltip) => {
+        if (newTooltip['tooltip'].trim() !== '') {
+          const filledModel = Object
+            .assign({}, this.state.buttonToExpand, newTooltip)
+          this.props.onButtonClick(filledModel)
+          this.setState({ buttonToExpand: undefined })
+        }
+
+      }}
+      text={this.state.buttonToExpand.tooltip} />
 
   }
 
+  // Function used in order to show the modal on click. 
+  private _showSearchResultModal() {
+    if (this.state.buttonSearchResultModal !== undefined) {
+      return <SearchResultModal onCancel={() => {
+        this.setState({
+          buttonSearchResultModal: undefined
+        })
+      } } clickedButton={this.state.buttonSearchResultModal} 
+      onParagraphClicked={this.props.onParagraphClicked} 
+      selectedButtons={this.props.selectedButtons} />
+    }
+    return;
+  }
+
   private _handleEditButtonClick = (buttonModel: IButtonModel) => {
-    this.setState({buttonToExpand: buttonModel})
+    this.setState({ buttonToExpand: buttonModel })
   }
 
   public render() {
     const extraRows = arrayMap(
-        this.props.persistentRows,
-        (row: IPersistentRowModel, index: number) => {
-          return (
-              <Row
-                  key={[row.label, row.id, index.toString()].join("-")}
-                  context={this.props.woz}
-                  buttons={row.buttons}
-                  rows={row.rows}
-                  label={row.label}
-                  index={index}
-                  onButtonClick={this._handleClick}
-                  onEditButtonClick={this._handleEditButtonClick}
-                  selectedButtons={this.props.selectedButtons}
-                  />
-          )
-        })
+      this.props.persistentRows,
+      (row: IPersistentRowModel, index: number) => {
+        return (
+          <Row
+            key={[row.label, row.id, index.toString()].join("-")}
+            context={this.props.woz}
+            buttons={row.buttons}
+            rows={row.rows}
+            label={row.label}
+            index={index}
+            onButtonClick={this._handleClick}
+            onEditButtonClick={this._handleEditButtonClick}
+            selectedButtons={this.props.selectedButtons}
+          />
+        )
+      })
 
     return (
-        <div className={css.scrollable}>
-          <div>
-            {extraRows}
-            {this._templateEditor()}
-            <Screen
-                context={this.props.woz}
-                identifier={this.props.selectedScreenID}
-                onButtonClick={this._handleClick}
-                onEditButtonClick={this._handleEditButtonClick}
-                selectedButtons={this.props.selectedButtons}/>
-          </div>
+      <div className={css.scrollable}>
+        <div>
+          {extraRows}
+          {this._showSearchResultModal()}
+          {this._templateEditor()}
+          <Screen
+            context={this.props.woz}
+            identifier={this.props.selectedScreenID}
+            onButtonClick={this._handleClick}
+            onEditButtonClick={this._handleEditButtonClick}
+            selectedButtons={this.props.selectedButtons} />
         </div>
+      </div>
     )
   }
 }

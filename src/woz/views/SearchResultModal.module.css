@@ -1,0 +1,17 @@
+.modalImage{
+    height: 200px;
+    width: 300px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.modalCheckBox{
+    font-size: 12px !important;
+    width: 100%;
+}

@@ -143,7 +143,17 @@ export class VHMSGConnector implements IWozConnector {
     return ourUserID
   }
 
-  onMessageSent(inputValue: string): void {
+  
+  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+    console.log(selectedButtons);
+    console.log(searchedQueries);
+    console.log(buttonModel);
+  }
+
+
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+    console.log(selectedButtons);
+    console.log(searchedQueries);
     console.log(inputValue);
   }
 }

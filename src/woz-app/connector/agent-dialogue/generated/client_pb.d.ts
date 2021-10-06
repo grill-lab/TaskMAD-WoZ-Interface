@@ -1,7 +1,8 @@
-import * as jspb from "google-protobuf"
+import * as jspb from 'google-protobuf'
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 import * as google_protobuf_struct_pb from 'google-protobuf/google/protobuf/struct_pb';
+
 
 export class ClientConversation extends jspb.Message {
   getTurnList(): Array<ClientTurn>;
@@ -172,6 +173,41 @@ export class InputInteraction extends jspb.Message {
   getLanguageCode(): string;
   setLanguageCode(value: string): InputInteraction;
 
+  getLoggedSearchQueriesList(): Array<string>;
+  setLoggedSearchQueriesList(value: Array<string>): InputInteraction;
+  clearLoggedSearchQueriesList(): InputInteraction;
+  addLoggedSearchQueries(value: string, index?: number): InputInteraction;
+
+  getLoggedPageIdsList(): Array<string>;
+  setLoggedPageIdsList(value: Array<string>): InputInteraction;
+  clearLoggedPageIdsList(): InputInteraction;
+  addLoggedPageIds(value: string, index?: number): InputInteraction;
+
+  getLoggedParagraphIdsList(): Array<string>;
+  setLoggedParagraphIdsList(value: Array<string>): InputInteraction;
+  clearLoggedParagraphIdsList(): InputInteraction;
+  addLoggedParagraphIds(value: string, index?: number): InputInteraction;
+
+  getLoggedParagraphTextsList(): Array<string>;
+  setLoggedParagraphTextsList(value: Array<string>): InputInteraction;
+  clearLoggedParagraphTextsList(): InputInteraction;
+  addLoggedParagraphTexts(value: string, index?: number): InputInteraction;
+
+  getLoggedPageOriginsList(): Array<string>;
+  setLoggedPageOriginsList(value: Array<string>): InputInteraction;
+  clearLoggedPageOriginsList(): InputInteraction;
+  addLoggedPageOrigins(value: string, index?: number): InputInteraction;
+
+  getLoggedPageTitlesList(): Array<string>;
+  setLoggedPageTitlesList(value: Array<string>): InputInteraction;
+  clearLoggedPageTitlesList(): InputInteraction;
+  addLoggedPageTitles(value: string, index?: number): InputInteraction;
+
+  getLoggedSectionTitlesList(): Array<string>;
+  setLoggedSectionTitlesList(value: Array<string>): InputInteraction;
+  clearLoggedSectionTitlesList(): InputInteraction;
+  addLoggedSectionTitles(value: string, index?: number): InputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: InputInteraction): InputInteraction.AsObject;
@@ -188,6 +224,13 @@ export namespace InputInteraction {
     type: InteractionType,
     deviceType: string,
     languageCode: string,
+    loggedSearchQueriesList: Array<string>,
+    loggedPageIdsList: Array<string>,
+    loggedParagraphIdsList: Array<string>,
+    loggedParagraphTextsList: Array<string>,
+    loggedPageOriginsList: Array<string>,
+    loggedPageTitlesList: Array<string>,
+    loggedSectionTitlesList: Array<string>,
   }
 }
 

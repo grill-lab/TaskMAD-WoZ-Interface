@@ -60,6 +60,7 @@ export interface IWozCollectionProperties {
   onRevert: () => void
   wozMessage:string
   onParagraphClicked: (buttnClicked: IButtonModel) => void
+  trackSearchedQueries: (query: string) => void 
 }
 
 interface ILoadingCollection {
@@ -172,6 +173,7 @@ export class WozCollection
 
   private _onSearch = (query: string) => {
     if (this.state.kind !== WOZ_SUCCEEDED) { return }
+    this.props.trackSearchedQueries(query);
     this.setState((prev) => {
       // @ts-ignore
       // noinspection JSUnusedLocalSymbols

@@ -2,12 +2,14 @@
 /**
  * @fileoverview
  * @enhanceable
+ * @suppress {missingRequire} reports error on implicit type usages.
  * @suppress {messageConventions} JS Compiler reports an error if a variable or
  *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
 /* eslint-disable */
+// @ts-nocheck
 
 var jspb = require('google-protobuf');
 var goog = jspb;
@@ -1311,7 +1313,7 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.setSessionId = function(valu
  * @private {!Array<number>}
  * @const
  */
-proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3];
+proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13];
 
 
 
@@ -1349,7 +1351,14 @@ proto.edu.gla.kail.ad.InputInteraction.toObject = function(includeInstance, msg)
     actionList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
     type: jspb.Message.getFieldWithDefault(msg, 4, 0),
     deviceType: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    languageCode: jspb.Message.getFieldWithDefault(msg, 6, "")
+    languageCode: jspb.Message.getFieldWithDefault(msg, 6, ""),
+    loggedSearchQueriesList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
+    loggedPageIdsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
+    loggedParagraphIdsList: (f = jspb.Message.getRepeatedField(msg, 9)) == null ? undefined : f,
+    loggedParagraphTextsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+    loggedPageOriginsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
+    loggedPageTitlesList: (f = jspb.Message.getRepeatedField(msg, 12)) == null ? undefined : f,
+    loggedSectionTitlesList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1409,6 +1418,34 @@ proto.edu.gla.kail.ad.InputInteraction.deserializeBinaryFromReader = function(ms
     case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.setLanguageCode(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedSearchQueries(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedPageIds(value);
+      break;
+    case 9:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedParagraphIds(value);
+      break;
+    case 10:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedParagraphTexts(value);
+      break;
+    case 11:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedPageOrigins(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedPageTitles(value);
+      break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedSectionTitles(value);
       break;
     default:
       reader.skipField();
@@ -1478,6 +1515,55 @@ proto.edu.gla.kail.ad.InputInteraction.serializeBinaryToWriter = function(messag
   if (f.length > 0) {
     writer.writeString(
       6,
+      f
+    );
+  }
+  f = message.getLoggedSearchQueriesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      7,
+      f
+    );
+  }
+  f = message.getLoggedPageIdsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      8,
+      f
+    );
+  }
+  f = message.getLoggedParagraphIdsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      9,
+      f
+    );
+  }
+  f = message.getLoggedParagraphTextsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      10,
+      f
+    );
+  }
+  f = message.getLoggedPageOriginsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      11,
+      f
+    );
+  }
+  f = message.getLoggedPageTitlesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      12,
+      f
+    );
+  }
+  f = message.getLoggedSectionTitlesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      13,
       f
     );
   }
@@ -1608,6 +1694,265 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLanguageCode = function() {
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLanguageCode = function(value) {
   return jspb.Message.setProto3StringField(this, 6, value);
+};
+
+
+/**
+ * repeated string logged_search_queries = 7;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedSearchQueriesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 7));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedSearchQueriesList = function(value) {
+  return jspb.Message.setField(this, 7, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedSearchQueries = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedSearchQueriesList = function() {
+  return this.setLoggedSearchQueriesList([]);
+};
+
+
+/**
+ * repeated string logged_page_ids = 8;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageIdsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 8));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageIdsList = function(value) {
+  return jspb.Message.setField(this, 8, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageIdsList = function() {
+  return this.setLoggedPageIdsList([]);
+};
+
+
+/**
+ * repeated string logged_paragraph_ids = 9;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphIdsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 9));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphIdsList = function(value) {
+  return jspb.Message.setField(this, 9, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 9, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphIdsList = function() {
+  return this.setLoggedParagraphIdsList([]);
+};
+
+
+/**
+ * repeated string logged_paragraph_texts = 10;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphTextsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 10));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphTextsList = function(value) {
+  return jspb.Message.setField(this, 10, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphTexts = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 10, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphTextsList = function() {
+  return this.setLoggedParagraphTextsList([]);
+};
+
+
+/**
+ * repeated string logged_page_origins = 11;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageOriginsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 11));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageOriginsList = function(value) {
+  return jspb.Message.setField(this, 11, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageOrigins = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 11, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageOriginsList = function() {
+  return this.setLoggedPageOriginsList([]);
+};
+
+
+/**
+ * repeated string logged_page_titles = 12;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageTitlesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 12));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageTitlesList = function(value) {
+  return jspb.Message.setField(this, 12, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageTitles = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 12, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageTitlesList = function() {
+  return this.setLoggedPageTitlesList([]);
+};
+
+
+/**
+ * repeated string logged_section_titles = 13;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedSectionTitlesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 13));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedSectionTitlesList = function(value) {
+  return jspb.Message.setField(this, 13, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedSectionTitles = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 13, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedSectionTitlesList = function() {
+  return this.setLoggedSectionTitlesList([]);
 };
 
 

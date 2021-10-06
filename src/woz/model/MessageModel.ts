@@ -22,6 +22,14 @@ export interface IMessage {
   text: string
   time: Date
   userID?: string
+  loggedSearchQueries?: Array<string>
+  loggedPageIds?: Array<string>
+  loggedParagraphIds?: Array<string>
+  loggedParagraphTexts?: Array<string>
+  loggedPageOrigins?: Array<string>
+  loggedPageTitles?: Array<string>
+  loggedSectionTitles?: Array<string>
+  
 }
 
 export const ourUserID = "us"
@@ -61,5 +69,34 @@ export class Message implements IMessage {
   public readonly time!: Date
   // noinspection JSUnusedGlobalSymbols
   public readonly userID?: string
+
+  /**
+   * Attributes used to log the wizard interaction associated to this message
+   * Notice that we want to keep track of:
+   * - Buttons clicked by the wizard (evidence) in order to compose the message
+   * - Searched queries done by the wizard while searching for external results 
+   * 
+   * However, for each button clicked, we want to keep track of several other properties. 
+   * As there is no trivial approach to save objects in Firestore, we save the relevant 
+   * attributes as lists. Each element at index i will correspond to the specific button 
+   * fetures (i.e. each button will have a pageId, paragraphId, origin and Text associated).
+   */
+  // Attribute used in order to log the queries searched while composing this message
+  public readonly loggedSearchQueries?: Array<string>
+  // Attribute used in order to log the PageIds of the paragraphs associated to the buttons clicked
+  public readonly loggedPageIds?: Array<string>
+  // Attribute used in order to log the Paragraphids of the paragraphs associated to the buttons clicked
+  public readonly loggedParagraphIds?: Array<string>
+  // Attribute used in order to log the Text of the paragraphs associated to the buttons clicked
+  public readonly loggedParagraphTexts?: Array<string>
+  // Attribute used in order to log the Origin (i.e. Excel, Wikipedia, Serious Eats etc...) 
+  // of the paragraphs associated to the buttons clicked
+  public readonly loggedPageOrigins?: Array<string>
+  // Attribute used in order to log the Page Title of the paragraphs associated to the buttons clicked
+  public readonly loggedPageTitles?: Array<string>
+  // Attribute used in order to log the Sction Title of the paragraphs associated to the buttons clicked
+  public readonly loggedSectionTitles?: Array<string>
+
+
 }
 

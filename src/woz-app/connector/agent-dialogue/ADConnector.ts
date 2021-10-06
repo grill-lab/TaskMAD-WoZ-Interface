@@ -15,14 +15,14 @@
  */
 
 import * as React from "react"
-import {log} from "../../../common/Logger"
-import {IButtonModel} from "../../../woz/model/ButtonModel"
-import {IMessage, Message, ourUserID} from "../../../woz/model/MessageModel"
-import {StringMap} from "../../App"
-import {Store} from "../../Store"
-import {IWozConnector} from "../Connector"
-import {ADConnection, ISubscription} from "./ADConnection"
-import {ADConnectorComponent} from "./ADConnectorComponent"
+import { log } from "../../../common/Logger"
+import { ButtonOrigin, IButtonModel } from "../../../woz/model/ButtonModel"
+import { IMessage, Message, ourUserID } from "../../../woz/model/MessageModel"
+import { StringMap } from "../../App"
+import { Store } from "../../Store"
+import { IWozConnector } from "../Connector"
+import { ADConnection, ISubscription } from "./ADConnection"
+import { ADConnectorComponent } from "./ADConnectorComponent"
 
 export interface IADConnectorModel {
   readonly conversationId?: string
@@ -68,7 +68,7 @@ export class ADConnector implements IWozConnector {
 
   public component = (): any => {
     return React.createElement(
-        ADConnectorComponent, {connector: this}, null)
+      ADConnectorComponent, { connector: this }, null)
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -92,8 +92,8 @@ export class ADConnector implements IWozConnector {
 
   public set model(value: IADConnectorModel) {
     if (value.userId === this.model.userId
-        && value.conversationId === this.model.conversationId
-        && value.serverURL === this.model.serverURL) {
+      && value.conversationId === this.model.conversationId
+      && value.serverURL === this.model.serverURL) {
       return
     }
 
@@ -118,7 +118,7 @@ export class ADConnector implements IWozConnector {
     if (this.stream !== undefined) { return this.stream }
 
     if (this.model.userId === undefined
-        || this.model.conversationId === undefined) {
+      || this.model.conversationId === undefined) {
       return undefined
     }
 
@@ -127,7 +127,7 @@ export class ADConnector implements IWozConnector {
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
-          const message = new Message({...reply, id: reply.responseID})
+          const message = new Message({ ...reply, id: reply.responseID })
           this.onMessage(message)
         }
       },
@@ -139,7 +139,7 @@ export class ADConnector implements IWozConnector {
   public onButtonClick = (buttonModel: IButtonModel) => {
 
     if (this.model.userId === undefined
-        || this.model.conversationId === undefined) {
+      || this.model.conversationId === undefined) {
       return
     }
 
@@ -161,30 +161,113 @@ export class ADConnector implements IWozConnector {
 
   public connect(params: StringMap): Promise<boolean> {
     if (params.userID !== undefined
-        && params.conversationID !== undefined
-        && params.serverURL !== undefined) {
+      && params.conversationID !== undefined
+      && params.serverURL !== undefined) {
       this.model = {
         conversationId: params.conversationID,
         serverURL: params.serverURL,
         userId: params.userID,
       }
-      return new Promise((resolve) => {resolve(true)})
+      return new Promise((resolve) => { resolve(true) })
     }
-    return new Promise((resolve) => {resolve(false)})
+    return new Promise((resolve) => { resolve(false) })
   }
 
 
-  // noinspection JSUnusedGlobalSymbols
-  public onMessageSent = (inputValue: string) => {
-
+  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
     if (this.model.userId === undefined
-        || this.model.conversationId === undefined) {
+      || this.model.conversationId === undefined) {
+      return
+    }
+
+    const message = new Message({
+      text: buttonModel.tooltip,
+      userID: this.model.userId,
+      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries : [''],
+      loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedParagraphIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.paragraphId !== undefined ? selectedButton.paragraphId : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedParagraphTexts: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.tooltip !== undefined ? selectedButton.tooltip : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedPageOrigins: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.buttonOrigin !== undefined ? ButtonOrigin[selectedButton.buttonOrigin] : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedPageTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.pageTitle !== undefined ? selectedButton.pageTitle : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedSectionTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+    })
+
+    if (this.onMessage !== undefined) {
+      this.onMessage(message)
+    }
+
+    this.connection.send(message, {
+      conversationID: this.model.conversationId,
+    })
+
+    log.debug("clicked:", "'" + buttonModel.id + "'", buttonModel.tooltip)
+  }
+
+
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+    if (this.model.userId === undefined
+      || this.model.conversationId === undefined) {
       return
     }
 
     const message = new Message({
       text: inputValue,
       userID: this.model.userId,
+      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries : [],
+      loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedParagraphIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.paragraphId !== undefined ? selectedButton.paragraphId : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedParagraphTexts: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.tooltip !== undefined ? selectedButton.tooltip : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedPageOrigins: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.buttonOrigin !== undefined ? ButtonOrigin[selectedButton.buttonOrigin] : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedPageTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.pageTitle !== undefined ? selectedButton.pageTitle : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedSectionTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
     })
 
     if (this.onMessage !== undefined) {

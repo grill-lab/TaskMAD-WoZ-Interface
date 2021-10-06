@@ -14,7 +14,14 @@ import {AgentDialogueClient} from "./generated/ServiceServiceClientPb"
 export interface IInputInteractionArguments {
   languageCode?: string
   text?: string
-  type?: InteractionType
+  type?: InteractionType,
+  loggedSearchQueries?: Array<string>
+  loggedPageIds?: Array<string>
+  loggedParagraphIds?: Array<string>
+  loggedParagraphTexts?: Array<string>
+  loggedPageOrigins?: Array<string>
+  loggedPageTitles?: Array<string>
+  loggedSectionTitles?: Array<string>
 }
 
 export interface IRequestArguments extends IInputInteractionArguments {
@@ -119,6 +126,15 @@ export class ADConnection {
     input.setText(args.text || "")
     input.setLanguageCode(args.languageCode || "en-US")
     input.setType(args.type || InteractionType.TEXT)
+
+    // Set the loggin attributes
+    input.setLoggedSearchQueriesList(args.loggedSearchQueries || []);
+    input.setLoggedPageIdsList(args.loggedPageIds || []);
+    input.setLoggedParagraphIdsList(args.loggedParagraphIds || []);
+    input.setLoggedParagraphTextsList(args.loggedParagraphTexts || []);
+    input.setLoggedPageOriginsList(args.loggedPageOrigins || []);
+    input.setLoggedPageTitlesList(args.loggedPageTitles || []);
+    input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
     return input
   }
 

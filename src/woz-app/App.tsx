@@ -55,8 +55,13 @@ type AppState =
   })
   &
   {
+
+    // Array used to keep track of clicked buttons
     selected_buttons: Array<IButtonModel>
+    // String used to keep track of the text in the input field
     woz_message: string
+    // Array used to keep track of anything the wizard typed in the search bar. 
+    searched_queries: Array<string>
   }
 
 
@@ -70,7 +75,8 @@ export default class App extends React.Component<{}, AppState> {
     this.state = {
       kind: CONFIG,
       selected_buttons: [],
-      woz_message: ""
+      woz_message: "",
+      searched_queries: [],
     }
 
     localStorage.clear()
@@ -131,13 +137,15 @@ export default class App extends React.Component<{}, AppState> {
             },
           }),
         selected_buttons: this.state.selected_buttons,
-        woz_message: this.state.woz_message
+        woz_message: this.state.woz_message,
+        searched_queries: this.state.searched_queries
       }
     } else {
       return {
         kind: CONFIG,
         selected_buttons: this.state.selected_buttons,
-        woz_message: this.state.woz_message
+        woz_message: this.state.woz_message,
+        searched_queries: this.state.searched_queries
       }
     }
   }
@@ -210,7 +218,8 @@ export default class App extends React.Component<{}, AppState> {
   private onButtonClick = (buttonClicked: IButtonModel) => {
     // If the button clicked is an image then we simply send the image
     if(isStringImagePath(buttonClicked.tooltip)){
-      WozConnectors.shared.selectedConnector.onButtonClick(buttonClicked);
+      WozConnectors.shared.selectedConnector.onButtonClickLogger(buttonClicked, this.state.selected_buttons, this.state.searched_queries);
+      this.onRevert();
       return
     }
     if (buttonClicked !== undefined) {
@@ -234,18 +243,19 @@ export default class App extends React.Component<{}, AppState> {
     }    
   }
 
+  // Sends a message to the backend.
   private onMessageSent = () => {
     const value = this.state.woz_message.trim()
     if (value.length !== 0) {
-      WozConnectors.shared.selectedConnector.onMessageSent(value);
+      WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries);
     }
-    this.onRevert()
+    this.onRevert();
   }
 
 
   // Simply resets the state
   private onRevert = () => {
-    this.setState({woz_message: "", selected_buttons: []})
+    this.setState({woz_message: "", selected_buttons: [], searched_queries: []})
   }
 
   // Function used to detect when text in the input box changes
@@ -254,6 +264,14 @@ export default class App extends React.Component<{}, AppState> {
       this.setState({selected_buttons: []})
     }
     this.setState({woz_message: text})
+  }
+
+  // Function used in order to keep track of the search queries
+  private trackSearchedQueries = (query: string) => {
+    if(query !== undefined && query.trim() !== '' && this.state.searched_queries.indexOf(query.trim()) === -1){
+      this.state.searched_queries.push(query.trim());
+    }
+
   }
 
   public render() {
@@ -287,6 +305,7 @@ export default class App extends React.Component<{}, AppState> {
             onRevert={this.onRevert}
             wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
+            trackSearchedQueries={this.trackSearchedQueries}
           />
         } else {
           content = <WozCollection
@@ -302,7 +321,8 @@ export default class App extends React.Component<{}, AppState> {
             onChange={this.onInputBoxChange}
             onRevert={this.onRevert}
             wozMessage={this.state.woz_message} 
-            onParagraphClicked={this.onButtonClick} />
+            onParagraphClicked={this.onButtonClick}
+            trackSearchedQueries={this.trackSearchedQueries} />
         }
         break
     }

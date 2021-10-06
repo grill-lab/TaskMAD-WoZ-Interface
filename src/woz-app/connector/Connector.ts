@@ -38,7 +38,13 @@ export interface IWozConnector {
 
   onUIAppear(): void
 
-  onMessageSent(inputValue: string): void
+  // Method used in order to handle button clicks and relative logging 
+  // of selectedButtons and searchedQueries associated to that message
+  onButtonClickLogger(buttonModel: IButtonModel, selectedButtons:Array<IButtonModel>, searchedQueries: Array<string>): void
+
+  // Method used in order to handle the inputform submit button and relative logging 
+  // of selectedButtons and searchedQueries associated to that message
+  onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<string>): void
 }
 
 export class WozConnectors {

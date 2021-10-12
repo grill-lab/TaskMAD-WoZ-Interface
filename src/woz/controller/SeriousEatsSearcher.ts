@@ -53,7 +53,7 @@ export class SeriousEatsSearcher extends Searcher {
                             transitions: {},
                             buttonOrigin: ButtonOrigin.seriousEats,
                             pageId: document['page_id'],
-                            paragraphId: document['id'],
+                            paragraphId: document['hashed_id'],
                             pageTitle: document['page_title'],
                             sectionTitle: document['section_title']
                         })

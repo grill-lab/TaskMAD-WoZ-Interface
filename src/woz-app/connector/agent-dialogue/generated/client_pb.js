@@ -1313,7 +1313,7 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.setSessionId = function(valu
  * @private {!Array<number>}
  * @const
  */
-proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13];
+proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13,14,15];
 
 
 
@@ -1353,12 +1353,14 @@ proto.edu.gla.kail.ad.InputInteraction.toObject = function(includeInstance, msg)
     deviceType: jspb.Message.getFieldWithDefault(msg, 5, ""),
     languageCode: jspb.Message.getFieldWithDefault(msg, 6, ""),
     loggedSearchQueriesList: (f = jspb.Message.getRepeatedField(msg, 7)) == null ? undefined : f,
-    loggedPageIdsList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
-    loggedParagraphIdsList: (f = jspb.Message.getRepeatedField(msg, 9)) == null ? undefined : f,
-    loggedParagraphTextsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
-    loggedPageOriginsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
-    loggedPageTitlesList: (f = jspb.Message.getRepeatedField(msg, 12)) == null ? undefined : f,
-    loggedSectionTitlesList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f
+    loggedSearchQueriesTimestampList: (f = jspb.Message.getRepeatedField(msg, 8)) == null ? undefined : f,
+    loggedPageIdsList: (f = jspb.Message.getRepeatedField(msg, 9)) == null ? undefined : f,
+    loggedParagraphIdsList: (f = jspb.Message.getRepeatedField(msg, 10)) == null ? undefined : f,
+    loggedParagraphTextsList: (f = jspb.Message.getRepeatedField(msg, 11)) == null ? undefined : f,
+    loggedPageOriginsList: (f = jspb.Message.getRepeatedField(msg, 12)) == null ? undefined : f,
+    loggedPageTitlesList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
+    loggedSectionTitlesList: (f = jspb.Message.getRepeatedField(msg, 14)) == null ? undefined : f,
+    loggedParagraphTimestampList: (f = jspb.Message.getRepeatedField(msg, 15)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1424,28 +1426,40 @@ proto.edu.gla.kail.ad.InputInteraction.deserializeBinaryFromReader = function(ms
       msg.addLoggedSearchQueries(value);
       break;
     case 8:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addLoggedPageIds(value);
+      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addLoggedSearchQueriesTimestamp(values[i]);
+      }
       break;
     case 9:
       var value = /** @type {string} */ (reader.readString());
-      msg.addLoggedParagraphIds(value);
+      msg.addLoggedPageIds(value);
       break;
     case 10:
       var value = /** @type {string} */ (reader.readString());
-      msg.addLoggedParagraphTexts(value);
+      msg.addLoggedParagraphIds(value);
       break;
     case 11:
       var value = /** @type {string} */ (reader.readString());
-      msg.addLoggedPageOrigins(value);
+      msg.addLoggedParagraphTexts(value);
       break;
     case 12:
       var value = /** @type {string} */ (reader.readString());
-      msg.addLoggedPageTitles(value);
+      msg.addLoggedPageOrigins(value);
       break;
     case 13:
       var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedPageTitles(value);
+      break;
+    case 14:
+      var value = /** @type {string} */ (reader.readString());
       msg.addLoggedSectionTitles(value);
+      break;
+    case 15:
+      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addLoggedParagraphTimestamp(values[i]);
+      }
       break;
     default:
       reader.skipField();
@@ -1525,45 +1539,59 @@ proto.edu.gla.kail.ad.InputInteraction.serializeBinaryToWriter = function(messag
       f
     );
   }
-  f = message.getLoggedPageIdsList();
+  f = message.getLoggedSearchQueriesTimestampList();
   if (f.length > 0) {
-    writer.writeRepeatedString(
+    writer.writePackedInt64(
       8,
       f
     );
   }
-  f = message.getLoggedParagraphIdsList();
+  f = message.getLoggedPageIdsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       9,
       f
     );
   }
-  f = message.getLoggedParagraphTextsList();
+  f = message.getLoggedParagraphIdsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       10,
       f
     );
   }
-  f = message.getLoggedPageOriginsList();
+  f = message.getLoggedParagraphTextsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       11,
       f
     );
   }
-  f = message.getLoggedPageTitlesList();
+  f = message.getLoggedPageOriginsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       12,
       f
     );
   }
-  f = message.getLoggedSectionTitlesList();
+  f = message.getLoggedPageTitlesList();
   if (f.length > 0) {
     writer.writeRepeatedString(
       13,
+      f
+    );
+  }
+  f = message.getLoggedSectionTitlesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      14,
+      f
+    );
+  }
+  f = message.getLoggedParagraphTimestampList();
+  if (f.length > 0) {
+    writer.writePackedInt64(
+      15,
       f
     );
   }
@@ -1735,11 +1763,48 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedSearchQueriesList = 
 
 
 /**
- * repeated string logged_page_ids = 8;
+ * repeated int64 logged_search_queries_timestamp = 8;
+ * @return {!Array<number>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedSearchQueriesTimestampList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 8));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedSearchQueriesTimestampList = function(value) {
+  return jspb.Message.setField(this, 8, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedSearchQueriesTimestamp = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedSearchQueriesTimestampList = function() {
+  return this.setLoggedSearchQueriesTimestampList([]);
+};
+
+
+/**
+ * repeated string logged_page_ids = 9;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageIdsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 8));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 9));
 };
 
 
@@ -1748,7 +1813,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageIdsList = function
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageIdsList = function(value) {
-  return jspb.Message.setField(this, 8, value || []);
+  return jspb.Message.setField(this, 9, value || []);
 };
 
 
@@ -1758,7 +1823,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageIdsList = function
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageIds = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 9, value, opt_index);
 };
 
 
@@ -1772,11 +1837,11 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageIdsList = functi
 
 
 /**
- * repeated string logged_paragraph_ids = 9;
+ * repeated string logged_paragraph_ids = 10;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphIdsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 9));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 10));
 };
 
 
@@ -1785,7 +1850,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphIdsList = fun
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphIdsList = function(value) {
-  return jspb.Message.setField(this, 9, value || []);
+  return jspb.Message.setField(this, 10, value || []);
 };
 
 
@@ -1795,7 +1860,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphIdsList = fun
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphIds = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 9, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 10, value, opt_index);
 };
 
 
@@ -1809,11 +1874,11 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphIdsList = f
 
 
 /**
- * repeated string logged_paragraph_texts = 10;
+ * repeated string logged_paragraph_texts = 11;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphTextsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 10));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 11));
 };
 
 
@@ -1822,7 +1887,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphTextsList = f
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphTextsList = function(value) {
-  return jspb.Message.setField(this, 10, value || []);
+  return jspb.Message.setField(this, 11, value || []);
 };
 
 
@@ -1832,7 +1897,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphTextsList = f
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphTexts = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 10, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 11, value, opt_index);
 };
 
 
@@ -1846,11 +1911,11 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphTextsList =
 
 
 /**
- * repeated string logged_page_origins = 11;
+ * repeated string logged_page_origins = 12;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageOriginsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 11));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 12));
 };
 
 
@@ -1859,7 +1924,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageOriginsList = func
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageOriginsList = function(value) {
-  return jspb.Message.setField(this, 11, value || []);
+  return jspb.Message.setField(this, 12, value || []);
 };
 
 
@@ -1869,7 +1934,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageOriginsList = func
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageOrigins = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 11, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 12, value, opt_index);
 };
 
 
@@ -1883,11 +1948,11 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageOriginsList = fu
 
 
 /**
- * repeated string logged_page_titles = 12;
+ * repeated string logged_page_titles = 13;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageTitlesList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 12));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 13));
 };
 
 
@@ -1896,7 +1961,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedPageTitlesList = funct
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageTitlesList = function(value) {
-  return jspb.Message.setField(this, 12, value || []);
+  return jspb.Message.setField(this, 13, value || []);
 };
 
 
@@ -1906,7 +1971,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedPageTitlesList = funct
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedPageTitles = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 12, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 13, value, opt_index);
 };
 
 
@@ -1920,11 +1985,11 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedPageTitlesList = fun
 
 
 /**
- * repeated string logged_section_titles = 13;
+ * repeated string logged_section_titles = 14;
  * @return {!Array<string>}
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedSectionTitlesList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 13));
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 14));
 };
 
 
@@ -1933,7 +1998,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedSectionTitlesList = fu
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedSectionTitlesList = function(value) {
-  return jspb.Message.setField(this, 13, value || []);
+  return jspb.Message.setField(this, 14, value || []);
 };
 
 
@@ -1943,7 +2008,7 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedSectionTitlesList = fu
  * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedSectionTitles = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 13, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 14, value, opt_index);
 };
 
 
@@ -1953,6 +2018,43 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedSectionTitles = functi
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedSectionTitlesList = function() {
   return this.setLoggedSectionTitlesList([]);
+};
+
+
+/**
+ * repeated int64 logged_paragraph_timestamp = 15;
+ * @return {!Array<number>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedParagraphTimestampList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 15));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedParagraphTimestampList = function(value) {
+  return jspb.Message.setField(this, 15, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphTimestamp = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 15, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphTimestampList = function() {
+  return this.setLoggedParagraphTimestampList([]);
 };
 
 

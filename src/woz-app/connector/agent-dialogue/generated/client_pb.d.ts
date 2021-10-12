@@ -178,6 +178,11 @@ export class InputInteraction extends jspb.Message {
   clearLoggedSearchQueriesList(): InputInteraction;
   addLoggedSearchQueries(value: string, index?: number): InputInteraction;
 
+  getLoggedSearchQueriesTimestampList(): Array<number>;
+  setLoggedSearchQueriesTimestampList(value: Array<number>): InputInteraction;
+  clearLoggedSearchQueriesTimestampList(): InputInteraction;
+  addLoggedSearchQueriesTimestamp(value: number, index?: number): InputInteraction;
+
   getLoggedPageIdsList(): Array<string>;
   setLoggedPageIdsList(value: Array<string>): InputInteraction;
   clearLoggedPageIdsList(): InputInteraction;
@@ -208,6 +213,11 @@ export class InputInteraction extends jspb.Message {
   clearLoggedSectionTitlesList(): InputInteraction;
   addLoggedSectionTitles(value: string, index?: number): InputInteraction;
 
+  getLoggedParagraphTimestampList(): Array<number>;
+  setLoggedParagraphTimestampList(value: Array<number>): InputInteraction;
+  clearLoggedParagraphTimestampList(): InputInteraction;
+  addLoggedParagraphTimestamp(value: number, index?: number): InputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: InputInteraction): InputInteraction.AsObject;
@@ -225,12 +235,14 @@ export namespace InputInteraction {
     deviceType: string,
     languageCode: string,
     loggedSearchQueriesList: Array<string>,
+    loggedSearchQueriesTimestampList: Array<number>,
     loggedPageIdsList: Array<string>,
     loggedParagraphIdsList: Array<string>,
     loggedParagraphTextsList: Array<string>,
     loggedPageOriginsList: Array<string>,
     loggedPageTitlesList: Array<string>,
     loggedSectionTitlesList: Array<string>,
+    loggedParagraphTimestampList: Array<number>,
   }
 }
 

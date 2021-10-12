@@ -107,7 +107,8 @@ export class SearchResultModal
             }
 
             let paragraphs = section_paragraphs.map((par: object, key: number) => {
-                var paragraph_id = JSON.parse(JSON.stringify(par))['id']
+                var anserini_id = JSON.parse(JSON.stringify(par))['id']
+                var paragraph_id = JSON.parse(JSON.stringify(par))['hashed_id']
                 var paragraph_content = JSON.parse(JSON.stringify(par))['contents']
 
                 // Create the ButtonModel associated to this paragraph. This is required as we will use
@@ -115,7 +116,7 @@ export class SearchResultModal
                 var paragraphButtonModel = new ButtonModel({
                     badges: {},
                     color: "",
-                    id: paragraph_id,
+                    id: anserini_id,
                     label: wordsTrim(paragraph_content, 7),
                     tooltip: paragraph_content,
                     transitions: {},

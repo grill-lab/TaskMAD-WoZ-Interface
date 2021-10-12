@@ -183,3 +183,7 @@ export const wordsTrim = (text:string, wordsToKeep: number) => {
 
   return splittedString.length <= wordsToKeep ? text : splittedString.slice(0, wordsToKeep).join(' ') + '...'; 
 }
+
+export const convertDateToTimestamp = (date:Date): number =>  {
+    return +date;
+}

@@ -19,6 +19,7 @@ import { log } from "../common/Logger"
 import { isStringImagePath, objectMap } from "../common/util"
 import { IButtonModel } from "../woz/model/ButtonModel"
 import { IWozDataSource } from "../woz/model/Model"
+import { SearchQueryModel } from "../woz/model/SearchQueryModel"
 import {
   collectionLoading,
   WozCollection,
@@ -61,7 +62,7 @@ type AppState =
     // String used to keep track of the text in the input field
     woz_message: string
     // Array used to keep track of anything the wizard typed in the search bar. 
-    searched_queries: Array<string>
+    searched_queries: Array<SearchQueryModel>
   }
 
 
@@ -216,6 +217,10 @@ export default class App extends React.Component<{}, AppState> {
 
   // Function used in order to handle clicks on buttons. 
   private onButtonClick = (buttonClicked: IButtonModel) => {
+
+    // Keep track of when this button has been clicked
+    buttonClicked.clickedTimestamp = new Date();
+
     // If the button clicked is an image then we simply send the image
     if(isStringImagePath(buttonClicked.tooltip)){
       WozConnectors.shared.selectedConnector.onButtonClickLogger(buttonClicked, this.state.selected_buttons, this.state.searched_queries);
@@ -268,8 +273,16 @@ export default class App extends React.Component<{}, AppState> {
 
   // Function used in order to keep track of the search queries
   private trackSearchedQueries = (query: string) => {
-    if(query !== undefined && query.trim() !== '' && this.state.searched_queries.indexOf(query.trim()) === -1){
-      this.state.searched_queries.push(query.trim());
+
+    // Convert the string to a SearchQueryModel to keep track of the searched timestamp
+    let searchQuery = new SearchQueryModel({
+      searchedQuery: query.trim(),
+      searchTimestamp: new Date()
+    });
+    if(query !== undefined 
+      && query.trim() !== '' 
+      && this.state.searched_queries.findIndex(query => query.searchedQuery === searchQuery.searchedQuery) === -1){
+      this.state.searched_queries.push(searchQuery);
     }
 
   }

@@ -16,12 +16,14 @@ export interface IInputInteractionArguments {
   text?: string
   type?: InteractionType,
   loggedSearchQueries?: Array<string>
+  loggedSearchQueriesTimestamp?: Array<number>
   loggedPageIds?: Array<string>
   loggedParagraphIds?: Array<string>
   loggedParagraphTexts?: Array<string>
   loggedPageOrigins?: Array<string>
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
+  loggedParagraphTimestamp?: Array<number>
 }
 
 export interface IRequestArguments extends IInputInteractionArguments {
@@ -129,12 +131,15 @@ export class ADConnection {
 
     // Set the loggin attributes
     input.setLoggedSearchQueriesList(args.loggedSearchQueries || []);
+    input.setLoggedSearchQueriesTimestampList(args.loggedSearchQueriesTimestamp || []);
     input.setLoggedPageIdsList(args.loggedPageIds || []);
     input.setLoggedParagraphIdsList(args.loggedParagraphIds || []);
     input.setLoggedParagraphTextsList(args.loggedParagraphTexts || []);
     input.setLoggedPageOriginsList(args.loggedPageOrigins || []);
     input.setLoggedPageTitlesList(args.loggedPageTitles || []);
     input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
+    input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
+    
     return input
   }
 

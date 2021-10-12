@@ -18,6 +18,7 @@ import * as React from "react"
 import {stringEncodingHTML} from "../../../common/util"
 import {IButtonModel} from "../../../woz/model/ButtonModel"
 import {IMessage, Message, ourUserID} from "../../../woz/model/MessageModel"
+import { SearchQueryModel } from "../../../woz/model/SearchQueryModel"
 import {StringMap} from "../../App"
 import {Store} from "../../Store"
 import {IWozConnector} from "../Connector"
@@ -144,14 +145,14 @@ export class VHMSGConnector implements IWozConnector {
   }
 
   
-  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
     console.log(selectedButtons);
     console.log(searchedQueries);
     console.log(buttonModel);
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
     console.log(selectedButtons);
     console.log(searchedQueries);
     console.log(inputValue);

@@ -16,6 +16,7 @@
 
 import {IButtonModel} from "../../woz/model/ButtonModel"
 import {IMessage} from "../../woz/model/MessageModel"
+import { SearchQueryModel } from "../../woz/model/SearchQueryModel"
 import {StringMap} from "../App"
 import {Store} from "../Store"
 import {ADConnector} from "./agent-dialogue/ADConnector"
@@ -40,11 +41,11 @@ export interface IWozConnector {
 
   // Method used in order to handle button clicks and relative logging 
   // of selectedButtons and searchedQueries associated to that message
-  onButtonClickLogger(buttonModel: IButtonModel, selectedButtons:Array<IButtonModel>, searchedQueries: Array<string>): void
+  onButtonClickLogger(buttonModel: IButtonModel, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>): void
 
   // Method used in order to handle the inputform submit button and relative logging 
   // of selectedButtons and searchedQueries associated to that message
-  onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<string>): void
+  onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>): void
 }
 
 export class WozConnectors {

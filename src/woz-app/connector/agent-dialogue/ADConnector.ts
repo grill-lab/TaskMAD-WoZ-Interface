@@ -16,8 +16,10 @@
 
 import * as React from "react"
 import { log } from "../../../common/Logger"
+import { convertDateToTimestamp } from "../../../common/util"
 import { ButtonOrigin, IButtonModel } from "../../../woz/model/ButtonModel"
 import { IMessage, Message, ourUserID } from "../../../woz/model/MessageModel"
+import { SearchQueryModel } from "../../../woz/model/SearchQueryModel"
 import { StringMap } from "../../App"
 import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
@@ -174,7 +176,7 @@ export class ADConnector implements IWozConnector {
   }
 
 
-  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+  public onButtonClickLogger = (buttonModel: IButtonModel, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
       return
@@ -183,7 +185,16 @@ export class ADConnector implements IWozConnector {
     const message = new Message({
       text: buttonModel.tooltip,
       userID: this.model.userId,
-      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries : [''],
+      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
+        return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedSearchQueriesTimestamp: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
+        return selectedQuery.searchTimestamp !== undefined ? convertDateToTimestamp(selectedQuery.searchTimestamp) : convertDateToTimestamp(new Date())
+      }).filter((el) => {
+        return el !== null
+      }) : [],
       loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
         return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
       }).filter((el) => {
@@ -213,6 +224,11 @@ export class ADConnector implements IWozConnector {
         return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
       }).filter((el) => {
         return el !== ''
+      }) : [],
+      loggedParagraphTimestamp: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.clickedTimestamp !== undefined ? convertDateToTimestamp(selectedButton.clickedTimestamp) : convertDateToTimestamp(new Date())
+      }).filter((el) => {
+        return el !== null
       }) : [],
     })
 
@@ -228,7 +244,7 @@ export class ADConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: string[]) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
       return
@@ -237,7 +253,16 @@ export class ADConnector implements IWozConnector {
     const message = new Message({
       text: inputValue,
       userID: this.model.userId,
-      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries : [],
+      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
+        return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
+      }).filter((el) => {
+        return el !== ''
+      }) : [],
+      loggedSearchQueriesTimestamp: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
+        return selectedQuery.searchTimestamp !== undefined ? convertDateToTimestamp(selectedQuery.searchTimestamp) : convertDateToTimestamp(new Date())
+      }).filter((el) => {
+        return el !== null
+      }) : [],
       loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
         return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
       }).filter((el) => {
@@ -267,6 +292,11 @@ export class ADConnector implements IWozConnector {
         return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
       }).filter((el) => {
         return el !== ''
+      }) : [],
+      loggedParagraphTimestamp: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
+        return selectedButton.clickedTimestamp !== undefined ? convertDateToTimestamp(selectedButton.clickedTimestamp) : convertDateToTimestamp(new Date())
+      }).filter((el) => {
+        return el !== null
       }) : [],
     })
 

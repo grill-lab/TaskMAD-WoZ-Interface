@@ -54,7 +54,7 @@ export class WikiSearcher extends Searcher {
                             transitions: {},
                             buttonOrigin: ButtonOrigin.wikipedia,
                             pageId: document['page_id'],
-                            paragraphId: document['id'],
+                            paragraphId: document['hashed_id'],
                             pageTitle: document['page_title'],
                             sectionTitle: document['section_title']
                         })

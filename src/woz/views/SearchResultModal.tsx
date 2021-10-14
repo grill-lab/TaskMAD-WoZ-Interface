@@ -18,7 +18,7 @@
 import * as React from "react"
 import { Accordion, Button, Checkbox, Dimmer, Icon, Loader, Modal } from "semantic-ui-react"
 import { API_ROOT_URL } from "../../common/config"
-import { isStringImagePath, wordsTrim } from "../../common/util"
+import { isStringImagePath, styles, wordsTrim } from "../../common/util"
 import { ButtonModel, ButtonOrigin, IButtonModel } from "../model/ButtonModel"
 import css from "./SearchResultModal.module.css"
 
@@ -127,14 +127,18 @@ export class SearchResultModal
                     sectionTitle: section_title
                 })
 
+
+
                 // We need to decide whether we need to show an image or a selectable paragraph. 
+                // We also need to prehighlight the paragraph if the clicked one is the one returned from the API
+                var highlightParagraph = this.props.clickedButton.hashedId === paragraphButtonModel.hashedId ? css.highlightParagraph : '';
                 var paragraph_rendering = isStringImagePath(paragraph_content)
                     ? <img key={key} src={paragraph_content} className={css.modalImage} alt={paragraph_content}></img>
                     : <Checkbox key={key} label={paragraph_content} onChange={() => {
                         this.props.onParagraphClicked(paragraphButtonModel);
                     }}
                         defaultChecked={this.props.selectedButtons.filter(button => button.hashedId === paragraphButtonModel.hashedId).length === 1}
-                        className={css.modalCheckBox}></Checkbox>
+                        className={styles(css.modalCheckBox, highlightParagraph)}></Checkbox>
 
                 return (paragraph_rendering)
             })

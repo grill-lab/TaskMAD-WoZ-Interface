@@ -94,3 +94,15 @@ span.them {
   border-radius: 1em;
   object-fit: cover;
 }
+
+
+.cellStatusMessage {
+  color: black;
+  padding: 1em;
+  border-radius: 1em;
+  max-width: 100%;
+  background-color: lightblue;
+  text-align: center;
+  font-size: 10px;
+  padding: 2px;
+}

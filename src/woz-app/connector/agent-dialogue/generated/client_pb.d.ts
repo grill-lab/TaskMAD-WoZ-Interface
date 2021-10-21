@@ -218,6 +218,31 @@ export class InputInteraction extends jspb.Message {
   clearLoggedParagraphTimestampList(): InputInteraction;
   addLoggedParagraphTimestamp(value: number, index?: number): InputInteraction;
 
+  getLoggedUserRecipePageIdsList(): Array<string>;
+  setLoggedUserRecipePageIdsList(value: Array<string>): InputInteraction;
+  clearLoggedUserRecipePageIdsList(): InputInteraction;
+  addLoggedUserRecipePageIds(value: string, index?: number): InputInteraction;
+
+  getLoggedUserRecipePageTitleList(): Array<string>;
+  setLoggedUserRecipePageTitleList(value: Array<string>): InputInteraction;
+  clearLoggedUserRecipePageTitleList(): InputInteraction;
+  addLoggedUserRecipePageTitle(value: string, index?: number): InputInteraction;
+
+  getLoggedUserRecipeSectionList(): Array<string>;
+  setLoggedUserRecipeSectionList(value: Array<string>): InputInteraction;
+  clearLoggedUserRecipeSectionList(): InputInteraction;
+  addLoggedUserRecipeSection(value: string, index?: number): InputInteraction;
+
+  getLoggedUserRecipeSectionValueList(): Array<string>;
+  setLoggedUserRecipeSectionValueList(value: Array<string>): InputInteraction;
+  clearLoggedUserRecipeSectionValueList(): InputInteraction;
+  addLoggedUserRecipeSectionValue(value: string, index?: number): InputInteraction;
+
+  getLoggedUserRecipeSelectTimestampList(): Array<number>;
+  setLoggedUserRecipeSelectTimestampList(value: Array<number>): InputInteraction;
+  clearLoggedUserRecipeSelectTimestampList(): InputInteraction;
+  addLoggedUserRecipeSelectTimestamp(value: number, index?: number): InputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: InputInteraction): InputInteraction.AsObject;
@@ -243,6 +268,11 @@ export namespace InputInteraction {
     loggedPageTitlesList: Array<string>,
     loggedSectionTitlesList: Array<string>,
     loggedParagraphTimestampList: Array<number>,
+    loggedUserRecipePageIdsList: Array<string>,
+    loggedUserRecipePageTitleList: Array<string>,
+    loggedUserRecipeSectionList: Array<string>,
+    loggedUserRecipeSectionValueList: Array<string>,
+    loggedUserRecipeSelectTimestampList: Array<number>,
   }
 }
 
@@ -333,4 +363,5 @@ export enum InteractionType {
   TEXT = 1,
   AUDIO = 2,
   ACTION = 3,
+  STATUS = 4,
 }

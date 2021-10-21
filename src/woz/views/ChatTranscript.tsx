@@ -1,5 +1,6 @@
 import * as React from "react"
 import { isStringImagePath } from "../../common/util"
+import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 import { IDialogue } from "../model/DialogueModel"
 import css from "./ChatTranscript.module.css"
 
@@ -52,14 +53,26 @@ export class ChatTranscript
         ? <span className={css.them}>{message.userID}: </span>
         : ""
 
+      // If the message is not an image
       if (!isStringImagePath(message.text)) {
-        return <div className={css.row + " " + rowClass} key={index}>
-          <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
-        </div>
-      }else{
+
+        // Here we need to check if a message is a status message or an actual text message  
+        if (message.messageType !== InteractionType.STATUS) {
+          return <div className={css.row + " " + rowClass} key={index}>
+            <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
+          </div>
+        }else{
+          // Return a message of type status 
+          return <div className={css.row + " " + rowClass} key={index}>
+            <div className={css.cellStatusMessage + " " + cellClass}>{message.text}</div>
+          </div>
+        }
+
+
+      } else {
         return <div className={css.row + " " + rowClass} key={index}>
           <div className={css.imageCell + " " + cellClass}>
-            <img src={message.text} className={css.imageCellSrc} alt={message.text}/>
+            <img src={message.text} className={css.imageCellSrc} alt={message.text} />
           </div>
         </div>
       }

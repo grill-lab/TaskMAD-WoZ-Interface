@@ -129,7 +129,7 @@ export class ADConnector implements IWozConnector {
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
-          const message = new Message({ ...reply, id: reply.responseID })
+          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType() })
           this.onMessage(message)
         }
       },

@@ -1313,7 +1313,7 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.setSessionId = function(valu
  * @private {!Array<number>}
  * @const
  */
-proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13,14,15];
+proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
 
 
@@ -1360,7 +1360,12 @@ proto.edu.gla.kail.ad.InputInteraction.toObject = function(includeInstance, msg)
     loggedPageOriginsList: (f = jspb.Message.getRepeatedField(msg, 12)) == null ? undefined : f,
     loggedPageTitlesList: (f = jspb.Message.getRepeatedField(msg, 13)) == null ? undefined : f,
     loggedSectionTitlesList: (f = jspb.Message.getRepeatedField(msg, 14)) == null ? undefined : f,
-    loggedParagraphTimestampList: (f = jspb.Message.getRepeatedField(msg, 15)) == null ? undefined : f
+    loggedParagraphTimestampList: (f = jspb.Message.getRepeatedField(msg, 15)) == null ? undefined : f,
+    loggedUserRecipePageIdsList: (f = jspb.Message.getRepeatedField(msg, 16)) == null ? undefined : f,
+    loggedUserRecipePageTitleList: (f = jspb.Message.getRepeatedField(msg, 17)) == null ? undefined : f,
+    loggedUserRecipeSectionList: (f = jspb.Message.getRepeatedField(msg, 18)) == null ? undefined : f,
+    loggedUserRecipeSectionValueList: (f = jspb.Message.getRepeatedField(msg, 19)) == null ? undefined : f,
+    loggedUserRecipeSelectTimestampList: (f = jspb.Message.getRepeatedField(msg, 20)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1459,6 +1464,28 @@ proto.edu.gla.kail.ad.InputInteraction.deserializeBinaryFromReader = function(ms
       var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
       for (var i = 0; i < values.length; i++) {
         msg.addLoggedParagraphTimestamp(values[i]);
+      }
+      break;
+    case 16:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedUserRecipePageIds(value);
+      break;
+    case 17:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedUserRecipePageTitle(value);
+      break;
+    case 18:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedUserRecipeSection(value);
+      break;
+    case 19:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addLoggedUserRecipeSectionValue(value);
+      break;
+    case 20:
+      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedInt64() : [reader.readInt64()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addLoggedUserRecipeSelectTimestamp(values[i]);
       }
       break;
     default:
@@ -1592,6 +1619,41 @@ proto.edu.gla.kail.ad.InputInteraction.serializeBinaryToWriter = function(messag
   if (f.length > 0) {
     writer.writePackedInt64(
       15,
+      f
+    );
+  }
+  f = message.getLoggedUserRecipePageIdsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      16,
+      f
+    );
+  }
+  f = message.getLoggedUserRecipePageTitleList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      17,
+      f
+    );
+  }
+  f = message.getLoggedUserRecipeSectionList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      18,
+      f
+    );
+  }
+  f = message.getLoggedUserRecipeSectionValueList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      19,
+      f
+    );
+  }
+  f = message.getLoggedUserRecipeSelectTimestampList();
+  if (f.length > 0) {
+    writer.writePackedInt64(
+      20,
       f
     );
   }
@@ -2055,6 +2117,191 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedParagraphTimestamp = f
  */
 proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedParagraphTimestampList = function() {
   return this.setLoggedParagraphTimestampList([]);
+};
+
+
+/**
+ * repeated string logged_user_recipe_page_ids = 16;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedUserRecipePageIdsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 16));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedUserRecipePageIdsList = function(value) {
+  return jspb.Message.setField(this, 16, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedUserRecipePageIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 16, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipePageIdsList = function() {
+  return this.setLoggedUserRecipePageIdsList([]);
+};
+
+
+/**
+ * repeated string logged_user_recipe_page_title = 17;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedUserRecipePageTitleList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 17));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedUserRecipePageTitleList = function(value) {
+  return jspb.Message.setField(this, 17, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedUserRecipePageTitle = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 17, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipePageTitleList = function() {
+  return this.setLoggedUserRecipePageTitleList([]);
+};
+
+
+/**
+ * repeated string logged_user_recipe_section = 18;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedUserRecipeSectionList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 18));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedUserRecipeSectionList = function(value) {
+  return jspb.Message.setField(this, 18, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedUserRecipeSection = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 18, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipeSectionList = function() {
+  return this.setLoggedUserRecipeSectionList([]);
+};
+
+
+/**
+ * repeated string logged_user_recipe_section_value = 19;
+ * @return {!Array<string>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedUserRecipeSectionValueList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 19));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedUserRecipeSectionValueList = function(value) {
+  return jspb.Message.setField(this, 19, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedUserRecipeSectionValue = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 19, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipeSectionValueList = function() {
+  return this.setLoggedUserRecipeSectionValueList([]);
+};
+
+
+/**
+ * repeated int64 logged_user_recipe_select_timestamp = 20;
+ * @return {!Array<number>}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedUserRecipeSelectTimestampList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedField(this, 20));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedUserRecipeSelectTimestampList = function(value) {
+  return jspb.Message.setField(this, 20, value || []);
+};
+
+
+/**
+ * @param {number} value
+ * @param {number=} opt_index
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedUserRecipeSelectTimestamp = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 20, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipeSelectTimestampList = function() {
+  return this.setLoggedUserRecipeSelectTimestampList([]);
 };
 
 
@@ -2654,7 +2901,8 @@ proto.edu.gla.kail.ad.InteractionType = {
   NOTSET: 0,
   TEXT: 1,
   AUDIO: 2,
-  ACTION: 3
+  ACTION: 3,
+  STATUS: 4
 };
 
 goog.object.extend(exports, proto.edu.gla.kail.ad);

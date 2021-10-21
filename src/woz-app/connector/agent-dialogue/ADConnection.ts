@@ -74,6 +74,7 @@ interface IADTextResponse {
   text: string
   userID: string
   time: Date
+  messageType?: InteractionType
 }
 
 declare module "./generated/client_pb" {
@@ -92,6 +93,7 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.asTextResponse =
     time: new Date(this.getTime().getSeconds() * 1000
                    + this.getTime().getNanos() / 1e+6),
     userID: this.getUserId(),
+    messageType: this.getInteractionList()[0].getType()
   }
 }
 

@@ -16,6 +16,7 @@
 
 import * as uuid from "uuid"
 import {PartialBy} from "../../common/util"
+import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 
 export interface IMessage {
   id: string
@@ -31,6 +32,9 @@ export interface IMessage {
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
   loggedParagraphTimestamp?: Array<number>
+
+  // Specific type of this message
+  messageType?: InteractionType
   
 }
 
@@ -102,6 +106,8 @@ export class Message implements IMessage {
   public readonly loggedSectionTitles?: Array<string>
   // Attribute used in order to log the timestamp of paragraph clicked while composing this message
   public readonly loggedParagraphTimestamp?: Array<number>
+
+  public readonly messageType?: InteractionType
 
 
 }

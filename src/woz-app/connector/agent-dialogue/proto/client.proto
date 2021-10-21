@@ -64,6 +64,7 @@ enum InteractionType {
     TEXT = 1;
     AUDIO = 2;
     ACTION = 3;
+    STATUS = 4;
 }
 
 // Message sent to the agent.
@@ -83,6 +84,13 @@ message InputInteraction {
     repeated string logged_page_titles = 13; // The list of page titles associated to the buttons clicked to generate this message
     repeated string logged_section_titles = 14; // The list of section titles associated to the buttons clicked to generate this message
     repeated int64 logged_paragraph_timestamp = 15; // The list timestamps associated to the buttons clicked to generate this message
+
+    // User side recipe logged actions
+    repeated string logged_user_recipe_page_ids = 16; // The list of recipe page ids associated to the checkboxes clicked 
+    repeated string logged_user_recipe_page_title = 17; // The list of recipe page titles associated to the checkboxes clicked
+    repeated string logged_user_recipe_section = 18; // The list the sections associated to the checkboxes clicked
+    repeated string logged_user_recipe_section_value = 19; // The list of checkboxes text associated to the checboxes clicked
+    repeated int64 logged_user_recipe_select_timestamp = 20; // The list of timestamps associated to the checkboxes clicked
 }
 
 // Message sent back by agent.

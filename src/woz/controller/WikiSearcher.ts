@@ -63,7 +63,7 @@ export class WikiSearcher extends Searcher {
                                 label: wordsTrim(Object.getOwnPropertyDescriptor(document, 'contents')?.value || "", 7),
                                 tooltip: Object.getOwnPropertyDescriptor(document, 'contents')?.value || "",
                                 transitions: {},
-                                buttonOrigin: ButtonOrigin.seriousEats,
+                                buttonOrigin: ButtonOrigin.wikipedia,
                                 pageId: Object.getOwnPropertyDescriptor(document, 'page_id')?.value || "",
                                 paragraphId: Object.getOwnPropertyDescriptor(document, 'hashed_id')?.value || "",
                                 pageTitle: Object.getOwnPropertyDescriptor(document, 'page_title')?.value || "",

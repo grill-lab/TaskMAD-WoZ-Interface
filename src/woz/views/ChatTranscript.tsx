@@ -65,7 +65,7 @@ export class ChatTranscript
         }else{
           // Return a message of type status 
           return <div className={css.row + " " + rowClass} key={index}>
-            <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
+            <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User moved to") ? "blue" : message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
           </div>
         }
 

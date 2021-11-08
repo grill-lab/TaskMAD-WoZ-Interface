@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { JavaScriptValue, Struct } from "google-protobuf/google/protobuf/struct_pb"
 import * as React from "react"
 import {stringEncodingHTML} from "../../../common/util"
 import {IButtonModel} from "../../../woz/model/ButtonModel"
@@ -156,5 +157,10 @@ export class VHMSGConnector implements IWozConnector {
     console.log(selectedButtons);
     console.log(searchedQueries);
     console.log(inputValue);
+  }
+
+  public onSearchAPIRequest =  async (requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>  => {
+    console.log(requestBody);
+    return JSON.parse("");
   }
 }

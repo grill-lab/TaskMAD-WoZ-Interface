@@ -16,6 +16,15 @@
 
 import { generateHashString } from "../../common/util"
 
+
+// Attribute used to specify if a button comes from the excel file or from a search
+export enum ButtonOrigin {
+  excel,
+  wikipedia,
+  seriousEats,
+}
+
+
 export interface ICachedFontSize {
   fontSize?: number
 }
@@ -84,11 +93,4 @@ export class ButtonModel implements IButtonModel, ICachedFontSize {
   public clickedTimestamp?: Date
 
   
-}
-
-// Attribute used to specify if a button comes from the excel file or from a search
-export enum ButtonOrigin {
-  excel,
-  wikipedia,
-  seriousEats,
 }

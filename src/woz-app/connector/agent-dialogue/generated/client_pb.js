@@ -2349,7 +2349,8 @@ proto.edu.gla.kail.ad.OutputInteraction.toObject = function(includeInstance, msg
     actionList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
     type: jspb.Message.getFieldWithDefault(msg, 4, 0),
     resultList: jspb.Message.toObjectList(msg.getResultList(),
-    proto.edu.gla.kail.ad.Result.toObject, includeInstance)
+    proto.edu.gla.kail.ad.Result.toObject, includeInstance),
+    unstructuredResult: (f = msg.getUnstructuredResult()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2406,6 +2407,11 @@ proto.edu.gla.kail.ad.OutputInteraction.deserializeBinaryFromReader = function(m
       var value = new proto.edu.gla.kail.ad.Result;
       reader.readMessage(value,proto.edu.gla.kail.ad.Result.deserializeBinaryFromReader);
       msg.addResult(value);
+      break;
+    case 6:
+      var value = new google_protobuf_struct_pb.Struct;
+      reader.readMessage(value,google_protobuf_struct_pb.Struct.deserializeBinaryFromReader);
+      msg.setUnstructuredResult(value);
       break;
     default:
       reader.skipField();
@@ -2470,6 +2476,14 @@ proto.edu.gla.kail.ad.OutputInteraction.serializeBinaryToWriter = function(messa
       5,
       f,
       proto.edu.gla.kail.ad.Result.serializeBinaryToWriter
+    );
+  }
+  f = message.getUnstructuredResult();
+  if (f != null) {
+    writer.writeMessage(
+      6,
+      f,
+      google_protobuf_struct_pb.Struct.serializeBinaryToWriter
     );
   }
 };
@@ -2601,6 +2615,43 @@ proto.edu.gla.kail.ad.OutputInteraction.prototype.addResult = function(opt_value
  */
 proto.edu.gla.kail.ad.OutputInteraction.prototype.clearResultList = function() {
   return this.setResultList([]);
+};
+
+
+/**
+ * optional google.protobuf.Struct unstructured_result = 6;
+ * @return {?proto.google.protobuf.Struct}
+ */
+proto.edu.gla.kail.ad.OutputInteraction.prototype.getUnstructuredResult = function() {
+  return /** @type{?proto.google.protobuf.Struct} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_struct_pb.Struct, 6));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Struct|undefined} value
+ * @return {!proto.edu.gla.kail.ad.OutputInteraction} returns this
+*/
+proto.edu.gla.kail.ad.OutputInteraction.prototype.setUnstructuredResult = function(value) {
+  return jspb.Message.setWrapperField(this, 6, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.edu.gla.kail.ad.OutputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.OutputInteraction.prototype.clearUnstructuredResult = function() {
+  return this.setUnstructuredResult(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.edu.gla.kail.ad.OutputInteraction.prototype.hasUnstructuredResult = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

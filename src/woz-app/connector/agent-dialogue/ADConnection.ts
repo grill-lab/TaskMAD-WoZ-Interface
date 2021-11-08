@@ -1,15 +1,15 @@
 /* tslint:disable:max-classes-per-file */
-import {Struct} from "google-protobuf/google/protobuf/struct_pb"
-import {Timestamp} from "google-protobuf/google/protobuf/timestamp_pb"
+import { JavaScriptValue, Struct } from "google-protobuf/google/protobuf/struct_pb"
+import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb"
 import * as grpcWeb from "grpc-web"
-import {Omit} from "../../../common/util"
-import {IMessage} from "../../../woz/model/MessageModel"
+import { Omit } from "../../../common/util"
+import { IMessage } from "../../../woz/model/MessageModel"
 import {
   ClientId, InputInteraction, InteractionRequest,
   InteractionResponse,
   InteractionType,
 } from "./generated/client_pb"
-import {AgentDialogueClient} from "./generated/ServiceServiceClientPb"
+import { AgentDialogueClient } from "./generated/ServiceServiceClientPb"
 
 export interface IInputInteractionArguments {
   languageCode?: string
@@ -86,16 +86,16 @@ declare module "./generated/client_pb" {
 
 // noinspection JSUnusedGlobalSymbols
 proto.edu.gla.kail.ad.InteractionResponse.prototype.asTextResponse =
-    function(): IADTextResponse {
-  return {
-    responseID: this.getResponseId(),
-    text: this.getInteractionList()[0].getText(),
-    time: new Date(this.getTime().getSeconds() * 1000
-                   + this.getTime().getNanos() / 1e+6),
-    userID: this.getUserId(),
-    messageType: this.getInteractionList()[0].getType()
+  function (): IADTextResponse {
+    return {
+      responseID: this.getResponseId(),
+      text: this.getInteractionList()[0].getText(),
+      time: new Date(this.getTime().getSeconds() * 1000
+        + this.getTime().getNanos() / 1e+6),
+      userID: this.getUserId(),
+      messageType: this.getInteractionList()[0].getType()
+    }
   }
-}
 
 export class ADConnection {
 
@@ -107,11 +107,11 @@ export class ADConnection {
   // noinspection JSUnusedGlobalSymbols
   public set hostURL(url: string) {
     if (url === this._hostURL) { return }
-    this._subscriptions.forEach((sub) => {sub.call.cancel()})
+    this._subscriptions.forEach((sub) => { sub.call.cancel() })
     this._hostURL = url.replace(/\/+$/, "")
     this._client = undefined
     this._subscriptions = this._subscriptions.map(
-        (sub) => this._subscribe(sub.request))
+      (sub) => this._subscribe(sub.request))
   }
 
   constructor(host: string) {
@@ -124,7 +124,7 @@ export class ADConnection {
   private _subscriptions: ConcreteSubscription[]
 
   private _makeInputInteraction = (args: IInputInteractionArguments)
-      : InputInteraction => {
+    : InputInteraction => {
     // tslint:disable-next-line:new-parens
     const input = new InputInteraction()
     input.setText(args.text || "")
@@ -141,13 +141,13 @@ export class ADConnection {
     input.setLoggedPageTitlesList(args.loggedPageTitles || []);
     input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
     input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
-    
+
     return input
   }
 
   // noinspection SpellCheckingInspection
   private _makeInteractionRequest = (args: IRequestArguments)
-      : InteractionRequest => {
+    : InteractionRequest => {
     const input = this._makeInputInteraction(args)
 
     // tslint:disable-next-line:new-parens
@@ -177,7 +177,7 @@ export class ADConnection {
     const request = this._makeInteractionRequest(args)
 
     const call = this.getClient().listResponses(
-        request, {})
+      request, {})
 
     call.on("data", args.onResponse)
 
@@ -195,14 +195,14 @@ export class ADConnection {
       console.debug("stream closed connection")
     }))
 
-    return new ConcreteSubscription({request: args, call, client: this})
+    return new ConcreteSubscription({ request: args, call, client: this })
   }
 
   private getClient = (): AgentDialogueClient => {
     if (this._client !== undefined) { return this._client }
     // noinspection SpellCheckingInspection
     return this._client = new AgentDialogueClient(
-        this._hostURL, null)
+      this._hostURL, null)
   }
 
 
@@ -218,17 +218,17 @@ export class ADConnection {
     if (userID === undefined) { return }
 
     const request = this._makeInteractionRequest(
-        { ...(options || {}), ...message, userID})
+      { ...(options || {}), ...message, userID })
     // console.log("request: ", request)
 
     // noinspection JSUnusedLocalSymbols
     this.getClient().getResponseFromAgents(
-        request, {},
-        (_err: grpcWeb.Error,
-         _response: InteractionResponse) => {
-          // console.log("echo", _response)
-          message.id = _response.asTextResponse().responseID
-        })
+      request, {},
+      (_err: grpcWeb.Error,
+        _response: InteractionResponse) => {
+        // console.log("echo", _response)
+        message.id = _response.asTextResponse().responseID
+      })
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -240,7 +240,59 @@ export class ADConnection {
 
   // noinspection JSUnusedGlobalSymbols
   public terminate = () => {
-    this._subscriptions.forEach((sub) => {sub.call.cancel()})
+    this._subscriptions.forEach((sub) => { sub.call.cancel() })
     this._subscriptions = []
+  }
+
+
+  // Method used in order to perform a generic call to the SearchAPI 
+  public searchApi = async (requestBody: Struct): Promise<{ [key: string]: JavaScriptValue; }> => {
+
+    // Return a new promise
+    return new Promise((resolve) => {
+
+      const input = new InputInteraction();
+
+      // Populate the InteractionRequest object
+      const request = new InteractionRequest()
+      request.setClientId(ClientId.WEB_SIMULATOR)
+      request.setInteraction(input)
+
+      // Specify that the request is for the SearchAPI agent
+      request.setChosenAgentsList(["SearchAPI"])
+      request.setAgentRequestParameters(requestBody);
+
+      var response: { [key: string]: JavaScriptValue; };
+      var callback = (_err: grpcWeb.Error,
+        _response: InteractionResponse,) => {
+
+        // If the response is successfull        
+        if (_err === null || _err.code === 0) {
+          if (_response !== undefined
+            && _response.getMessageStatus() === InteractionResponse.ClientMessageStatus.SUCCESSFUL
+            && _response.getInteractionList().length !== 0) {
+
+            // Retrieve the response object and resolve the promise
+            let responseObj = _response.getInteractionList()[0].getUnstructuredResult();
+            if (responseObj !== undefined) {
+              let responseStruct: { [key: string]: JavaScriptValue; } = responseObj.toJavaScript();
+              resolve(responseStruct);
+              return;
+            }
+          }
+        }
+
+        resolve(response);
+
+      }
+
+      // Perform the call 
+      this.getClient().getResponseFromAgents(
+        request, {},
+        callback)
+
+    });
+
+
   }
 }

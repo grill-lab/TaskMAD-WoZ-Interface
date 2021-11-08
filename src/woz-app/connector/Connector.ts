@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { JavaScriptValue, Struct } from "google-protobuf/google/protobuf/struct_pb"
 import {IButtonModel} from "../../woz/model/ButtonModel"
 import {IMessage} from "../../woz/model/MessageModel"
 import { SearchQueryModel } from "../../woz/model/SearchQueryModel"
@@ -46,6 +47,8 @@ export interface IWozConnector {
   // Method used in order to handle the inputform submit button and relative logging 
   // of selectedButtons and searchedQueries associated to that message
   onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>): void
+
+  onSearchAPIRequest(requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>
 }
 
 export class WozConnectors {

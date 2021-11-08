@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { JavaScriptValue, Struct } from "google-protobuf/google/protobuf/struct_pb"
 import * as React from "react"
 import { log } from "../../../common/Logger"
 import { convertDateToTimestamp } from "../../../common/util"
@@ -309,5 +310,9 @@ export class ADConnector implements IWozConnector {
     })
 
     log.debug("value:", "'" + inputValue + "'")
+  }
+
+  public onSearchAPIRequest = async (requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>  => {
+    return await this.connection.searchApi(requestBody);
   }
 }

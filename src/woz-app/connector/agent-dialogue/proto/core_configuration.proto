@@ -9,6 +9,7 @@ enum ServiceProvider {
     UNRECOGNISED = 0;
     DIALOGFLOW = 1;
     WIZARD = 2;
+    SEARCH = 3;
 }
 
 message CoreConfig {

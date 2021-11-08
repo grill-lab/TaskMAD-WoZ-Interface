@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import {API_ROOT_URL } from "../../common/config"
+import { Struct } from "google-protobuf/google/protobuf/struct_pb"
 import { wordsTrim } from "../../common/util"
+import { WozConnectors } from "../../woz-app/connector/Connector"
 import {ButtonModel, ButtonOrigin} from "../model/ButtonModel"
 import {ISearchRequest, ISearchResult, Searcher} from "./Searcher"
 
@@ -26,44 +27,58 @@ export class WikiSearcher extends Searcher {
     }
 
     protected performSearch = async (request: ISearchRequest): Promise<ISearchResult[] | undefined> => {
+        let results = [];
+
+
         if (request.data === undefined || request.query.trim().length === 0) {
             return undefined
         }
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({query: request.query.trim()})
-        };
+        let apiResponse:Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
+            "api_endpoint": "query_documents",
+            "request_body": {
+                "knowledge_source": "wikipedia",
+                "query": request.query.trim()
+            }
+        }));
 
-        let results = [];
-
-        try {
-            const response = await fetch(API_ROOT_URL + '/search/wiki', requestOptions);
-            const dataJson = await response.json();
-            if (dataJson !== undefined && dataJson['errors'].length === 0) {
-                const documents = dataJson['documents']
-                for (let document of documents) {
-                    results.push({
-                        buttonID: new ButtonModel({
-                            badges: {},
-                            color: "",
-                            id: document['id'],
-                            label: wordsTrim(document['contents'], 7),
-                            tooltip: document['contents'],
-                            transitions: {},
-                            buttonOrigin: ButtonOrigin.wikipedia,
-                            pageId: document['page_id'],
-                            paragraphId: document['hashed_id'],
-                            pageTitle: document['page_title'],
-                            sectionTitle: document['section_title']
+        // Check if the response returned something 
+        // and check if the response has the proper format 
+        if(apiResponse !== undefined && apiResponse.hasOwnProperty('errors') && apiResponse.hasOwnProperty('documents')){
+            let errors: string[] = Object.getOwnPropertyDescriptor(apiResponse, 'errors')?.value || [];
+            if(errors.length === 0){
+                // Get the documents
+                let documents:Object[] = Object.getOwnPropertyDescriptor(apiResponse, 'documents')?.value || [];
+                
+                if(documents.length !== 0){
+                    
+                    for(let i = 0; i < documents.length;i++){
+                        let document = documents[i];
+                        
+                        results.push({
+                            buttonID: new ButtonModel({
+                                badges: {},
+                                color: "",
+                                id: Object.getOwnPropertyDescriptor(document, 'id')?.value || "",
+                                label: wordsTrim(Object.getOwnPropertyDescriptor(document, 'contents')?.value || "", 7),
+                                tooltip: Object.getOwnPropertyDescriptor(document, 'contents')?.value || "",
+                                transitions: {},
+                                buttonOrigin: ButtonOrigin.seriousEats,
+                                pageId: Object.getOwnPropertyDescriptor(document, 'page_id')?.value || "",
+                                paragraphId: Object.getOwnPropertyDescriptor(document, 'hashed_id')?.value || "",
+                                pageTitle: Object.getOwnPropertyDescriptor(document, 'page_title')?.value || "",
+                                sectionTitle: Object.getOwnPropertyDescriptor(document, 'section_title')?.value || ""
+                            })
                         })
-                    })
+                    }
+                    
                 }
+
             }
 
-        } catch (error) {
-            console.log(error)
+            
+           
+            
         }
         return results;
     }

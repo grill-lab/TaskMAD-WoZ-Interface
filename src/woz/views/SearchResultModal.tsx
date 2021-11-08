@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
+import { Struct } from "google-protobuf/google/protobuf/struct_pb"
 import * as React from "react"
 import { Accordion, Button, Checkbox, Dimmer, Icon, Loader, Modal } from "semantic-ui-react"
-import { API_ROOT_URL } from "../../common/config"
 import { isStringImagePath, styles, wordsTrim } from "../../common/util"
+import { WozConnectors } from "../../woz-app/connector/Connector"
 import { ButtonModel, ButtonOrigin, IButtonModel } from "../model/ButtonModel"
 import css from "./SearchResultModal.module.css"
 
@@ -47,28 +48,28 @@ export class SearchResultModal
     public async componentDidMount() {
 
         // Perform a request and extract the page associated to the specific paragraph. 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                section_id: this.props.clickedButton.id,
-                index: this.props.clickedButton.buttonOrigin === ButtonOrigin.wikipedia ? 'wikipedia' : 'seriouseats'
-            })
-        };
-        try {
-            const response = await fetch(API_ROOT_URL + '/search/extract_page', requestOptions);
-            const dataJson = await response.json();
-            if (dataJson !== undefined && dataJson['errors'].length === 0) {
-                const documents = dataJson['documents']
+
+        let apiResponse:Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
+            "api_endpoint": "page",
+            "request_body": {
+                "knowledge_source": this.props.clickedButton.buttonOrigin === ButtonOrigin.wikipedia ? 'wikipedia' : 'seriouseats',
+                "section_id": this.props.clickedButton.id
+            }
+        }));
+        
+
+        // Check if the response returned something (and not a null object)
+        if(apiResponse !== undefined && apiResponse.hasOwnProperty('errors') && apiResponse.hasOwnProperty('documents')){
+            let errors: string[] = Object.getOwnPropertyDescriptor(apiResponse, 'errors')?.value || [];
+            if(errors.length === 0){
+                // Get the documents
+                let documents:Object[] = Object.getOwnPropertyDescriptor(apiResponse, 'documents')?.value || [];
                 this.setState({
-                    modalResults: documents['sections'],
+                    modalResults: Object.getOwnPropertyDescriptor(documents, 'sections')?.value || [],
                     modalLoading: false
                 })
-            }
 
-        } catch (error) {
-            console.log(error)
-        }
+            }}
     }
 
     // Function used purely to manage the opening and closing of the accordion tabs

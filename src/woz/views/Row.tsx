@@ -93,7 +93,7 @@ export class Row extends React.Component<IRowProperties, {}> {
           context={this.props.context}
           identifier={buttonID}
           onButtonClick={this.props.onButtonClick}
-          showEditButton={true}
+          showEditButton={false}
           onEditButtonClick={this.props.onEditButtonClick}
           selectedButtons={this.props.selectedButtons}/>
       }

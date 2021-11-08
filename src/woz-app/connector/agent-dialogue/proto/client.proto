@@ -100,6 +100,7 @@ message OutputInteraction {
     repeated string action = 3; // The requested interaction (e.g. "click on a result").
     InteractionType type = 4;
     repeated Result result = 5; // To allow search results and similar output
+    google.protobuf.Struct unstructured_result = 6; // General unstructured result used to handle responses in different format (e.g. json)
 }
 
 message Result {

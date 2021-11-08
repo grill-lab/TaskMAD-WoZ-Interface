@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Message } from "semantic-ui-react"
 import { isStringImagePath } from "../../common/util"
 import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 import { IDialogue } from "../model/DialogueModel"
@@ -64,7 +65,7 @@ export class ChatTranscript
         }else{
           // Return a message of type status 
           return <div className={css.row + " " + rowClass} key={index}>
-            <div className={css.cellStatusMessage + " " + cellClass}>{message.text}</div>
+            <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
           </div>
         }
 

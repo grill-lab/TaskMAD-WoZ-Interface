@@ -296,6 +296,11 @@ export class OutputInteraction extends jspb.Message {
   clearResultList(): OutputInteraction;
   addResult(value?: Result, index?: number): Result;
 
+  getUnstructuredResult(): google_protobuf_struct_pb.Struct | undefined;
+  setUnstructuredResult(value?: google_protobuf_struct_pb.Struct): OutputInteraction;
+  hasUnstructuredResult(): boolean;
+  clearUnstructuredResult(): OutputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): OutputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: OutputInteraction): OutputInteraction.AsObject;
@@ -311,6 +316,7 @@ export namespace OutputInteraction {
     actionList: Array<string>,
     type: InteractionType,
     resultList: Array<Result.AsObject>,
+    unstructuredResult?: google_protobuf_struct_pb.Struct.AsObject,
   }
 }
 

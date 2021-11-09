@@ -87,7 +87,7 @@ export class Search extends React.Component<ISearchProperties, ISearchState> {
             }}
             onKeyDown={(event: KeyboardEvent) => {
               if (isKeyPressed(event, "Enter")) {
-                this._setFilter(this.state.value, 0)
+                //this._setFilter(this.state.value, 0)
               } else if (isKeyPressed(event, "Escape")) {
                 this._setFilter("", 0)
               }

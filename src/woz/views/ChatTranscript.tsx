@@ -8,11 +8,21 @@ import css from "./ChatTranscript.module.css"
 export interface IChatTranscriptProperties {
   dialogue: IDialogue
   us: string
-  them: string[]
+  them: string[],
+  showWizardNotifications?: boolean
 }
 
 export class ChatTranscript
   extends React.Component<IChatTranscriptProperties, {}> {
+
+  public static defaultProps = {
+    showWizardNotifications: false
+  };
+
+  constructor(props: IChatTranscriptProperties) {
+    super(props);
+
+  }
 
   private messageList?: HTMLDivElement
 
@@ -62,11 +72,16 @@ export class ChatTranscript
           return <div className={css.row + " " + rowClass} key={index}>
             <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
           </div>
-        }else{
-          // Return a message of type status 
-          return <div className={css.row + " " + rowClass} key={index}>
-            <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User moved to") ? "blue" : message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
-          </div>
+        } else {
+
+          if (this.props.showWizardNotifications) {
+            // Return a message of type status 
+            return <div className={css.row + " " + rowClass} key={index}>
+              <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User moved to") ? "blue" : message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
+            </div>
+          }
+          return;
+
         }
 
 

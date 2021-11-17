@@ -16,7 +16,7 @@
 
 import * as React from "react"
 import { Popup } from "semantic-ui-react"
-import { isStringImagePath, objectMap, styles } from "../../common/util"
+import { isStringImagePath, isStringVideoPath, objectMap, styles } from "../../common/util"
 import {
   ButtonIdentifier,
   PLACEHOLDER,
@@ -109,24 +109,43 @@ export class Button extends React.Component<IButtonProperties, {}> {
         // 1) If the button has been selected (hashedId matches)
         // 2) Or if, only for the search buttons, any of the paragraphs in the page has been selected (in order to show to the wizard)
         //    that one of the paragraphs has been selected. 
-        if((this.props.selectedButtons?.filter(button => button.hashedId === buttonModel.hashedId))?.length === 1
-        || (buttonModel.buttonOrigin !== ButtonOrigin.excel 
-          && (this.props.selectedButtons?.filter(button => button.pageId === buttonModel.pageId))?.length !== 0)){
+        if ((this.props.selectedButtons?.filter(button => button.hashedId === buttonModel.hashedId))?.length === 1
+          || (buttonModel.buttonOrigin !== ButtonOrigin.excel
+            && (this.props.selectedButtons?.filter(button => button.pageId === buttonModel.pageId))?.length !== 0)) {
           selectedClass = css.buttonSelected
         }
         // We need to check whether the button is an image or a normal paragraph
         const button = !isStringImagePath(buttonModel.tooltip) ? (
 
-          <div className={styles(selectedClass ,css.button, css.selectable)}
-            onClick={() => {
-              this.props.onButtonClick(buttonModel)
-            }}
-            style={buttonStyle}>
-            {badges}
-            <Label model={buttonModel}>{buttonModel.label}</Label>
-            {editButton}
-          </div>
+
+          // If the button is not an image then it could be a video. If it's a video 
+          // the it should containe the <video_separator> tag to seperate the poster
+          // image from the actual video url 
+          isStringVideoPath(buttonModel.tooltip) ? (
+            // Show VIDEO 
+            <div className={styles(css.imageButton)}
+              onClick={() => {
+                this.props.onButtonClick(buttonModel)
+              }}>
+                <div className={styles(css.videoCover)}>
+                  <Icon name="play" className={css.videoIcon}></Icon>
+                </div>
+                <img src={buttonModel.tooltip.split("<video_separator>")[0]} className={styles(css.imageButtonSrc)} alt={buttonModel.label}></img>
+            </div>
+          ) : (
+            // Show TEXT
+            <div className={styles(selectedClass, css.button, css.selectable)}
+              onClick={() => {
+                this.props.onButtonClick(buttonModel)
+              }}
+              style={buttonStyle}>
+              {badges}
+              <Label model={buttonModel}>{buttonModel.label}</Label>
+              {editButton}
+            </div>
+          )
         ) : (
+          // SHOW IMAGE
           <div className={styles(css.imageButton)}
             onClick={() => {
               this.props.onButtonClick(buttonModel)
@@ -136,7 +155,8 @@ export class Button extends React.Component<IButtonProperties, {}> {
         )
 
         // Change the popup style based on the type of button (text or image)
-        return !isStringImagePath(buttonModel.tooltip) ? (
+        // More precisely, we do not show the tooltip if the button is an image or a video 
+        return !isStringImagePath(buttonModel.tooltip) && !isStringVideoPath(buttonModel.tooltip) ? (
           <Popup inverted={true} trigger={button} content={buttonModel.tooltip} />
         ) : (<Popup inverted={true} disabled trigger={button} content={buttonModel.tooltip} />)
     }

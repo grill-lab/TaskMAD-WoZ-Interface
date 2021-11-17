@@ -188,7 +188,7 @@
   font-size: 14px;
 }
 
-.imageButton:hover {
+.imageButton:hover  {
   border: 2px solid #000;
 }
 .imageButton:hover{
@@ -201,11 +201,28 @@
   object-fit: cover;
 }
 .imageButtonSrc:hover{
-  width: 96px;
-  height: 96px;
-}
-.imageButtonSrc:hover{
   width: 94px;
   height: 94px;
+}
+
+.videoCover{
+  background-color: rgba(0, 0, 0,0.5);
+  width: 99px;
+  height: 99px;
+  object-fit: cover;
+  position: absolute;
+}
+
+.videoCover:hover, .videoCover:hover + .imageButtonSrc {
+  width: 94px;
+  height: 94px;
+}
+
+.videoIcon{
+  color: white;
+  font-size: 30px !important;
+  position: relative;
+  top: 40%;
+  left: 5%;
 }
 

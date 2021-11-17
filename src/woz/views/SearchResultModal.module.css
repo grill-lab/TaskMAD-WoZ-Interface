@@ -19,5 +19,19 @@
 .highlightParagraph{
     background-color: yellow;
     border-radius: 5px;
+}
 
+.videoSearchModalContainer{
+    height: 300px !important;
+    width: 500px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.modalSearchVideo{
+    border-radius: 5px;
 }

@@ -17,8 +17,8 @@
 
 import { Struct } from "google-protobuf/google/protobuf/struct_pb"
 import * as React from "react"
-import { Accordion, Button, Checkbox, Dimmer, Icon, Loader, Modal } from "semantic-ui-react"
-import { isStringImagePath, styles, wordsTrim } from "../../common/util"
+import { Accordion, Button, Checkbox, Dimmer, Embed, Icon, Loader, Modal } from "semantic-ui-react"
+import { isStringImagePath, isStringVideoPath, styles, wordsTrim } from "../../common/util"
 import { WozConnectors } from "../../woz-app/connector/Connector"
 import { ButtonModel, ButtonOrigin, IButtonModel } from "../model/ButtonModel"
 import css from "./SearchResultModal.module.css"
@@ -49,27 +49,28 @@ export class SearchResultModal
 
         // Perform a request and extract the page associated to the specific paragraph. 
 
-        let apiResponse:Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
+        let apiResponse: Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
             "api_endpoint": "page",
             "request_body": {
                 "knowledge_source": this.props.clickedButton.buttonOrigin === ButtonOrigin.wikipedia ? 'wikipedia' : 'seriouseats',
                 "section_id": this.props.clickedButton.id
             }
         }));
-        
+
 
         // Check if the response returned something (and not a null object)
-        if(apiResponse !== undefined && apiResponse.hasOwnProperty('errors') && apiResponse.hasOwnProperty('documents')){
+        if (apiResponse !== undefined && apiResponse.hasOwnProperty('errors') && apiResponse.hasOwnProperty('documents')) {
             let errors: string[] = Object.getOwnPropertyDescriptor(apiResponse, 'errors')?.value || [];
-            if(errors.length === 0){
+            if (errors.length === 0) {
                 // Get the documents
-                let documents:Object[] = Object.getOwnPropertyDescriptor(apiResponse, 'documents')?.value || [];
+                let documents: Object[] = Object.getOwnPropertyDescriptor(apiResponse, 'documents')?.value || [];
                 this.setState({
                     modalResults: Object.getOwnPropertyDescriptor(documents, 'sections')?.value || [],
                     modalLoading: false
                 })
 
-            }}
+            }
+        }
     }
 
     // Function used purely to manage the opening and closing of the accordion tabs
@@ -135,11 +136,19 @@ export class SearchResultModal
                 var highlightParagraph = this.props.clickedButton.hashedId === paragraphButtonModel.hashedId ? css.highlightParagraph : '';
                 var paragraph_rendering = isStringImagePath(paragraph_content)
                     ? <img key={key} src={paragraph_content} className={css.modalImage} alt={paragraph_content}></img>
-                    : <Checkbox key={key} label={paragraph_content} onChange={() => {
-                        this.props.onParagraphClicked(paragraphButtonModel);
-                    }}
-                        defaultChecked={this.props.selectedButtons.filter(button => button.hashedId === paragraphButtonModel.hashedId).length === 1}
-                        className={styles(css.modalCheckBox, highlightParagraph)}></Checkbox>
+                    : isStringVideoPath(paragraph_content)
+                        ? (<div className={css.videoSearchModalContainer}><Embed placeholder={this.props.clickedButton.tooltip.split('<video_separator>')[0]}
+                            url={this.props.clickedButton.tooltip.split('<video_separator>')[1]}
+                            className={css.modalSearchVideo}
+                            autoplay={true}
+                            iframe={{
+                                allowFullScreen: true
+                            }}></Embed></div>)
+                        : (<Checkbox key={key} label={paragraph_content} onChange={() => {
+                            this.props.onParagraphClicked(paragraphButtonModel);
+                        }}
+                            defaultChecked={this.props.selectedButtons.filter(button => button.hashedId === paragraphButtonModel.hashedId).length === 1}
+                            className={styles(css.modalCheckBox, highlightParagraph)}></Checkbox>)
 
                 return (paragraph_rendering)
             })

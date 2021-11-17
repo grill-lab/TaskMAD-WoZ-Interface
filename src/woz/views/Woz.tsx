@@ -15,10 +15,11 @@
  */
 
 import * as React from "react"
-import { arrayMap, isStringImagePath } from "../../common/util"
+import { arrayMap, isStringImagePath, isStringVideoPath } from "../../common/util"
 import { ButtonOrigin, IButtonModel } from "../model/ButtonModel"
 import { IPersistentRowModel } from "../model/RowModel"
 import { IWozContext } from "../model/WozModel"
+import { MediaModal } from "./MediaModal"
 import { Row } from "./Row"
 import { Screen } from "./Screen"
 import { SearchResultModal } from "./SearchResultModal"
@@ -39,6 +40,7 @@ interface IWozProperties {
 interface IWozState {
   buttonToExpand?: IButtonModel
   buttonSearchResultModal?: IButtonModel
+  buttonMediaModal?: IButtonModel
 }
 
 export class Woz extends React.Component<IWozProperties, IWozState> {
@@ -70,7 +72,16 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
           buttonSearchResultModal: buttonModel
         });
       } else {
-        this.props.onButtonClick(buttonModel)
+        // In here we need to check whether the button is a media or not. If it's a video then we need to show 
+        // the video modal 
+        if (isStringVideoPath(buttonModel.tooltip)) {
+          this.setState({
+            buttonMediaModal: buttonModel
+          });
+        } else {
+          this.props.onButtonClick(buttonModel)
+        }
+
       }
 
     }
@@ -102,17 +113,37 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
 
   }
 
-  // Function used in order to show the modal on click. 
+  // Function used in order to show the search modal on click. 
   private _showSearchResultModal() {
     if (this.state.buttonSearchResultModal !== undefined) {
       return <SearchResultModal onCancel={() => {
         this.setState({
           buttonSearchResultModal: undefined
         })
-      } } clickedButton={this.state.buttonSearchResultModal} 
-      onParagraphClicked={this.props.onParagraphClicked} 
-      selectedButtons={this.props.selectedButtons} />
+      }} clickedButton={this.state.buttonSearchResultModal}
+        onParagraphClicked={this.props.onParagraphClicked}
+        selectedButtons={this.props.selectedButtons} />
     }
+    return;
+  }
+
+  // Function used in order to show the media modal on click
+  private _showMediaModal() {
+    if (this.state.buttonMediaModal !== undefined) {
+
+      return <MediaModal onCancel={() => {
+        this.setState({
+          buttonMediaModal: undefined
+        })
+      }} clickedButton={this.state.buttonMediaModal} onButtonClicked={(bm: IButtonModel)=>{
+        this.props.onButtonClick(bm);
+        this.setState({
+          buttonMediaModal: undefined
+        })
+      }}></MediaModal>
+
+    }
+
     return;
   }
 
@@ -145,6 +176,7 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
           {extraRows}
           {this._showSearchResultModal()}
           {this._templateEditor()}
+          {this._showMediaModal()}
           <Screen
             context={this.props.woz}
             identifier={this.props.selectedScreenID}

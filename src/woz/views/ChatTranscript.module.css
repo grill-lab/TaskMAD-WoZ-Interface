@@ -97,3 +97,14 @@ span.them {
   padding: 5px !important;
   text-align: center !important;
 }
+
+.videoCell{
+  width: 300px;
+  padding: 3px;
+  border-radius: 1em;
+  display: inline-block;
+}
+
+.videoCellEmbed{
+  border-radius: 1em;
+}

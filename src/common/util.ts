@@ -166,6 +166,11 @@ export const isStringImagePath = (image_path: string): boolean => {
   return false
 }
 
+// Method used to check if a string path is a custom video
+export const isStringVideoPath = (string_path: string): boolean => {
+  return string_path.includes('<video_separator>');
+}
+
 // Function used to generate an MD5 hashtring from text. 
 export const generateHashString = (text:string) => {
   return text !== undefined ? CryptoJS.MD5(CryptoJS.enc.Utf8.parse(text)).toString() : '';             

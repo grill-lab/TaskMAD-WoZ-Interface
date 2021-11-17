@@ -16,8 +16,8 @@
 
 import * as React from "react"
 import { log } from "../common/Logger"
-import { isStringImagePath, objectMap } from "../common/util"
-import { IButtonModel } from "../woz/model/ButtonModel"
+import { isStringImagePath, isStringVideoPath, objectMap } from "../common/util"
+import { ButtonModel, IButtonModel } from "../woz/model/ButtonModel"
 import { IWozDataSource } from "../woz/model/Model"
 import { SearchQueryModel } from "../woz/model/SearchQueryModel"
 import {
@@ -221,8 +221,8 @@ export default class App extends React.Component<{}, AppState> {
     // Keep track of when this button has been clicked
     buttonClicked.clickedTimestamp = new Date();
 
-    // If the button clicked is an image then we simply send the image
-    if(isStringImagePath(buttonClicked.tooltip)){
+    // If the button clicked is an image or a video then we simply send the message
+    if(isStringImagePath(buttonClicked.tooltip) || isStringVideoPath(buttonClicked.tooltip)){
       WozConnectors.shared.selectedConnector.onButtonClickLogger(buttonClicked, this.state.selected_buttons, this.state.searched_queries);
       this.onRevert();
       return

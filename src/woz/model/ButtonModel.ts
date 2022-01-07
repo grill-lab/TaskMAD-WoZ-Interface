@@ -22,6 +22,7 @@ export enum ButtonOrigin {
   excel,
   wikipedia,
   seriousEats,
+  stackExchangeCooking
 }
 
 
@@ -92,5 +93,16 @@ export class ButtonModel implements IButtonModel, ICachedFontSize {
   // Used to keep track of when a button has been clicked
   public clickedTimestamp?: Date
 
+  public buttonOriginEnumToString(): String{
+
+    if(this.buttonOrigin === ButtonOrigin.wikipedia)
+      return 'wikipedia'
+    if(this.buttonOrigin === ButtonOrigin.seriousEats)
+      return 'seriouseats'
+    if(this.buttonOrigin === ButtonOrigin.stackExchangeCooking)
+      return 'stack_exchange_cooking'
+    
+    return 'excel'
+  }
   
 }

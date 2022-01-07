@@ -42,6 +42,7 @@ import {LoadingMessage} from "./LoadingMessage"
 import {Woz} from "./Woz"
 import css from "./woz.module.css"
 import {WozHeader} from "./WozHeader"
+import { StackExchangeCookingSearcher } from "../controller/StackExchangeCookingSearcher"
 
 export type ButtonClickCallback = (buttonModel: IButtonModel) => void
 
@@ -128,7 +129,7 @@ export class WozCollection
   constructor(props: IWozCollectionProperties) {
     super(props)
     this.searcher = new MetaSearcher({
-      searchers: [new LunrSearcher(), new RegexSearcher(), new WikiSearcher(), new SeriousEatsSearcher()],
+      searchers: [new LunrSearcher(), new RegexSearcher(), new WikiSearcher(), new SeriousEatsSearcher(), new StackExchangeCookingSearcher()],
     })
     this.state = props.initialState
   }

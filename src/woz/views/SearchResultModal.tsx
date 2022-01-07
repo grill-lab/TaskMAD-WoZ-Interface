@@ -48,11 +48,10 @@ export class SearchResultModal
     public async componentDidMount() {
 
         // Perform a request and extract the page associated to the specific paragraph. 
-
         let apiResponse: Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
             "api_endpoint": "page",
             "request_body": {
-                "knowledge_source": this.props.clickedButton.buttonOrigin === ButtonOrigin.wikipedia ? 'wikipedia' : 'seriouseats',
+                "knowledge_source": this.props.clickedButton.buttonOriginEnumToString(),
                 "section_id": this.props.clickedButton.id
             }
         }));

@@ -67,6 +67,7 @@ export class WikiSearcher extends Searcher {
                                 pageId: Object.getOwnPropertyDescriptor(document, 'page_id')?.value || "",
                                 paragraphId: Object.getOwnPropertyDescriptor(document, 'hashed_id')?.value || "",
                                 pageTitle: Object.getOwnPropertyDescriptor(document, 'page_title')?.value || "",
+                                sourceUrl: Object.getOwnPropertyDescriptor(document, 'source_url')?.value || "",
                                 sectionTitle: Object.getOwnPropertyDescriptor(document, 'section_title')?.value || ""
                             })
                         })

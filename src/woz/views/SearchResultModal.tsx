@@ -20,7 +20,7 @@ import * as React from "react"
 import { Accordion, Button, Checkbox, Dimmer, Embed, Icon, Loader, Modal } from "semantic-ui-react"
 import { isStringImagePath, isStringVideoPath, styles, wordsTrim } from "../../common/util"
 import { WozConnectors } from "../../woz-app/connector/Connector"
-import { ButtonModel, ButtonOrigin, IButtonModel } from "../model/ButtonModel"
+import { ButtonModel, IButtonModel } from "../model/ButtonModel"
 import css from "./SearchResultModal.module.css"
 
 interface ISearchResultModalProperties {
@@ -125,6 +125,7 @@ export class SearchResultModal
                     pageId: this.props.clickedButton.pageId,
                     paragraphId: paragraph_id,
                     pageTitle: this.props.clickedButton.pageTitle,
+                    sourceUrl: this.props.clickedButton.sourceUrl,
                     sectionTitle: section_title
                 })
 
@@ -139,12 +140,13 @@ export class SearchResultModal
                         ? (<div className={css.videoSearchModalContainer}><Embed placeholder={this.props.clickedButton.tooltip.split('<video_separator>')[0]}
                             url={this.props.clickedButton.tooltip.split('<video_separator>')[1]}
                             className={css.modalSearchVideo}
-                            autoplay={true}
                             iframe={{
                                 allowFullScreen: true
                             }}></Embed></div>)
                         : (<Checkbox key={key} label={paragraph_content} onChange={() => {
                             this.props.onParagraphClicked(paragraphButtonModel);
+                            console.log(paragraphButtonModel);
+                            
                         }}
                             defaultChecked={this.props.selectedButtons.filter(button => button.hashedId === paragraphButtonModel.hashedId).length === 1}
                             className={styles(css.modalCheckBox, highlightParagraph)}></Checkbox>)

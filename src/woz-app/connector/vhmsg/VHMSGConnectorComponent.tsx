@@ -140,6 +140,7 @@ export class VHMSGConnectorComponent
             {message}
             <Button
                 primary
+                style={{backgroundColor: "var(--main-color)"}}
                 loading={config.animating}
                 disabled={config.animating}
                 onClick={() => {

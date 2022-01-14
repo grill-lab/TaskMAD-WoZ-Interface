@@ -51,6 +51,7 @@ export class Woz extends React.Component<IWozProperties, IWozState> {
   }
 
   private _handleClick = (buttonModel: IButtonModel) => {
+    console.log(buttonModel);
     let targetID = buttonModel.transitions[this.props.selectedScreenID]
     if (targetID === undefined) {
       targetID = buttonModel.transitions._any

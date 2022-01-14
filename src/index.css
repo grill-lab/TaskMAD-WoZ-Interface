@@ -47,5 +47,6 @@ html, body, #root {
 }
 
 :root {
-  --message-frame: rgb(156, 81, 0);
+  --main-color: rgba(130,95,255);
+  --message-frame: var(--main-color);
 }

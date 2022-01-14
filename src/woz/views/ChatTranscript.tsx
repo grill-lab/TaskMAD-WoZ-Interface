@@ -19,11 +19,6 @@ export class ChatTranscript
     showWizardNotifications: false
   };
 
-  constructor(props: IChatTranscriptProperties) {
-    super(props);
-
-  }
-
   private messageList?: HTMLDivElement
 
   private scrollToBottom() {
@@ -77,7 +72,6 @@ export class ChatTranscript
               <Embed placeholder={message.text.split('<video_separator>')[0]} 
               url={message.text.split('<video_separator>')[1]} 
               className={css.videoCellEmbed} 
-              autoplay={true}
               iframe={{
                 allowFullScreen: true
               }}></Embed>
@@ -98,7 +92,7 @@ export class ChatTranscript
                 <Message className={css.cellStatusMessage + " " + cellClass} color={message.text.startsWith("User moved to") ? "blue" : message.text.startsWith("User added") ? "green" : "red"}>{message.text}</Message>
               </div>
             }
-            return;
+            return <span key={index}></span>;
 
           }
 

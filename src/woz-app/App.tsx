@@ -17,7 +17,7 @@
 import * as React from "react"
 import { log } from "../common/Logger"
 import { isStringImagePath, isStringVideoPath, objectMap } from "../common/util"
-import { ButtonModel, IButtonModel } from "../woz/model/ButtonModel"
+import { IButtonModel } from "../woz/model/ButtonModel"
 import { IWozDataSource } from "../woz/model/Model"
 import { SearchQueryModel } from "../woz/model/SearchQueryModel"
 import {

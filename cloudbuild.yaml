@@ -1,0 +1,27 @@
+# File need for CD
+steps:
+# Build the chat image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}', '.']
+
+# Push the image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}']
+
+# deploy container image to GKE
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+  - run
+  - --filename=${_K8_FILE}
+  - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}
+  - --location=${_CLUSTER_LOCATION}
+  - --cluster=${_CLUSTER_NAME}
+
+substitutions:
+  _REPOSITORY: agent-dialogue-system 
+  _IMAGE_NAME: woz
+  _IMAGE_VERSION: latest
+  _K8_FILE: woz_deployment_nginx.yaml
+  _CLUSTER_LOCATION: europe-central2-b
+  _CLUSTER_NAME: woz-cluster
+    

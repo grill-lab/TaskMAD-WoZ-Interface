@@ -30,6 +30,7 @@ import {
   Message,
   Segment,
   Select,
+  Image
 } from "semantic-ui-react"
 import {Coalescer} from "../common/Coalescer"
 import {arrayMap} from "../common/util"
@@ -48,6 +49,7 @@ import css from "./App.module.css"
 import {IWozConnector, WozConnectors} from "./connector/Connector"
 import {DataSources} from "./DataSource"
 import {Store} from "./Store"
+import logo from "../resources/wizard-hat.png"
 
 enum ConfigurationEditorState {
   NONE = "NONE",
@@ -289,7 +291,7 @@ export class ConfigurationEditor
                   htmlFor="excel"
                   primary
                   // this and the Input style stretch the button
-                  style={{maxWidth: "90%", lineHeight: "normal"}}
+                  style={{maxWidth: "90%", lineHeight: "normal", backgroundColor: "var(--main-color)"}}
                   size="medium"
               ><Icon name="upload"/>Upload Excel spreadsheet</Button>
             </Input>
@@ -429,7 +431,9 @@ export class ConfigurationEditor
                   verticalAlign="middle">
               <Grid.Column style={{maxWidth: 650}}>
                 <Header as="h2" textAlign="center">
-                  <Icon name={"cog"}/> Configure WoZ
+                  <Image src={logo} size="huge"></Image>
+                  {/* <Icon name={"cog"}/>  */}
+                  Configure WoZ
                 </Header>
                 <Segment placeholder>
                   <Segment secondary className={css.connectorEditorSegment}
@@ -465,7 +469,7 @@ export class ConfigurationEditor
           </div>
           <div className={css.configEditorCopyright}>
             <div className={css.documentationLink}>
-              <a href={docPath}>WoZ Sheet Content Documentation</a>
+              <a style={{color: "var(--main-color)"}} href={docPath}>WoZ Sheet Content Documentation</a>
             </div>
             WoZ {version()}.
             Copyright © {year(2018)}. USC/ICT. All rights reserved.

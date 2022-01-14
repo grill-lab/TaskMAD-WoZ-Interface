@@ -24,4 +24,3 @@ substitutions:
   _K8_FILE: woz_deployment_nginx.yaml
   _CLUSTER_LOCATION: europe-central2-b
   _CLUSTER_NAME: woz-cluster
-    

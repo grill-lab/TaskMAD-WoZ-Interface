@@ -25,5 +25,5 @@ substitutions:
   _CLUSTER_LOCATION: europe-central2-b
   _CLUSTER_NAME: woz-cluster
 
-# Time out after 30 minutes
-timeout: 1800s
+# Time out after 60 minutes
+timeout: 3600s

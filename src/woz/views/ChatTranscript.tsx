@@ -16,7 +16,7 @@ export class ChatTranscript
   extends React.Component<IChatTranscriptProperties, {}> {
 
   public static defaultProps = {
-    showWizardNotifications: false
+    showWizardNotifications: true
   };
 
   private messageList?: HTMLDivElement

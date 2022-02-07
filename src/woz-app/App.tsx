@@ -32,6 +32,7 @@ import {
   dataSourceForURL,
   IConfigurationEditorCallback,
 } from "./ConfigurationEditor"
+import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
 import { DataSources } from "./DataSource"
 import { Store } from "./Store"
@@ -248,11 +249,13 @@ export default class App extends React.Component<{}, AppState> {
     }    
   }
 
-  // Sends a message to the backend.
-  private onMessageSent = () => {
+  // Sends a message to the backend. By default the interaction type is text and there are no actions
+  // associated
+  private onMessageSent = (interactionType?: InteractionType, actions?: Array<string>) => {
     const value = this.state.woz_message.trim()
-    if (value.length !== 0) {
-      WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries);
+    
+    if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
+      WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
     }
     this.onRevert();
   }

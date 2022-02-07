@@ -23,4 +23,33 @@
   display: grid;
   height: 100%;
   grid-template-rows: [row1-start] 35% [row1-end] 20% [third-line] 40% [last-line];
+  margin-top: 0 !important;
+}
+
+.wozInteractionColumns{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+.wozInteractionButton{
+  width: 100%;
+  margin-top: 10px !important;
+}
+.wozInteractionButtonNext{
+  background-color: var(--main-color) !important;
+  color: var(--main-text-color) !important;
+}
+
+.wozInteractionGrid{
+  margin: 0 auto !important;
+}
+
+.wozInteractionGridTwo{
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.wozInteractionColumnsTwo{
+  padding-top: 0 !important;
 }

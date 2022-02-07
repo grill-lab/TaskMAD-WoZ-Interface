@@ -35,6 +35,7 @@ export interface IMessage {
 
   // Specific type of this message
   messageType?: InteractionType
+  actions?: Array<string>
   
 }
 
@@ -106,8 +107,10 @@ export class Message implements IMessage {
   public readonly loggedSectionTitles?: Array<string>
   // Attribute used in order to log the timestamp of paragraph clicked while composing this message
   public readonly loggedParagraphTimestamp?: Array<number>
-
+  // Type of the specific sent message
   public readonly messageType?: InteractionType
+  // Actions to execute in the case InteractionType.ACTION
+  public readonly actions?: Array<string>
 
 
 }

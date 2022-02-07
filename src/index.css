@@ -49,4 +49,5 @@ html, body, #root {
 :root {
   --main-color: rgba(130,95,255);
   --message-frame: var(--main-color);
+  --main-text-color: white;
 }

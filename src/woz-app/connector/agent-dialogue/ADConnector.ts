@@ -26,6 +26,7 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
+import { InteractionType } from "./generated/client_pb"
 
 export interface IADConnectorModel {
   readonly conversationId?: string
@@ -245,7 +246,8 @@ export class ADConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>) => {
+    
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
       return
@@ -254,6 +256,8 @@ export class ADConnector implements IWozConnector {
     const message = new Message({
       text: inputValue,
       userID: this.model.userId,
+      messageType: interactionType,
+      actions: actions,
       loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
         return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
       }).filter((el) => {

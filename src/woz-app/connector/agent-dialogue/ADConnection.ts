@@ -14,7 +14,8 @@ import { AgentDialogueClient } from "./generated/ServiceServiceClientPb"
 export interface IInputInteractionArguments {
   languageCode?: string
   text?: string
-  type?: InteractionType,
+  messageType?: InteractionType,
+  actions?: Array<string>
   loggedSearchQueries?: Array<string>
   loggedSearchQueriesTimestamp?: Array<number>
   loggedPageIds?: Array<string>
@@ -125,11 +126,14 @@ export class ADConnection {
 
   private _makeInputInteraction = (args: IInputInteractionArguments)
     : InputInteraction => {
+
+    
     // tslint:disable-next-line:new-parens
     const input = new InputInteraction()
     input.setText(args.text || "")
     input.setLanguageCode(args.languageCode || "en-US")
-    input.setType(args.type || InteractionType.TEXT)
+    input.setType(args.messageType || InteractionType.TEXT)
+    input.setActionList(args.actions || []);
 
     // Set the loggin attributes
     input.setLoggedSearchQueriesList(args.loggedSearchQueries || []);
@@ -219,8 +223,6 @@ export class ADConnection {
 
     const request = this._makeInteractionRequest(
       { ...(options || {}), ...message, userID })
-    // console.log("request: ", request)
-
     // noinspection JSUnusedLocalSymbols
     this.getClient().getResponseFromAgents(
       request, {},

@@ -21,6 +21,7 @@ import {IButtonModel} from "../../../woz/model/ButtonModel"
 import {IMessage, Message, ourUserID} from "../../../woz/model/MessageModel"
 import { SearchQueryModel } from "../../../woz/model/SearchQueryModel"
 import {StringMap} from "../../App"
+import { InteractionType } from "../agent-dialogue/generated/client_pb"
 import {IWozConnector} from "../Connector"
 import {ConsoleConnectorComponent} from "./ConsoleConnectorComponent"
 
@@ -77,10 +78,14 @@ export class ConsoleConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[]) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>) => {
     console.log(selectedButtons);
     console.log(searchedQueries);
     console.log(inputValue);
+    console.log(interactionType);
+    console.log(actions);
+    
+    
   }
 
   public onSearchAPIRequest = async (requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }> => {

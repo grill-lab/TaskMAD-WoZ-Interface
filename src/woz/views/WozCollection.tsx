@@ -43,6 +43,7 @@ import {Woz} from "./Woz"
 import css from "./woz.module.css"
 import {WozHeader} from "./WozHeader"
 import { StackExchangeCookingSearcher } from "../controller/StackExchangeCookingSearcher"
+import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 
 export type ButtonClickCallback = (buttonModel: IButtonModel) => void
 
@@ -56,7 +57,7 @@ export interface IWozCollectionProperties {
   onUnmount?: (state: WozCollectionState) => void
   onError?: () => void
   selectedButtons: Array<IButtonModel>
-  onCommit: () => void
+  onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage:string

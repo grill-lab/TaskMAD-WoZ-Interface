@@ -24,6 +24,7 @@ import {
 import css from "./App.module.css"
 import {WozConnectors} from "./connector/Connector"
 import {ChatInput} from "../woz/views/ChatInput"
+import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 
 export interface IWoZWithCharCollectionProperties
     extends IWozCollectionProperties {
@@ -36,7 +37,7 @@ interface IWoZWithCharCollectionState {
 
 interface IChatComponentProperties {
   dialogue?: Dialogue
-  onCommit: () => void
+  onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage:string

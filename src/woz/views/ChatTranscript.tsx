@@ -79,13 +79,14 @@ export class ChatTranscript
           </div>
 
         } else {
-          // Here we need to check if a message is a status message or an actual text message  
-          if (message.messageType !== InteractionType.STATUS) {
+          // Here we need to check if a message is text
+          if (message.messageType === InteractionType.TEXT) {
             return <div className={css.row + " " + rowClass} key={index}>
               <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
             </div>
-          } else {
-
+          } 
+          // Or if the message is of type status
+          else if (message.messageType === InteractionType.STATUS){
             if (this.props.showWizardNotifications) {
               // Return a message of type status 
               return <div className={css.row + " " + rowClass} key={index}>
@@ -93,7 +94,9 @@ export class ChatTranscript
               </div>
             }
             return <span key={index}></span>;
-
+          }
+          else{
+            return <span key={index}></span>;
           }
 
         }

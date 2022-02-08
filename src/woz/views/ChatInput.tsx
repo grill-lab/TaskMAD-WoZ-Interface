@@ -31,7 +31,7 @@ export class ChatInput
         name="send" inverted circular link
         className={css.enterButton}
         disabled={this.props.wozMessage.trim().length === 0}
-        onClick={this.props.onCommit} />} 
+        onClick={()=> this.props.onCommit(InteractionType.TEXT, [])} />} 
       displayInteractionButtons={true}      />
     </div>
   }

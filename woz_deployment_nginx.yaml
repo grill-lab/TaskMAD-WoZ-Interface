@@ -12,7 +12,7 @@ spec:
     app: woz-app
   type: NodePort
   # type: LoadBalancer
-  # loadBalancerIP: "34.111.82.65"
+  # loadBalancerIP: "34.111.50.148"
 ---
 apiVersion: apps/v1
 kind: Deployment

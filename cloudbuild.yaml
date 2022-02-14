@@ -16,12 +16,18 @@ steps:
   - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}
   - --location=${_CLUSTER_LOCATION}
   - --cluster=${_CLUSTER_NAME}
+  - run
+  - --filename=${_ROOT_FOLDER}/${_INGRESS_FILE}
+  - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}
+  - --location=${_CLUSTER_LOCATION}
+  - --cluster=${_CLUSTER_NAME}
 
 substitutions:
   _REPOSITORY: agent-dialogue-system 
   _IMAGE_NAME: woz
   _IMAGE_VERSION: latest
   _K8_FILE: woz_deployment_nginx.yaml
+  _INGRESS_FILE: managed_cert_ingress.yaml
   _CLUSTER_LOCATION: europe-central2-b
   _CLUSTER_NAME: woz-cluster
 

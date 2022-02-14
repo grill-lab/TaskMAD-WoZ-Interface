@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: managed-cert-ingress
+  name: woz-managed-cert-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: woz-ip
     # Enable this flag if we want to use the self-managed certificate
-    # networking.gke.io/managed-certificates: managed-cert
+    # networking.gke.io/managed-certificates: woz-managed-cert
     kubernetes.io/ingress.class: "gce"
 spec:
   defaultBackend:

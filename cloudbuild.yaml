@@ -32,7 +32,7 @@ substitutions:
   _IMAGE_NAME: woz
   _IMAGE_VERSION: latest
   _K8_FILE: woz_deployment_nginx.yaml
-  _INGRESS_FILE: managed_cert_ingress.yaml
+  _INGRESS_FILE: woz_managed_cert_ingress.yaml
   _CLUSTER_LOCATION: europe-central2-b
   _CLUSTER_NAME: woz-cluster
 

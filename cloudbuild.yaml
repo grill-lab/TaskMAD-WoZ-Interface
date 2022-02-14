@@ -9,18 +9,23 @@ steps:
   args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}']
 
 # deploy container image to GKE
-- name: "gcr.io/cloud-builders/gke-deploy"
+- name: 'gcr.io/cloud-builders/kubectl'
   args:
-  - run
-  - --filename=${_K8_FILE}
-  - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}
-  - --location=${_CLUSTER_LOCATION}
-  - --cluster=${_CLUSTER_NAME}
-  - run
-  - --filename=${_ROOT_FOLDER}/${_INGRESS_FILE}
-  - --image=europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}
-  - --location=${_CLUSTER_LOCATION}
-  - --cluster=${_CLUSTER_NAME}
+  - apply
+  - -f
+  - ${_K8_FILE}
+  env:
+  - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
+  - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - apply
+  - -f
+  - ${_INGRESS_FILE}
+  env:
+  - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
+  - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
 
 substitutions:
   _REPOSITORY: agent-dialogue-system 

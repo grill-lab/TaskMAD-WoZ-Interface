@@ -49,7 +49,7 @@ export interface IWozConnector {
   // of selectedButtons and searchedQueries associated to that message
   onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>, interactionType?: InteractionType, actions?: Array<string>): void
 
-  onSearchAPIRequest(requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>
+  onAgentInteractionApiRequest(requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>
 }
 
 export class WozConnectors {

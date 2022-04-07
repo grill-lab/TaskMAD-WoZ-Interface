@@ -162,8 +162,9 @@ export class VHMSGConnector implements IWozConnector {
     console.log(actions);
   }
 
-  public onSearchAPIRequest =  async (requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>  => {
+  public onAgentInteractionApiRequest =  async (requestBody: Struct, agentName: string): Promise<{[key: string]: JavaScriptValue; }>  => {
     console.log(requestBody);
+    console.log(agentName);
     return JSON.parse("");
   }
 }

@@ -27,6 +27,7 @@ import { TemplateEditor } from "./TemplateEditor"
 import css from "./woz.module.css"
 import { ButtonClickCallback } from "./WozCollection"
 
+
 interface IWozProperties {
   onButtonClick: ButtonClickCallback
   onScreenChange: (screenID: string) => void

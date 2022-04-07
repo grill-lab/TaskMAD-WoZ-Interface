@@ -316,7 +316,7 @@ export class ADConnector implements IWozConnector {
     log.debug("value:", "'" + inputValue + "'")
   }
 
-  public onSearchAPIRequest = async (requestBody: Struct): Promise<{[key: string]: JavaScriptValue; }>  => {
-    return await this.connection.searchApi(requestBody);
+  public onAgentInteractionApiRequest = async (requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>  => {
+    return await this.connection.AgentInteractionApi(requestBody, agentName);
   }
 }

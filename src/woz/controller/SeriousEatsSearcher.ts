@@ -33,14 +33,14 @@ export class SeriousEatsSearcher extends Searcher {
             return undefined
         }
 
-        // Perform a call to the api 
-        let apiResponse:Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
+        let apiResponse:Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
+            "service_name":"search_api",
             "api_endpoint": "query_documents",
             "request_body": {
                 "knowledge_source": "seriouseats",
                 "query": request.query.trim()
             }
-        }));
+        }), "SearchAPI");
 
         // Check if the response returned something 
         // and check if the response has the proper format 

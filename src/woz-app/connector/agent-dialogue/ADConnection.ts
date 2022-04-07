@@ -248,7 +248,7 @@ export class ADConnection {
 
 
   // Method used in order to perform a generic call to the SearchAPI 
-  public searchApi = async (requestBody: Struct): Promise<{ [key: string]: JavaScriptValue; }> => {
+  public AgentInteractionApi = async (requestBody: Struct, agent: string): Promise<{ [key: string]: JavaScriptValue; }> => {
 
     // Return a new promise
     return new Promise((resolve) => {
@@ -261,7 +261,7 @@ export class ADConnection {
       request.setInteraction(input)
 
       // Specify that the request is for the SearchAPI agent
-      request.setChosenAgentsList(["SearchAPI"])
+      request.setChosenAgentsList([agent])
       request.setAgentRequestParameters(requestBody);
 
       var response: { [key: string]: JavaScriptValue; };

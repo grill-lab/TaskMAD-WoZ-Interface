@@ -48,13 +48,14 @@ export class SearchResultModal
     public async componentDidMount() {
 
         // Perform a request and extract the page associated to the specific paragraph. 
-        let apiResponse: Object = await WozConnectors.shared.selectedConnector.onSearchAPIRequest(Struct.fromJavaScript({
+        let apiResponse: Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
+            "service_name":"search_api",
             "api_endpoint": "page",
             "request_body": {
                 "knowledge_source": this.props.clickedButton.buttonOriginEnumToString(),
                 "section_id": this.props.clickedButton.id
             }
-        }));
+        }), "SearchAPI");
 
 
         // Check if the response returned something (and not a null object)

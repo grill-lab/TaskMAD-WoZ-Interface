@@ -16,7 +16,7 @@
 
 import * as React from "react"
 import { log } from "../common/Logger"
-import { isStringImagePath, isStringVideoPath, objectMap } from "../common/util"
+import { generateHashString, isStringImagePath, isStringVideoPath, objectMap } from "../common/util"
 import { IButtonModel } from "../woz/model/ButtonModel"
 import { IWozDataSource } from "../woz/model/Model"
 import { SearchQueryModel } from "../woz/model/SearchQueryModel"
@@ -64,6 +64,8 @@ type AppState =
     woz_message: string
     // Array used to keep track of anything the wizard typed in the search bar. 
     searched_queries: Array<SearchQueryModel>
+    selected_api_paragraphs: Map<string, Map<string, string | string[]>>
+    api_query_rewritten: Map<string, Map<string, string>>
   }
 
 
@@ -79,6 +81,8 @@ export default class App extends React.Component<{}, AppState> {
       selected_buttons: [],
       woz_message: "",
       searched_queries: [],
+      selected_api_paragraphs: new Map(),
+      api_query_rewritten: new Map()
     }
 
     localStorage.clear()
@@ -140,14 +144,18 @@ export default class App extends React.Component<{}, AppState> {
           }),
         selected_buttons: this.state.selected_buttons,
         woz_message: this.state.woz_message,
-        searched_queries: this.state.searched_queries
+        searched_queries: this.state.searched_queries,
+        selected_api_paragraphs: this.state.selected_api_paragraphs,
+        api_query_rewritten: this.state.api_query_rewritten
       }
     } else {
       return {
         kind: CONFIG,
         selected_buttons: this.state.selected_buttons,
         woz_message: this.state.woz_message,
-        searched_queries: this.state.searched_queries
+        searched_queries: this.state.searched_queries,
+        selected_api_paragraphs: this.state.selected_api_paragraphs,
+        api_query_rewritten: this.state.api_query_rewritten
       }
     }
   }
@@ -223,7 +231,7 @@ export default class App extends React.Component<{}, AppState> {
     buttonClicked.clickedTimestamp = new Date();
 
     // If the button clicked is an image or a video then we simply send the message
-    if(isStringImagePath(buttonClicked.tooltip) || isStringVideoPath(buttonClicked.tooltip)){
+    if (isStringImagePath(buttonClicked.tooltip) || isStringVideoPath(buttonClicked.tooltip)) {
       WozConnectors.shared.selectedConnector.onButtonClickLogger(buttonClicked, this.state.selected_buttons, this.state.searched_queries);
       this.onRevert();
       return
@@ -246,14 +254,77 @@ export default class App extends React.Component<{}, AppState> {
             woz_message: this.state.woz_message + ' ' + buttonClicked.tooltip
           });
       }
-    }    
+    }
+  }
+
+  private onSearchResultClick = (
+    issued_query?: string,
+    passage_id?: string,
+    passage_text?: string,
+    passageSize?: string) => {
+
+    if (issued_query !== undefined && issued_query.length !== 0 &&
+      passage_id !== undefined && passage_id.length !== 0 &&
+      passage_text !== undefined && passage_text.length !== 0 &&
+      passageSize !== undefined && passageSize.length !== 0) {
+
+      var map_key: string = `${issued_query.toLowerCase().replace(" ", "_")}_${passageSize}`;
+      if (this.state.selected_api_paragraphs.has(map_key)) {
+        if (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id')?.includes(passage_id)) {
+          this.state.selected_api_paragraphs.get(map_key)?.set('passage_id',
+            (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as []).filter(id => {
+              return id !== passage_id;
+            }))
+
+        } else {
+          this.state.selected_api_paragraphs.get(map_key)?.set('passage_id', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as [], passage_id])
+        }
+
+      } else {
+        var tempMap = new Map();
+        tempMap.set('query', issued_query);
+        tempMap.set("passage_id", [passage_id])
+        this.state.selected_api_paragraphs.set(map_key, tempMap);
+
+      }
+
+      this.setState(
+        {
+          woz_message: `${this.state.woz_message} ${passage_text}`,
+          selected_api_paragraphs: this.state.selected_api_paragraphs
+        });
+    }
+    console.log(this.state.selected_api_paragraphs);
+  }
+
+  private onQueryRewrite = (query: string, context: string, rewritten_query: string) => {
+    if (query !== undefined && query.length !== 0 &&
+      context !== undefined && context.length !== 0 &&
+      rewritten_query !== undefined && rewritten_query.length !== 0) {
+      var unique_id = generateHashString(`${query}${context}${rewritten_query}`);
+      if (!this.state.api_query_rewritten.has(unique_id)) {
+        var tempMap = new Map();
+        tempMap.set("query", query);
+        tempMap.set("context", context);
+        tempMap.set("rewritten_query", rewritten_query);
+
+        this.state.api_query_rewritten.set(unique_id, tempMap);
+
+        this.setState({
+          api_query_rewritten: this.state.api_query_rewritten
+        })
+      }
+    }
+
+    console.log(this.state.api_query_rewritten);
+
   }
 
   // Sends a message to the backend. By default the interaction type is text and there are no actions
   // associated
   private onMessageSent = (interactionType?: InteractionType, actions?: Array<string>) => {
     const value = this.state.woz_message.trim()
-    
+
     if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
       WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
     }
@@ -263,15 +334,15 @@ export default class App extends React.Component<{}, AppState> {
 
   // Simply resets the state
   private onRevert = () => {
-    this.setState({woz_message: "", selected_buttons: [], searched_queries: []})
+    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [] })
   }
 
   // Function used to detect when text in the input box changes
   private onInputBoxChange = (text: string) => {
-    if(text.trim().length === 0){
-      this.setState({selected_buttons: []})
+    if (text.trim().length === 0) {
+      this.setState({ selected_buttons: [] })
     }
-    this.setState({woz_message: text})
+    this.setState({ woz_message: text })
   }
 
   // Function used in order to keep track of the search queries
@@ -282,9 +353,9 @@ export default class App extends React.Component<{}, AppState> {
       searchedQuery: query.trim(),
       searchTimestamp: new Date()
     });
-    if(query !== undefined 
-      && query.trim() !== '' 
-      && this.state.searched_queries.findIndex(query => query.searchedQuery === searchQuery.searchedQuery) === -1){
+    if (query !== undefined
+      && query.trim() !== ''
+      && this.state.searched_queries.findIndex(query => query.searchedQuery === searchQuery.searchedQuery) === -1) {
       this.state.searched_queries.push(searchQuery);
     }
 
@@ -322,6 +393,8 @@ export default class App extends React.Component<{}, AppState> {
             wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
             trackSearchedQueries={this.trackSearchedQueries}
+            onSearchResultClick={this.onSearchResultClick}
+            onQueryRewrite={this.onQueryRewrite}
           />
         } else {
           content = <WozCollection
@@ -336,9 +409,11 @@ export default class App extends React.Component<{}, AppState> {
             onCommit={this.onMessageSent}
             onChange={this.onInputBoxChange}
             onRevert={this.onRevert}
-            wozMessage={this.state.woz_message} 
+            wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
-            trackSearchedQueries={this.trackSearchedQueries} />
+            trackSearchedQueries={this.trackSearchedQueries}
+            onSearchResultClick={this.onSearchResultClick}
+            onQueryRewrite={this.onQueryRewrite} />
         }
         break
     }

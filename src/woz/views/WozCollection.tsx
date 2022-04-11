@@ -15,13 +15,13 @@
  */
 
 import * as React from "react"
-import {Button} from "semantic-ui-react"
-import {log} from "../../common/Logger"
-import {arrayMap, objectMap} from "../../common/util"
-import {LunrSearcher} from "../controller/LunrSearcher"
-import {MetaSearcher} from "../controller/MetaSearcher"
-import {RegexSearcher} from "../controller/RegexSearcher"
-import {ISearcher, ISearchResult, ISearchResults} from "../controller/Searcher"
+import { Button } from "semantic-ui-react"
+import { log } from "../../common/Logger"
+import { arrayMap, objectMap } from "../../common/util"
+import { LunrSearcher } from "../controller/LunrSearcher"
+import { MetaSearcher } from "../controller/MetaSearcher"
+import { RegexSearcher } from "../controller/RegexSearcher"
+import { ISearcher, ISearchResult, ISearchResults } from "../controller/Searcher"
 import { WikiSearcher } from "../controller/WikiSearcher"
 import { SeriousEatsSearcher } from "../controller/SeriousEatsSearcher";
 import {
@@ -29,21 +29,23 @@ import {
   ButtonPlaceholder,
   RowIdentifier, UndefinedRow,
 } from "../model/ButtonIdentifier"
-import {IButtonModel} from "../model/ButtonModel"
+import { IButtonModel } from "../model/ButtonModel"
 import {
   IWozCollectionModel,
   IWozDataSource,
   IWozLoadOptions,
 } from "../model/Model"
-import {RowModel} from "../model/RowModel"
-import {IWozContent, IWozContext, WozModel} from "../model/WozModel"
-import {ErrorMessage} from "./ErrorMessage"
-import {LoadingMessage} from "./LoadingMessage"
-import {Woz} from "./Woz"
+import { RowModel } from "../model/RowModel"
+import { IWozContent, IWozContext, WozModel } from "../model/WozModel"
+import { ErrorMessage } from "./ErrorMessage"
+import { LoadingMessage } from "./LoadingMessage"
+import { Woz } from "./Woz"
 import css from "./woz.module.css"
-import {WozHeader} from "./WozHeader"
+import { WozHeader } from "./WozHeader"
 import { StackExchangeCookingSearcher } from "../controller/StackExchangeCookingSearcher"
 import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { WozHeaderTabs } from "./WozHeaderTabs"
+import { Dialogue } from "../model/DialogueModel"
 
 export type ButtonClickCallback = (buttonModel: IButtonModel) => void
 
@@ -60,9 +62,16 @@ export interface IWozCollectionProperties {
   onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
   onChange: (text: string) => void
   onRevert: () => void
-  wozMessage:string
+  wozMessage: string
   onParagraphClicked: (buttnClicked: IButtonModel) => void
-  trackSearchedQueries: (query: string) => void 
+  trackSearchedQueries: (query: string) => void,
+  onSearchResultClick: (
+    issued_query?: string,
+    passage_id?: string,
+    passage_text?: string,
+    passageSize?: string) => void,
+  onQueryRewrite: (query: string, context: string, rewritten_query: string) => void,
+  dialogue?: Dialogue
 }
 
 interface ILoadingCollection {
@@ -100,32 +109,32 @@ type WOZ_SUCCEEDED = "woz succeeded"
 const WOZ_SUCCEEDED: WOZ_SUCCEEDED = "woz succeeded"
 
 export type WozCollectionState = CollectionLoading | CollectionLoadFailure
-    | CollectionLoadSuccess | WozLoadFailure | WozLoadSuccess
+  | CollectionLoadSuccess | WozLoadFailure | WozLoadSuccess
 
 // noinspection JSUnusedGlobalSymbols
 export const collectionLoading = (args: ILoadingCollection): CollectionLoading => {
-  return {kind: COLLECTION_IS_LOADING, ...args}
+  return { kind: COLLECTION_IS_LOADING, ...args }
 }
 
 // noinspection JSUnusedGlobalSymbols
 export const wozLoading = (args: ILoadedCollection): CollectionLoadSuccess => {
-  return {kind: WOZ_IS_LOADING, ...args}
+  return { kind: WOZ_IS_LOADING, ...args }
 }
 
 type CollectionLoading = { kind: COLLECTION_IS_LOADING }
-    & ILoadingCollection
+  & ILoadingCollection
 type CollectionLoadFailure = { kind: COLLECTION_FAILED }
-    & IError
+  & IError
 type CollectionLoadSuccess = { kind: WOZ_IS_LOADING }
-    & ILoadedCollection
+  & ILoadedCollection
 type WozLoadFailure = { kind: WOZ_FAILED }
-    & ILoadedCollection & IError
+  & ILoadedCollection & IError
 type WozLoadSuccess = { kind: WOZ_SUCCEEDED }
-    & ILoadedCollection & ILoadedWoz
+  & ILoadedCollection & ILoadedWoz
 
 // noinspection JSUnusedGlobalSymbols
 export class WozCollection
-    extends React.Component<IWozCollectionProperties, WozCollectionState> {
+  extends React.Component<IWozCollectionProperties, WozCollectionState> {
 
   constructor(props: IWozCollectionProperties) {
     super(props)
@@ -133,6 +142,7 @@ export class WozCollection
       searchers: [new LunrSearcher(), new RegexSearcher(), new WikiSearcher(), new SeriousEatsSearcher(), new StackExchangeCookingSearcher()],
     })
     this.state = props.initialState
+
   }
 
   private readonly searcher: ISearcher
@@ -141,26 +151,26 @@ export class WozCollection
 
   private get _searchResultCount(): number {
     return this.props.resultCount === undefined
-           ? 8 : this.props.resultCount
+      ? 8 : this.props.resultCount
   }
 
   private _searchCallback = (results?: ISearchResults) => {
     if (!this._isMounted || results === undefined || this.state.kind
-        !== WOZ_SUCCEEDED) { return }
+      !== WOZ_SUCCEEDED) { return }
 
     this.setState((prev) => {
       if (prev.kind === WOZ_SUCCEEDED) {
-        const {searchResults, ...other} = prev
+        const { searchResults, ...other } = prev
         const newResults = searchResults === undefined ? [] : searchResults
         newResults.push(results)
-        return {...other, searchResults: newResults}
+        return { ...other, searchResults: newResults }
       } else { return null }
     })
   }
 
   private _filterButtons = (value: ISearchResults): ButtonIdentifier[] => {
     let buttonIDs = arrayMap(value.results,
-        (value1: ISearchResult) => value1.buttonID)
+      (value1: ISearchResult) => value1.buttonID)
 
     if (buttonIDs.length > this._searchResultCount) {
       buttonIDs = buttonIDs.slice(0, this._searchResultCount)
@@ -179,8 +189,8 @@ export class WozCollection
     this.setState((prev) => {
       // @ts-ignore
       // noinspection JSUnusedLocalSymbols
-      const {searchResults, ...other} = prev
-      return {...other, searchResults: undefined}
+      const { searchResults, ...other } = prev
+      return { ...other, searchResults: undefined }
     })
 
     this.searcher.search({
@@ -192,57 +202,57 @@ export class WozCollection
   }
 
   private _loadWozCollection = (
-      dataSource: IWozDataSource, options: IWozLoadOptions) => {
+    dataSource: IWozDataSource, options: IWozLoadOptions) => {
     dataSource.loadWozCollection(options)
-              .then((wozCollection: IWozCollectionModel) => {
-                const currentWoz = Object.values(wozCollection.wozs)[0]
-                if (currentWoz === undefined) {
-                  throw new Error("No Wozs in the Woz collection.")
-                }
-                this._loadWoz(wozCollection, currentWoz)
-              })
-              .catch((error) => this.setState({
-                error, kind: COLLECTION_FAILED,
-              }))
+      .then((wozCollection: IWozCollectionModel) => {
+        const currentWoz = Object.values(wozCollection.wozs)[0]
+        if (currentWoz === undefined) {
+          throw new Error("No Wozs in the Woz collection.")
+        }
+        this._loadWoz(wozCollection, currentWoz)
+      })
+      .catch((error) => this.setState({
+        error, kind: COLLECTION_FAILED,
+      }))
   }
 
   private _loadWoz = (
-      wozCollection: IWozCollectionModel,
-      currentWoz: WozModel) => {
+    wozCollection: IWozCollectionModel,
+    currentWoz: WozModel) => {
 
-    this.setState(wozLoading({currentWoz, wozCollection}))
+    this.setState(wozLoading({ currentWoz, wozCollection }))
 
     log.debug("will load " + currentWoz.id)
 
     currentWoz.loadContent()
-              .then((data: IWozContent) => {
-                const screenKeys = Object.keys(data.screens)
-                if (screenKeys.length === 0) {
-                  throw new Error("No screens in WoZ")
-                }
-                const currentScreenID = screenKeys[0]
+      .then((data: IWozContent) => {
+        const screenKeys = Object.keys(data.screens)
+        if (screenKeys.length === 0) {
+          throw new Error("No screens in WoZ")
+        }
+        const currentScreenID = screenKeys[0]
 
-                this.setState({
-                  currentScreenID,
-                  currentWoz,
-                  kind: WOZ_SUCCEEDED,
-                  searchResults: undefined,
-                  wozCollection,
-                })
-              })
-              .catch((error) => this.setState({
-                currentWoz, error, kind: WOZ_FAILED, wozCollection,
-              }))
+        this.setState({
+          currentScreenID,
+          currentWoz,
+          kind: WOZ_SUCCEEDED,
+          searchResults: undefined,
+          wozCollection,
+        })
+      })
+      .catch((error) => this.setState({
+        currentWoz, error, kind: WOZ_FAILED, wozCollection,
+      }))
   }
 
   private _rowsForButtons = (
-      context: IWozContext,
-      buttons: ButtonIdentifier[]): RowIdentifier[] => {
-    const buttonIndex: {[index: string]: RowModel} = Object.assign({},
-        ...objectMap(context.rows, ([_rowID, rowModel]) => {
-          return arrayMap(
-              rowModel.buttons, (buttonID: string) => ({[buttonID]: rowModel}))
-        }).flat())
+    context: IWozContext,
+    buttons: ButtonIdentifier[]): RowIdentifier[] => {
+    const buttonIndex: { [index: string]: RowModel } = Object.assign({},
+      ...objectMap(context.rows, ([_rowID, rowModel]) => {
+        return arrayMap(
+          rowModel.buttons, (buttonID: string) => ({ [buttonID]: rowModel }))
+      }).flat())
 
     return arrayMap(buttons, (buttonID): RowIdentifier => {
       const model = buttonIndex[buttonID.id]
@@ -256,14 +266,14 @@ export class WozCollection
     }
 
     return arrayMap(state.searchResults,
-        (value: ISearchResults, index) => {
-          const buttons = this._filterButtons(value)
-          const rows = this._rowsForButtons(state.currentWoz, buttons)
-          return {
-            buttons, id: "search_results " + index,
-            label: value.engineName, rows,
-          }
-        })
+      (value: ISearchResults, index) => {
+        const buttons = this._filterButtons(value)
+        const rows = this._rowsForButtons(state.currentWoz, buttons)
+        return {
+          buttons, id: "search_results " + index,
+          label: value.engineName, rows,
+        }
+      })
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -271,7 +281,7 @@ export class WozCollection
     this._isMounted = true
     switch (this.state.kind) {
       case COLLECTION_IS_LOADING:
-        const {dataSource, options} = this.state
+        const { dataSource, options } = this.state
         this._loadWozCollection(dataSource, options)
         break
       case WOZ_IS_LOADING:
@@ -282,8 +292,8 @@ export class WozCollection
         this.setState((prev) => {
           // @ts-ignore
           // noinspection JSUnusedLocalSymbols
-          const {searchResults, ...other} = prev
-          return {...other, searchResults: undefined}
+          const { searchResults, ...other } = prev
+          return { ...other, searchResults: undefined }
         })
         break
     }
@@ -304,12 +314,12 @@ export class WozCollection
     const state = this.state
     switch (state.kind) {
       case COLLECTION_IS_LOADING:
-        return (<LoadingMessage message={"Loading..."}/>)
+        return (<LoadingMessage message={"Loading..."} />)
       case COLLECTION_FAILED:
         return <div>
           <ErrorMessage message={"WoZ UI failed to load."}
-                        error={state.error}/>
-          <div style={{textAlign: "center"}}>
+            error={state.error} />
+          <div style={{ textAlign: "center" }}>
             <Button onClick={this.props.onError}>OK</Button>
           </div>
         </div>
@@ -323,7 +333,7 @@ export class WozCollection
       if (this.props.onBack) {
         // @ts-ignore
         // noinspection JSUnusedLocalSymbols
-        const {searchResults, ...rest} = this.state
+        const { searchResults, ...rest } = this.state
         this.props.onBack(rest)
       }
     }
@@ -336,30 +346,30 @@ export class WozCollection
     const onSearch = state.kind === WOZ_SUCCEEDED ? this._onSearch : undefined
 
     const header = <WozHeader
-        allWozs={state.wozCollection.wozs}
-        onChangeWoz={onWozChange}
-        onBack={onBack}
-        onCopyURL={_onCopyURL}
-        onSearch={onSearch}
-        selectedWoz={state.currentWoz}
+      allWozs={state.wozCollection.wozs}
+      onChangeWoz={onWozChange}
+      onBack={onBack}
+      onCopyURL={_onCopyURL}
+      onSearch={onSearch}
+      selectedWoz={state.currentWoz}
     />
 
     let body: any = null
     switch (state.kind) {
       case WOZ_IS_LOADING:
         body = <LoadingMessage
-            message={"Loading UI "}
-            detail={`for "${state.currentWoz.id}"...`}/>
+          message={"Loading UI "}
+          detail={`for "${state.currentWoz.id}"...`} />
         break
       case WOZ_FAILED:
         body = <ErrorMessage
-            message={`WoZ UI for "${state.currentWoz.id}" failed to load.`}
-            error={state.error}/>
+          message={`WoZ UI for "${state.currentWoz.id}" failed to load.`}
+          error={state.error} />
         break
       case WOZ_SUCCEEDED:
         const onScreenChange = (screenID: string) => {
           this.setState((prev) => {
-            return {...prev, currentScreenID: screenID}
+            return { ...prev, currentScreenID: screenID }
           })
         }
 
@@ -369,16 +379,17 @@ export class WozCollection
           persistentRows={this._searchRows(state)}
           woz={state.currentWoz}
           selectedScreenID={state.currentScreenID}
-          selectedButtons={this.props.selectedButtons} 
-          onParagraphClicked={this.props.onParagraphClicked}            
+          selectedButtons={this.props.selectedButtons}
+          onParagraphClicked={this.props.onParagraphClicked}
         />
     }
 
     return (
-        <div className={css.searchableTable}>
-          {header}
-          {body}
-        </div>
+      <div className={css.searchableTable}>
+        {header}
+        <WozHeaderTabs dialogue={this.props.dialogue} onSearchResultClick={this.props.onSearchResultClick} onQueryRewrite={this.props.onQueryRewrite}></WozHeaderTabs>
+        {body}
+      </div>
     )
   }
 }

@@ -2,11 +2,11 @@ import * as React from "react"
 import { Embed, Message } from "semantic-ui-react"
 import { isStringImagePath, isStringVideoPath } from "../../common/util"
 import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
-import { IDialogue } from "../model/DialogueModel"
+import { Dialogue } from "../model/DialogueModel"
 import css from "./ChatTranscript.module.css"
 
 export interface IChatTranscriptProperties {
-  dialogue: IDialogue
+  dialogue?: Dialogue
   us: string
   them: string[],
   showWizardNotifications?: boolean
@@ -41,7 +41,9 @@ export class ChatTranscript
 
   public render(): React.ReactNode {
 
-    const rows = this.props.dialogue.messages.map((message, index) => {
+
+
+    const rows = this.props.dialogue?.messages.map((message, index) => {
       const cellClass = message.userID === undefined
         ? css.systemCell
         : message.userID === this.props.us
@@ -69,12 +71,12 @@ export class ChatTranscript
           // Display video
           return <div className={css.row + " " + rowClass} key={index}>
             <div className={css.videoCell + " " + cellClass}>
-              <Embed placeholder={message.text.split('<video_separator>')[0]} 
-              url={message.text.split('<video_separator>')[1]} 
-              className={css.videoCellEmbed} 
-              iframe={{
-                allowFullScreen: true
-              }}></Embed>
+              <Embed placeholder={message.text.split('<video_separator>')[0]}
+                url={message.text.split('<video_separator>')[1]}
+                className={css.videoCellEmbed}
+                iframe={{
+                  allowFullScreen: true
+                }}></Embed>
             </div>
           </div>
 
@@ -84,9 +86,9 @@ export class ChatTranscript
             return <div className={css.row + " " + rowClass} key={index}>
               <div className={css.cell + " " + cellClass}>{visibleUserID}{message.text}</div>
             </div>
-          } 
+          }
           // Or if the message is of type status
-          else if (message.messageType === InteractionType.STATUS){
+          else if (message.messageType === InteractionType.STATUS) {
             if (this.props.showWizardNotifications) {
               // Return a message of type status 
               return <div className={css.row + " " + rowClass} key={index}>
@@ -95,7 +97,7 @@ export class ChatTranscript
             }
             return <span key={index}></span>;
           }
-          else{
+          else {
             return <span key={index}></span>;
           }
 

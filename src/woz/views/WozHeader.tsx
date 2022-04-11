@@ -22,10 +22,10 @@ import {
   Icon,
   SemanticICONS,
 } from "semantic-ui-react"
-import {WozModel} from "../model/WozModel"
-import {Search} from "./Search"
+import { WozModel } from "../model/WozModel"
+import { Search } from "./Search"
 import css from "./woz.module.css"
-import {WozSelector} from "./WozSelector"
+import { WozSelector } from "./WozSelector"
 
 export interface IWozHeaderProperties {
   onChangeWoz: (newWoz: WozModel) => void
@@ -38,59 +38,59 @@ export interface IWozHeaderProperties {
 }
 
 export const WozHeader
-    : React.FunctionComponent<IWozHeaderProperties>
-    = (props: IWozHeaderProperties) => {
+  : React.FunctionComponent<IWozHeaderProperties>
+  = (props: IWozHeaderProperties) => {
 
-  let wozSelector: any = null
-  let searchField: any = null
-  let backButton: any = null
-  let copyURLButton: any = null
+    let wozSelector: any = null
+    let searchField: any = null
+    let backButton: any = null
+    let copyURLButton: any = null
 
-  if (props.selectedWoz !== undefined) {
-    wozSelector = <WozSelector
+    if (props.selectedWoz !== undefined) {
+      wozSelector = <WozSelector
         onChange={props.onChangeWoz}
         value={props.selectedWoz}
-        values={props.allWozs}/>
+        values={props.allWozs} />
 
-    if (props.onSearch !== undefined) {
-      const onSearch = props.onSearch
-      searchField = <Search
-          icon={{name: "search", circular: true}}
+      if (props.onSearch !== undefined) {
+        const onSearch = props.onSearch
+        searchField = <Search
+          icon={{ name: "search", circular: true }}
           className={css.searchField}
           onSearch={onSearch}
-          placeholder="Search..."/>
+          placeholder="Search..." />
+      }
     }
-  }
 
-  if (props.onCopyURL !== undefined) {
-    copyURLButton = <SUIButton
+    if (props.onCopyURL !== undefined) {
+      copyURLButton = <SUIButton
         icon
         onClick={props.onCopyURL}>
-      <Icon name={"linkify"}/>
-    </SUIButton>
-  }
+        <Icon name={"linkify"} />
+      </SUIButton>
+    }
 
-  if (props.onBack !== undefined) {
-    backButton = <SUIButton
+    if (props.onBack !== undefined) {
+      backButton = <SUIButton
         icon
         onClick={props.onBack}>
-      <Icon name={props.icon !== undefined
-                  ? props.icon : "cogs"}/>
-    </SUIButton>
-  }
+        <Icon name={props.icon !== undefined
+          ? props.icon : "cogs"} />
+      </SUIButton>
+    }
 
-  return <Container className={css.tableHeader} fluid>
-    <Grid columns={2} verticalAlign={"middle"}>
-      <Grid.Column floated="left">
-        {searchField}
-      </Grid.Column>
-      <Grid.Column textAlign="right" floated="right">
-        <div id={css.wozSelectorGroupId}>
-          {wozSelector}
-          {copyURLButton}
-          {backButton}
-        </div>
-      </Grid.Column>
-    </Grid>
-  </Container>
-}
+    return <Container className={css.tableHeader} fluid>
+      <Grid columns={2} verticalAlign={"middle"}>
+        <Grid.Column floated="left">
+          {searchField}
+        </Grid.Column>
+        <Grid.Column textAlign="right" floated="right">
+          <div id={css.wozSelectorGroupId}>
+            {wozSelector}
+            {copyURLButton}
+            {backButton}
+          </div>
+        </Grid.Column>
+      </Grid>
+    </Container>
+  }

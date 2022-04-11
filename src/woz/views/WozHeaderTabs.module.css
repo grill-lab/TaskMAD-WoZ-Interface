@@ -1,0 +1,20 @@
+.maindiv{
+    width: 100%;
+    padding: 10px;
+}
+
+.tabInputStyle{
+    width: 100%;
+}
+.multiDropdownStyle {
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px 0 10px 0;
+    border-color: gainsboro;
+  }
+  
+  .multiDropdownStyle:focus{
+    outline: #2185d0;
+    border-color: #2185d0;
+  }

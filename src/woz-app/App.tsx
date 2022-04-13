@@ -268,7 +268,7 @@ export default class App extends React.Component<{}, AppState> {
       passage_text !== undefined && passage_text.length !== 0 &&
       passageSize !== undefined && passageSize.length !== 0) {
 
-      var map_key: string = `${issued_query.toLowerCase().replace(" ", "_")}_${passageSize}`;
+      var map_key: string = generateHashString(`${issued_query.toLowerCase()}_${passageSize}`, 16);
       if (this.state.selected_api_paragraphs.has(map_key)) {
         if (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id')?.includes(passage_id)) {
           this.state.selected_api_paragraphs.get(map_key)?.set('passage_id',
@@ -276,14 +276,21 @@ export default class App extends React.Component<{}, AppState> {
               return id !== passage_id;
             }))
 
+          this.state.selected_api_paragraphs.get(map_key)?.set('passage_text',
+            (this.state.selected_api_paragraphs.get(map_key)?.get('passage_text') as []).filter(p => {
+              return p !== passage_text;
+            }))
+
         } else {
           this.state.selected_api_paragraphs.get(map_key)?.set('passage_id', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as [], passage_id])
+          this.state.selected_api_paragraphs.get(map_key)?.set('passage_text', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_text') as [], passage_text])
         }
 
       } else {
         var tempMap = new Map();
         tempMap.set('query', issued_query);
         tempMap.set("passage_id", [passage_id])
+        tempMap.set("passage_text", [passage_text])
         this.state.selected_api_paragraphs.set(map_key, tempMap);
 
       }
@@ -301,7 +308,7 @@ export default class App extends React.Component<{}, AppState> {
     if (query !== undefined && query.length !== 0 &&
       context !== undefined && context.length !== 0 &&
       rewritten_query !== undefined && rewritten_query.length !== 0) {
-      var unique_id = generateHashString(`${query}${context}${rewritten_query}`);
+      var unique_id = generateHashString(`${query}${context}${rewritten_query}`, 16);
       if (!this.state.api_query_rewritten.has(unique_id)) {
         var tempMap = new Map();
         tempMap.set("query", query);

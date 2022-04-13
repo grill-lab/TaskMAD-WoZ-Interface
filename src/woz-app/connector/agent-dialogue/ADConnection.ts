@@ -248,7 +248,7 @@ export class ADConnection {
 
 
   // Method used in order to perform a generic call to the SearchAPI 
-  public AgentInteractionApi = async (requestBody: Struct, agent: string): Promise<{ [key: string]: JavaScriptValue; }> => {
+  public agentInteractionApi = async (requestBody: Struct, agent: string): Promise<{ [key: string]: JavaScriptValue; }> => {
 
     // Return a new promise
     return new Promise((resolve) => {

@@ -51,3 +51,13 @@ html, body, #root {
   --message-frame: var(--main-color);
   --main-text-color: white;
 }
+
+
+.customLabelFormatWizard{
+  background-color: var(--main-color) !important;
+  color: var(--main-text-color) !important;
+}
+.customLabelFormatUser{
+  background-color: #888888 !important;
+  color: var(--main-text-color) !important;
+}

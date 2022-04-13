@@ -14,7 +14,14 @@
     border-color: gainsboro;
   }
   
-  .multiDropdownStyle:focus{
-    outline: #2185d0;
-    border-color: #2185d0;
-  }
+.multiDropdownStyle:focus{
+  outline: #2185d0;
+  border-color: #2185d0;
+}
+
+.advancedSearcherAccordion{
+  margin-bottom: 10px !important;
+}
+.advancedSearcherAccordionContent{
+  padding: 10px !important;
+}

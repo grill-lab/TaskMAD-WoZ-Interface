@@ -172,8 +172,8 @@ export const isStringVideoPath = (string_path: string): boolean => {
 }
 
 // Function used to generate an MD5 hashtring from text. 
-export const generateHashString = (text:string) => {
-  return text !== undefined ? CryptoJS.MD5(CryptoJS.enc.Utf8.parse(text)).toString() : '';             
+export const generateHashString = (text:string, number_chars = 32) => {
+  return text !== undefined ? CryptoJS.MD5(CryptoJS.enc.Utf8.parse(text)).toString().substring(0, number_chars) : '';             
 }
 
 

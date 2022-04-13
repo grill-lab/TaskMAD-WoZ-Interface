@@ -63,6 +63,7 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
 
   dropDownOptions: any[] = [];
   dropdownSelected: number[] = [];
+  dropdownLabelsToHighlight: number[] = [];
 
   searcherTypeOptions = [{
     key: 0,
@@ -84,6 +85,7 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
     text: "true",
     value: 1
   }];
+  advancedSearcherAccordionToggle: boolean = false;
   constructor(props: any) {
     super(props)
 
@@ -190,10 +192,14 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
 
         if (message.messageType === InteractionType.TEXT && !isStringImagePath(message.text) && !isStringVideoPath(message.text)) {
           if (this.dropdownSelected.includes(i) === false) {
-            if (this.dropdownSelected.length >= 6) {
+            if (this.dropdownSelected.length >= 3) {
               this.dropdownSelected.shift();
             }
             this.dropdownSelected.push(i);
+            if (message.userID === WozConnectors.shared.selectedConnector.chatUserID && !this.dropdownLabelsToHighlight.includes(i)) {
+              this.dropdownLabelsToHighlight.push(i);
+            }
+
 
           }
           return { key: i, text: message.text, value: i }
@@ -236,44 +242,57 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
             options={this.dropDownOptions}
             className={css.multiDropdownStyle}
             onChange={(_, data) => {
+              console.log(data.value);
+
               this.dropdownSelected = data.value as [];
+            }}
+            renderLabel={(label) => {
+              return {
+                content: `${label.text}`,
+                className: this.dropdownLabelsToHighlight.includes(label.value as number) ? 'customLabelFormatWizard' : 'customLabelFormatUser'
+              }
             }}
             defaultValue={this.dropdownSelected}
           />
           <Button compact color='green' loading={this.state.queryRewriteLoading} onClick={async () => {
             this.setState({
-              queryRewriteLoading: true
+              queryRewriteLoading: true,
+              apiRewrittentQuery: ""
             });
             var context_string = "";
 
-            for (var i = 0; i < this.dropdownSelected.length; i++) {
-              for (var j = 0; j < this.dropDownOptions.length; j++) {
-                if (this.dropdownSelected[i] === this.dropDownOptions[j].key) {
-                  context_string += this.dropDownOptions[j].text + " ||| "
+            if (this.state.queryRewriteInput !== undefined && this.state.queryRewriteInput.trim().length !== 0) {
+              for (var i = 0; i < this.dropdownSelected.length; i++) {
+                for (var j = 0; j < this.dropDownOptions.length; j++) {
+                  if (this.dropdownSelected[i] === this.dropDownOptions[j].key) {
+                    context_string += this.dropDownOptions[j].text + " ||| "
+                  }
                 }
+
               }
 
-            }
-
-            let apiResponse: Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
-              "service_name": "cast_api_searcher",
-              "api_endpoint": "rewrite",
-              "request_body": {
-                "rewriter": "T5",
-                "searchQuery": this.state.queryRewriteInput,
-                "context": context_string,
-                "turnsToUse": "raw"
+              let apiResponse: Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
+                "service_name": "cast_api",
+                "api_endpoint": "rewrite",
+                "request_type": "GET",
+                "request_body": {
+                  "rewriter": "T5",
+                  "searchQuery": this.state.queryRewriteInput,
+                  "context": context_string,
+                  "turnsToUse": "raw"
+                }
+              }), "SearchAPI");
+              if (apiResponse !== undefined && apiResponse.hasOwnProperty('rewrite')) {
+                this.setState({
+                  apiRewrittentQuery: Object.getOwnPropertyDescriptor(apiResponse, "rewrite")?.value
+                });
               }
-            }), "SearchAPI");
-            if (apiResponse !== undefined && apiResponse.hasOwnProperty('rewrite')) {
-              this.setState({
-                apiRewrittentQuery: Object.getOwnPropertyDescriptor(apiResponse, "rewrite")?.value
-              });
-            }
 
-            this.props.onQueryRewrite(this.state.queryRewriteInput, context_string, this.state.apiRewrittentQuery);
+              this.props.onQueryRewrite(this.state.queryRewriteInput, context_string, this.state.apiRewrittentQuery);
+            }
 
             this.setState({
+              searcherQueryInput: this.state.apiRewrittentQuery !== undefined && this.state.apiRewrittentQuery.length !== 0 ? this.state.apiRewrittentQuery : this.state.searcherQueryInput,
               queryRewriteLoading: false,
               queryRewriteInput: ""
             });
@@ -311,91 +330,106 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
               });
             }}
           />
-          <Input
-            placeholder='Number of Documents'
-            className={css.tabInputStyle}
-            style={{ "margin": "10px 0 10px 0" }}
-            fluid={true}
-            value={this.state.numberOfDocumentsInput}
-            onChange={(value) => {
-              this.setState({
-                numberOfDocumentsInput: value.target.value
-              });
-            }}
-          />
-          <Input
-            placeholder='Passage Size'
-            className={css.tabInputStyle}
-            style={{ "margin": "10px 0 10px 0" }}
-            fluid={true}
-            value={this.state.passageSizeInput}
-            onChange={(value) => {
-              this.setState({
-                passageSizeInput: value.target.value
-              });
-            }}
-          />
-          <Input
-            placeholder='Passage Count'
-            className={css.tabInputStyle}
-            style={{ "margin": "10px 0 10px 0" }}
-            fluid={true}
-            value={this.state.passageCountInput}
-            onChange={(value) => {
-              this.setState({
-                passageCountInput: value.target.value
-              });
-            }}
-          />
-          <Dropdown
-            placeholder='Searcher Type'
-            fluid
-            search
-            selection
-            options={this.searcherTypeOptions}
-            className={css.multiDropdownStyle}
-            onChange={(value) => {
-              this.setState({
-                searcherTypeInput: value.currentTarget.textContent!,
-              })
-            }}
-            defaultValue={0}
-          />
-          <Dropdown
-            placeholder='Collection'
-            fluid
-            search
-            selection
-            options={this.collectionOptions}
-            className={css.multiDropdownStyle}
-            onChange={(value) => {
-              this.setState({
-                collectionInput: value.currentTarget.textContent!,
-              })
-            }}
-            defaultValue={0}
-          />
-          <Dropdown
-            placeholder='Skip Rerank'
-            fluid
-            search
-            selection
-            options={this.skipRerankOptions}
-            className={css.multiDropdownStyle}
-            onChange={(value) => {
-              this.setState({
-                skipRerankInput: value.currentTarget.textContent!,
-              })
-            }}
-            defaultValue={0}
-          />
+          <Accordion className={css.advancedSearcherAccordion}>
+            <Accordion.Title
+              active={this.advancedSearcherAccordionToggle}
+              index={1}
+              onClick={() => {
+                this.advancedSearcherAccordionToggle = !this.advancedSearcherAccordionToggle;
+                this.setState({})
+              }}
+            >
+              <Icon name='dropdown' />
+              Searcher Settings
+            </Accordion.Title>
+            <Accordion.Content active={this.advancedSearcherAccordionToggle} className={css.advancedSearcherAccordionContent}>
+              <Input
+                placeholder='Number of Documents'
+                className={css.tabInputStyle}
+                style={{ "margin": "10px 0 10px 0" }}
+                fluid={true}
+                value={this.state.numberOfDocumentsInput}
+                onChange={(value) => {
+                  this.setState({
+                    numberOfDocumentsInput: value.target.value
+                  });
+                }}
+              />
+              <Input
+                placeholder='Passage Size'
+                className={css.tabInputStyle}
+                style={{ "margin": "10px 0 10px 0" }}
+                fluid={true}
+                value={this.state.passageSizeInput}
+                onChange={(value) => {
+                  this.setState({
+                    passageSizeInput: value.target.value
+                  });
+                }}
+              />
+              <Input
+                placeholder='Passage Count'
+                className={css.tabInputStyle}
+                style={{ "margin": "10px 0 10px 0" }}
+                fluid={true}
+                value={this.state.passageCountInput}
+                onChange={(value) => {
+                  this.setState({
+                    passageCountInput: value.target.value
+                  });
+                }}
+              />
+              <Dropdown
+                placeholder='Searcher Type'
+                fluid
+                search
+                selection
+                options={this.searcherTypeOptions}
+                className={css.multiDropdownStyle}
+                onChange={(value) => {
+                  this.setState({
+                    searcherTypeInput: value.currentTarget.textContent!,
+                  })
+                }}
+                defaultValue={0}
+              />
+              <Dropdown
+                placeholder='Collection'
+                fluid
+                search
+                selection
+                options={this.collectionOptions}
+                className={css.multiDropdownStyle}
+                onChange={(value) => {
+                  this.setState({
+                    collectionInput: value.currentTarget.textContent!,
+                  })
+                }}
+                defaultValue={0}
+              />
+              <Dropdown
+                placeholder='Skip Rerank'
+                fluid
+                search
+                selection
+                options={this.skipRerankOptions}
+                className={css.multiDropdownStyle}
+                onChange={(value) => {
+                  this.setState({
+                    skipRerankInput: value.currentTarget.textContent!,
+                  })
+                }}
+                defaultValue={0}
+              />
+            </Accordion.Content>
+          </Accordion>
 
           <Button compact color='green' loading={this.state.searcherLoading} onClick={async () => {
             this.setState({
               searcherLoading: true
             });
             let apiResponse: Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
-              "service_name": "cast_api_searcher",
+              "service_name": "cast_api",
               "api_endpoint": "search",
               "request_type": "GET",
               "request_body": {
@@ -406,9 +440,10 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
                 "searcherType": this.state.searcherTypeInput,
                 "collection": this.state.collectionInput,
                 "skipRerank": this.state.skipRerankInput,
-
               }
             }), "SearchAPI");
+
+            console.log(apiResponse);
 
             if (apiResponse !== undefined && apiResponse.hasOwnProperty('documents')) {
               this.setState({

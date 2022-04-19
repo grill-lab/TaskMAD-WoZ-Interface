@@ -32,7 +32,7 @@ import {
   dataSourceForURL,
   IConfigurationEditorCallback,
 } from "./ConfigurationEditor"
-import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
 import { DataSources } from "./DataSource"
 import { Store } from "./Store"
@@ -73,6 +73,8 @@ type AppState =
 export interface StringMap { [index: string]: string }
 
 export default class App extends React.Component<{}, AppState> {
+
+  selectedCheckboxesSearcherResults: string[] = []
 
   constructor(props: any) {
     super(props)
@@ -281,27 +283,48 @@ export default class App extends React.Component<{}, AppState> {
               return p !== passage_text;
             }))
 
+          if (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id')?.length === 0) {
+            this.state.selected_api_paragraphs.delete(map_key);
+          }
+
+          this.selectedCheckboxesSearcherResults = this.selectedCheckboxesSearcherResults.filter(el => {
+            return el !== passage_id
+          });
+
+          this.setState(
+            {
+              selected_api_paragraphs: this.state.selected_api_paragraphs
+            });
+
         } else {
           this.state.selected_api_paragraphs.get(map_key)?.set('passage_id', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as [], passage_id])
           this.state.selected_api_paragraphs.get(map_key)?.set('passage_text', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_text') as [], passage_text])
+          this.selectedCheckboxesSearcherResults.push(passage_id);
+          this.setState(
+            {
+              woz_message: `${this.state.woz_message} ${passage_text}`,
+              selected_api_paragraphs: this.state.selected_api_paragraphs
+            });
         }
 
       } else {
+        this.selectedCheckboxesSearcherResults.push(passage_id);
+
         var tempMap = new Map();
         tempMap.set('query', issued_query);
         tempMap.set("passage_id", [passage_id])
         tempMap.set("passage_text", [passage_text])
         this.state.selected_api_paragraphs.set(map_key, tempMap);
 
+        this.setState(
+          {
+            woz_message: `${this.state.woz_message} ${passage_text}`,
+            selected_api_paragraphs: this.state.selected_api_paragraphs
+          });
+
       }
 
-      this.setState(
-        {
-          woz_message: `${this.state.woz_message} ${passage_text}`,
-          selected_api_paragraphs: this.state.selected_api_paragraphs
-        });
     }
-    console.log(this.state.selected_api_paragraphs);
   }
 
   private onQueryRewrite = (query: string, context: string, rewritten_query: string) => {
@@ -323,7 +346,6 @@ export default class App extends React.Component<{}, AppState> {
       }
     }
 
-    console.log(this.state.api_query_rewritten);
 
   }
 
@@ -333,7 +355,47 @@ export default class App extends React.Component<{}, AppState> {
     const value = this.state.woz_message.trim()
 
     if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
-      WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
+
+      // Need to create a loggedCastQueryRewrite obj from the map
+      var loggedCastQueryRewriteArray: LoggedCastQueryRewrite[] = [];
+
+      for (const [key, value] of this.state.api_query_rewritten.entries()) {
+        var tempLoggedCastQueryRewrite: LoggedCastQueryRewrite = new LoggedCastQueryRewrite()
+        tempLoggedCastQueryRewrite.setId(key);
+        var loggedCastQueryRewriteContent: LoggedCastQueryRewrite.LoggedCastQueryRewriteContent = new LoggedCastQueryRewrite.LoggedCastQueryRewriteContent();
+        loggedCastQueryRewriteContent.setQuery(value.get("query") ?? "");
+        loggedCastQueryRewriteContent.setContext(value.get("context") ?? "")
+        loggedCastQueryRewriteContent.setRewrittenQuery(value.get("rewritten_query") ?? "")
+        tempLoggedCastQueryRewrite.setContent(loggedCastQueryRewriteContent);
+
+        loggedCastQueryRewriteArray.push(tempLoggedCastQueryRewrite);
+
+      }
+
+      // Need to create a loggedCastQueryRewrite obj from the map
+      var loggedCastSearcherSelectionArray: LoggedCastSearcherSelection[] = [];
+
+      for (const [key, value] of this.state.selected_api_paragraphs.entries()) {
+
+        var tempLoggedCastSearcherSelection: LoggedCastSearcherSelection = new LoggedCastSearcherSelection()
+
+        tempLoggedCastSearcherSelection.setId(key);
+        var loggedCastSearcherSelectionContent: LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent = new LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent();
+        loggedCastSearcherSelectionContent.setQuery((value.get("query") as string) ?? "");
+        loggedCastSearcherSelectionContent.setPassageIdList((value.get("passage_id") as []) ?? [])
+        loggedCastSearcherSelectionContent.setPassageTextList((value.get("passage_text") as []) ?? [])
+
+        tempLoggedCastSearcherSelection.setContent(loggedCastSearcherSelectionContent);
+        loggedCastSearcherSelectionArray.push(tempLoggedCastSearcherSelection);
+
+      }
+
+      WozConnectors.shared.selectedConnector.onMessageSentLogger(value,
+        this.state.selected_buttons,
+        this.state.searched_queries,
+        interactionType, actions,
+        loggedCastSearcherSelectionArray,
+        loggedCastQueryRewriteArray);
     }
     this.onRevert();
   }
@@ -341,7 +403,9 @@ export default class App extends React.Component<{}, AppState> {
 
   // Simply resets the state
   private onRevert = () => {
-    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [] })
+    this.selectedCheckboxesSearcherResults = [];
+    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [], selected_api_paragraphs: new Map(), api_query_rewritten: new Map() })
+
   }
 
   // Function used to detect when text in the input box changes
@@ -402,6 +466,8 @@ export default class App extends React.Component<{}, AppState> {
             trackSearchedQueries={this.trackSearchedQueries}
             onSearchResultClick={this.onSearchResultClick}
             onQueryRewrite={this.onQueryRewrite}
+            selectedCheckboxesSearcherResults={this.selectedCheckboxesSearcherResults}
+
           />
         } else {
           content = <WozCollection
@@ -420,7 +486,8 @@ export default class App extends React.Component<{}, AppState> {
             onParagraphClicked={this.onButtonClick}
             trackSearchedQueries={this.trackSearchedQueries}
             onSearchResultClick={this.onSearchResultClick}
-            onQueryRewrite={this.onQueryRewrite} />
+            onQueryRewrite={this.onQueryRewrite}
+            selectedCheckboxesSearcherResults={this.selectedCheckboxesSearcherResults} />
         }
         break
     }

@@ -21,7 +21,7 @@ import { SearchQueryModel } from "../../woz/model/SearchQueryModel"
 import {StringMap} from "../App"
 import {Store} from "../Store"
 import {ADConnector} from "./agent-dialogue/ADConnector"
-import { InteractionType } from "./agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "./agent-dialogue/generated/client_pb"
 import {ConsoleConnector} from "./console/ConsoleConnector"
 import {VHMSGConnector} from "./vhmsg/VHMSGConnector"
 
@@ -47,7 +47,14 @@ export interface IWozConnector {
 
   // Method used in order to handle the inputform submit button and relative logging 
   // of selectedButtons and searchedQueries associated to that message
-  onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>, interactionType?: InteractionType, actions?: Array<string>): void
+  onMessageSentLogger(
+    inputValue: string,
+    selectedButtons:Array<IButtonModel>,
+    searchedQueries: Array<SearchQueryModel>,
+    interactionType?: InteractionType,
+    actions?: Array<string>,
+    loggedCastSearcherSelection?: LoggedCastSearcherSelection[],
+    loggedCastQueryRewrite?: LoggedCastQueryRewrite[]): void
 
   onAgentInteractionApiRequest(requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>
 }

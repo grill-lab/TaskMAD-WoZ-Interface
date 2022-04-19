@@ -2,12 +2,14 @@
 import { JavaScriptValue, Struct } from "google-protobuf/google/protobuf/struct_pb"
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb"
 import * as grpcWeb from "grpc-web"
-import { Omit } from "../../../common/util"
+import {Omit } from "../../../common/util"
 import { IMessage } from "../../../woz/model/MessageModel"
 import {
   ClientId, InputInteraction, InteractionRequest,
   InteractionResponse,
   InteractionType,
+  LoggedCastQueryRewrite,
+  LoggedCastSearcherSelection,
 } from "./generated/client_pb"
 import { AgentDialogueClient } from "./generated/ServiceServiceClientPb"
 
@@ -25,6 +27,8 @@ export interface IInputInteractionArguments {
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
   loggedParagraphTimestamp?: Array<number>
+  loggedCastSearcherSelection?: LoggedCastSearcherSelection[]
+  loggedCastQueryRewrite?: LoggedCastQueryRewrite[]
 }
 
 export interface IRequestArguments extends IInputInteractionArguments {
@@ -145,6 +149,8 @@ export class ADConnection {
     input.setLoggedPageTitlesList(args.loggedPageTitles || []);
     input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
     input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
+    input.setLoggedCastSearcherSelectionList(args.loggedCastSearcherSelection ?? []);
+    input.setLoggedCastQueryRewriteList(args.loggedCastQueryRewrite ?? []);
 
     return input
   }

@@ -22,7 +22,7 @@ import {IMessage, Message, ourUserID} from "../../../woz/model/MessageModel"
 import { SearchQueryModel } from "../../../woz/model/SearchQueryModel"
 import {StringMap} from "../../App"
 import {Store} from "../../Store"
-import { InteractionType } from "../agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "../agent-dialogue/generated/client_pb"
 import {IWozConnector} from "../Connector"
 import {IVHMSGModel, VHMSG} from "./vhmsg"
 import {VHMSGConnectorComponent} from "./VHMSGConnectorComponent"
@@ -154,12 +154,21 @@ export class VHMSGConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>) => {
+  public onMessageSentLogger = (
+    inputValue: string,
+    selectedButtons?: IButtonModel[],
+    searchedQueries?: SearchQueryModel[],
+    interactionType?: InteractionType,
+    actions?: Array<string>,
+    loggedCastSearcherSelection?: LoggedCastSearcherSelection[],
+    loggedCastQueryRewrite?: LoggedCastQueryRewrite[]) => {
     console.log(selectedButtons);
     console.log(searchedQueries);
     console.log(inputValue);
     console.log(interactionType);
     console.log(actions);
+    console.log(loggedCastSearcherSelection);
+    console.log(loggedCastQueryRewrite);
   }
 
   public onAgentInteractionApiRequest =  async (requestBody: Struct, agentName: string): Promise<{[key: string]: JavaScriptValue; }>  => {

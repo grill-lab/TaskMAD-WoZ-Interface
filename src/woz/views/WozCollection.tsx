@@ -71,7 +71,8 @@ export interface IWozCollectionProperties {
     passage_text?: string,
     passageSize?: string) => void,
   onQueryRewrite: (query: string, context: string, rewritten_query: string) => void,
-  dialogue?: Dialogue
+  dialogue?: Dialogue,
+  selectedCheckboxesSearcherResults: string[]
 }
 
 interface ILoadingCollection {
@@ -387,7 +388,7 @@ export class WozCollection
     return (
       <div className={css.searchableTable}>
         {header}
-        <WozHeaderTabs dialogue={this.props.dialogue} onSearchResultClick={this.props.onSearchResultClick} onQueryRewrite={this.props.onQueryRewrite}></WozHeaderTabs>
+        <WozHeaderTabs dialogue={this.props.dialogue} onSearchResultClick={this.props.onSearchResultClick} onQueryRewrite={this.props.onQueryRewrite} selectedCheckboxesSearcherResults={this.props.selectedCheckboxesSearcherResults}></WozHeaderTabs>
         {body}
       </div>
     )

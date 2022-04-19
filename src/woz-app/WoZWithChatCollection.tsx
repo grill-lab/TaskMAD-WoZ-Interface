@@ -41,6 +41,7 @@ interface IChatComponentProperties {
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage: string
+  selectedCheckboxesSearcherResults: string[]
 }
 
 class ChatComponent extends React.Component<IChatComponentProperties,

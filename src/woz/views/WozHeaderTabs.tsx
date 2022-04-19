@@ -40,6 +40,7 @@ export interface IWozHeaderTabsProperties {
     passage_text?: string,
     passageSize?: string) => void,
   onQueryRewrite: (query: string, context: string, rewritten_query: string) => void,
+  selectedCheckboxesSearcherResults: string[]
 }
 
 interface IWozHeaderTabsState {
@@ -154,7 +155,8 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
               onClick={(_, value) => {
                 this.props.onSearchResultClick(this.state.searcherQueryInput, checkbox_id, value.label?.toString(), this.state.passageSizeInput);
               }}
-              label={Object.getOwnPropertyDescriptor(innerObj, "body")?.value}></Checkbox>
+              label={Object.getOwnPropertyDescriptor(innerObj, "body")?.value}
+              checked={this.props.selectedCheckboxesSearcherResults.includes(checkbox_id)}></Checkbox>
             <Divider></Divider></div>
         });
 
@@ -185,6 +187,8 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
 
 
   public render() {
+
+
 
     if (this.props.dialogue !== undefined) {
 
@@ -242,7 +246,6 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
             options={this.dropDownOptions}
             className={css.multiDropdownStyle}
             onChange={(_, data) => {
-              console.log(data.value);
 
               this.dropdownSelected = data.value as [];
             }}
@@ -442,8 +445,6 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
                 "skipRerank": this.state.skipRerankInput,
               }
             }), "SearchAPI");
-
-            console.log(apiResponse);
 
             if (apiResponse !== undefined && apiResponse.hasOwnProperty('documents')) {
               this.setState({

@@ -41,7 +41,10 @@ interface IChatComponentProperties {
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage: string
-  selectedCheckboxesSearcherResults: string[]
+  onBotUseResponseClick: (
+    issued_query?: string,
+    bot_response?: string,
+    bot_rewritten_response?: string) => void
 }
 
 class ChatComponent extends React.Component<IChatComponentProperties,

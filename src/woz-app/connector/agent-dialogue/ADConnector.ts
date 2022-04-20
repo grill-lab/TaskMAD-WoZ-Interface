@@ -26,7 +26,7 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
-import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "./generated/client_pb"
+import { InteractionType, LoggedBotInteraction } from "./generated/client_pb"
 
 export interface IADConnectorModel {
   readonly conversationId?: string
@@ -251,8 +251,7 @@ export class ADConnector implements IWozConnector {
     searchedQueries?: SearchQueryModel[],
     interactionType?: InteractionType,
     actions?: Array<string>,
-    loggedCastSearcherSelection?: LoggedCastSearcherSelection[],
-    loggedCastQueryRewrite?: LoggedCastQueryRewrite[]) => {      
+    loggedBotInteractions?: LoggedBotInteraction[]) => {      
     
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
@@ -309,8 +308,7 @@ export class ADConnector implements IWozConnector {
       }).filter((el) => {
         return el !== null
       }) : [],
-      loggedCastSearcherSelection: loggedCastSearcherSelection ?? [],
-      loggedCastQueryRewrite: loggedCastQueryRewrite ?? []
+      loggedBotInteractions: loggedBotInteractions ?? [],
     })
 
     if (this.onMessage !== undefined) {

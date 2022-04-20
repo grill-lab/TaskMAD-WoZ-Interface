@@ -21,7 +21,7 @@ import { SearchQueryModel } from "../../woz/model/SearchQueryModel"
 import {StringMap} from "../App"
 import {Store} from "../Store"
 import {ADConnector} from "./agent-dialogue/ADConnector"
-import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "./agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedBotInteraction } from "./agent-dialogue/generated/client_pb"
 import {ConsoleConnector} from "./console/ConsoleConnector"
 import {VHMSGConnector} from "./vhmsg/VHMSGConnector"
 
@@ -53,8 +53,7 @@ export interface IWozConnector {
     searchedQueries: Array<SearchQueryModel>,
     interactionType?: InteractionType,
     actions?: Array<string>,
-    loggedCastSearcherSelection?: LoggedCastSearcherSelection[],
-    loggedCastQueryRewrite?: LoggedCastQueryRewrite[]): void
+    loggedBotInteractions?: LoggedBotInteraction[]): void
 
   onAgentInteractionApiRequest(requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>
 }

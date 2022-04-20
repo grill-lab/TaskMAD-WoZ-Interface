@@ -8,8 +8,7 @@ import {
   ClientId, InputInteraction, InteractionRequest,
   InteractionResponse,
   InteractionType,
-  LoggedCastQueryRewrite,
-  LoggedCastSearcherSelection,
+  LoggedBotInteraction,
 } from "./generated/client_pb"
 import { AgentDialogueClient } from "./generated/ServiceServiceClientPb"
 
@@ -27,8 +26,7 @@ export interface IInputInteractionArguments {
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
   loggedParagraphTimestamp?: Array<number>
-  loggedCastSearcherSelection?: LoggedCastSearcherSelection[]
-  loggedCastQueryRewrite?: LoggedCastQueryRewrite[]
+  loggedBotInteractions?: LoggedBotInteraction[]
 }
 
 export interface IRequestArguments extends IInputInteractionArguments {
@@ -148,9 +146,9 @@ export class ADConnection {
     input.setLoggedPageOriginsList(args.loggedPageOrigins || []);
     input.setLoggedPageTitlesList(args.loggedPageTitles || []);
     input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
-    input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
-    input.setLoggedCastSearcherSelectionList(args.loggedCastSearcherSelection ?? []);
-    input.setLoggedCastQueryRewriteList(args.loggedCastQueryRewrite ?? []);
+    input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);    
+    input.setLoggedBotInteractionList(args.loggedBotInteractions ?? [])
+    
 
     return input
   }
@@ -158,6 +156,7 @@ export class ADConnection {
   // noinspection SpellCheckingInspection
   private _makeInteractionRequest = (args: IRequestArguments)
     : InteractionRequest => {
+      
     const input = this._makeInputInteraction(args)
 
     // tslint:disable-next-line:new-parens

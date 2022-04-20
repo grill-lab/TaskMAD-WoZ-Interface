@@ -16,7 +16,7 @@
 
 import * as uuid from "uuid"
 import {PartialBy} from "../../common/util"
-import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedBotInteraction } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 
 export interface IMessage {
   id: string
@@ -32,8 +32,7 @@ export interface IMessage {
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
   loggedParagraphTimestamp?: Array<number>
-  loggedCastSearcherSelection?: LoggedCastSearcherSelection[]
-  loggedCastQueryRewrite?: LoggedCastQueryRewrite[]
+  loggedBotInteractions?: LoggedBotInteraction[]
 
   // Specific type of this message
   messageType?: InteractionType
@@ -111,8 +110,7 @@ export class Message implements IMessage {
   // Attribute used in order to log the timestamp of paragraph clicked while composing this message
   public readonly loggedParagraphTimestamp?: Array<number>
 
-  public readonly loggedCastSearcherSelection?:LoggedCastSearcherSelection[]
-  public readonly loggedCastQueryRewrite?: LoggedCastQueryRewrite[]
+  public readonly loggedBotInteractions?:LoggedBotInteraction[]
   // Type of the specific sent message
   public readonly messageType?: InteractionType
   // Actions to execute in the case InteractionType.ACTION

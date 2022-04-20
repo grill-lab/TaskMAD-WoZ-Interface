@@ -7,7 +7,6 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 /* eslint-disable */
-
 var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
@@ -22,10 +21,8 @@ goog.exportSymbol('proto.edu.gla.kail.ad.InteractionRequest', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionResponse', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionResponse.ClientMessageStatus', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionType', null, global);
-goog.exportSymbol('proto.edu.gla.kail.ad.LoggedCastQueryRewrite', null, global);
-goog.exportSymbol('proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent', null, global);
-goog.exportSymbol('proto.edu.gla.kail.ad.LoggedCastSearcherSelection', null, global);
-goog.exportSymbol('proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent', null, global);
+goog.exportSymbol('proto.edu.gla.kail.ad.LoggedBotInteraction', null, global);
+goog.exportSymbol('proto.edu.gla.kail.ad.LoggedBotInteraction.Content', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.OutputInteraction', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.Result', null, global);
 
@@ -1154,7 +1151,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
+proto.edu.gla.kail.ad.InputInteraction.repeatedFields_ = [3,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
 
 
 
@@ -1205,10 +1202,8 @@ proto.edu.gla.kail.ad.InputInteraction.toObject = function(includeInstance, msg)
     loggedUserRecipeSectionList: jspb.Message.getRepeatedField(msg, 18),
     loggedUserRecipeSectionValueList: jspb.Message.getRepeatedField(msg, 19),
     loggedUserRecipeSelectTimestampList: jspb.Message.getRepeatedField(msg, 20),
-    loggedCastQueryRewriteList: jspb.Message.toObjectList(msg.getLoggedCastQueryRewriteList(),
-    proto.edu.gla.kail.ad.LoggedCastQueryRewrite.toObject, includeInstance),
-    loggedCastSearcherSelectionList: jspb.Message.toObjectList(msg.getLoggedCastSearcherSelectionList(),
-    proto.edu.gla.kail.ad.LoggedCastSearcherSelection.toObject, includeInstance)
+    loggedBotInteractionList: jspb.Message.toObjectList(msg.getLoggedBotInteractionList(),
+    proto.edu.gla.kail.ad.LoggedBotInteraction.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1326,14 +1321,9 @@ proto.edu.gla.kail.ad.InputInteraction.deserializeBinaryFromReader = function(ms
       msg.setLoggedUserRecipeSelectTimestampList(value);
       break;
     case 21:
-      var value = new proto.edu.gla.kail.ad.LoggedCastQueryRewrite;
-      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinaryFromReader);
-      msg.addLoggedCastQueryRewrite(value);
-      break;
-    case 22:
-      var value = new proto.edu.gla.kail.ad.LoggedCastSearcherSelection;
-      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedCastSearcherSelection.deserializeBinaryFromReader);
-      msg.addLoggedCastSearcherSelection(value);
+      var value = new proto.edu.gla.kail.ad.LoggedBotInteraction;
+      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedBotInteraction.deserializeBinaryFromReader);
+      msg.addLoggedBotInteraction(value);
       break;
     default:
       reader.skipField();
@@ -1504,20 +1494,12 @@ proto.edu.gla.kail.ad.InputInteraction.serializeBinaryToWriter = function(messag
       f
     );
   }
-  f = message.getLoggedCastQueryRewriteList();
+  f = message.getLoggedBotInteractionList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       21,
       f,
-      proto.edu.gla.kail.ad.LoggedCastQueryRewrite.serializeBinaryToWriter
-    );
-  }
-  f = message.getLoggedCastSearcherSelectionList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      22,
-      f,
-      proto.edu.gla.kail.ad.LoggedCastSearcherSelection.serializeBinaryToWriter
+      proto.edu.gla.kail.ad.LoggedBotInteraction.serializeBinaryToWriter
     );
   }
 };
@@ -2034,64 +2016,33 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedUserRecipeSelectTime
 
 
 /**
- * repeated LoggedCastQueryRewrite logged_cast_query_rewrite = 21;
- * @return {!Array<!proto.edu.gla.kail.ad.LoggedCastQueryRewrite>}
+ * repeated LoggedBotInteraction logged_bot_interaction = 21;
+ * @return {!Array<!proto.edu.gla.kail.ad.LoggedBotInteraction>}
  */
-proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedCastQueryRewriteList = function() {
-  return /** @type{!Array<!proto.edu.gla.kail.ad.LoggedCastQueryRewrite>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.edu.gla.kail.ad.LoggedCastQueryRewrite, 21));
+proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedBotInteractionList = function() {
+  return /** @type{!Array<!proto.edu.gla.kail.ad.LoggedBotInteraction>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.edu.gla.kail.ad.LoggedBotInteraction, 21));
 };
 
 
-/** @param {!Array<!proto.edu.gla.kail.ad.LoggedCastQueryRewrite>} value */
-proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedCastQueryRewriteList = function(value) {
+/** @param {!Array<!proto.edu.gla.kail.ad.LoggedBotInteraction>} value */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedBotInteractionList = function(value) {
   jspb.Message.setRepeatedWrapperField(this, 21, value);
 };
 
 
 /**
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite=} opt_value
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction=} opt_value
  * @param {number=} opt_index
- * @return {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite}
+ * @return {!proto.edu.gla.kail.ad.LoggedBotInteraction}
  */
-proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedCastQueryRewrite = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 21, opt_value, proto.edu.gla.kail.ad.LoggedCastQueryRewrite, opt_index);
+proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedBotInteraction = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 21, opt_value, proto.edu.gla.kail.ad.LoggedBotInteraction, opt_index);
 };
 
 
-proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedCastQueryRewriteList = function() {
-  this.setLoggedCastQueryRewriteList([]);
-};
-
-
-/**
- * repeated LoggedCastSearcherSelection logged_cast_searcher_selection = 22;
- * @return {!Array<!proto.edu.gla.kail.ad.LoggedCastSearcherSelection>}
- */
-proto.edu.gla.kail.ad.InputInteraction.prototype.getLoggedCastSearcherSelectionList = function() {
-  return /** @type{!Array<!proto.edu.gla.kail.ad.LoggedCastSearcherSelection>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.edu.gla.kail.ad.LoggedCastSearcherSelection, 22));
-};
-
-
-/** @param {!Array<!proto.edu.gla.kail.ad.LoggedCastSearcherSelection>} value */
-proto.edu.gla.kail.ad.InputInteraction.prototype.setLoggedCastSearcherSelectionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 22, value);
-};
-
-
-/**
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection=} opt_value
- * @param {number=} opt_index
- * @return {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection}
- */
-proto.edu.gla.kail.ad.InputInteraction.prototype.addLoggedCastSearcherSelection = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 22, opt_value, proto.edu.gla.kail.ad.LoggedCastSearcherSelection, opt_index);
-};
-
-
-proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedCastSearcherSelectionList = function() {
-  this.setLoggedCastSearcherSelectionList([]);
+proto.edu.gla.kail.ad.InputInteraction.prototype.clearLoggedBotInteractionList = function() {
+  this.setLoggedBotInteractionList([]);
 };
 
 
@@ -2761,12 +2712,12 @@ proto.edu.gla.kail.ad.Result.prototype.setFullText = function(value) {
  * @extends {jspb.Message}
  * @constructor
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite = function(opt_data) {
+proto.edu.gla.kail.ad.LoggedBotInteraction = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.edu.gla.kail.ad.LoggedCastQueryRewrite, jspb.Message);
+goog.inherits(proto.edu.gla.kail.ad.LoggedBotInteraction, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.edu.gla.kail.ad.LoggedCastQueryRewrite.displayName = 'proto.edu.gla.kail.ad.LoggedCastQueryRewrite';
+  proto.edu.gla.kail.ad.LoggedBotInteraction.displayName = 'proto.edu.gla.kail.ad.LoggedBotInteraction';
 }
 
 
@@ -2781,8 +2732,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.toObject = function(opt_includeInstance) {
-  return proto.edu.gla.kail.ad.LoggedCastQueryRewrite.toObject(opt_includeInstance, this);
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.toObject = function(opt_includeInstance) {
+  return proto.edu.gla.kail.ad.LoggedBotInteraction.toObject(opt_includeInstance, this);
 };
 
 
@@ -2791,14 +2742,14 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.toObject = function(opt_i
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite} msg The msg instance to transform.
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.toObject = function(includeInstance, msg) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    content: (f = msg.getContent()) && proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.toObject(includeInstance, f)
+    content: (f = msg.getContent()) && proto.edu.gla.kail.ad.LoggedBotInteraction.Content.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2812,23 +2763,23 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.toObject = function(includeInstance
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite}
+ * @return {!proto.edu.gla.kail.ad.LoggedBotInteraction}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinary = function(bytes) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.edu.gla.kail.ad.LoggedCastQueryRewrite;
-  return proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.edu.gla.kail.ad.LoggedBotInteraction;
+  return proto.edu.gla.kail.ad.LoggedBotInteraction.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite} msg The message object to deserialize into.
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite}
+ * @return {!proto.edu.gla.kail.ad.LoggedBotInteraction}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinaryFromReader = function(msg, reader) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2840,8 +2791,8 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinaryFromReader = funct
       msg.setId(value);
       break;
     case 2:
-      var value = new proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent;
-      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deserializeBinaryFromReader);
+      var value = new proto.edu.gla.kail.ad.LoggedBotInteraction.Content;
+      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedBotInteraction.Content.deserializeBinaryFromReader);
       msg.setContent(value);
       break;
     default:
@@ -2857,9 +2808,9 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.deserializeBinaryFromReader = funct
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.serializeBinary = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.edu.gla.kail.ad.LoggedCastQueryRewrite.serializeBinaryToWriter(this, writer);
+  proto.edu.gla.kail.ad.LoggedBotInteraction.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -2867,11 +2818,11 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.serializeBinary = functio
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite} message
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.serializeBinaryToWriter = function(message, writer) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getId();
   if (f.length > 0) {
@@ -2885,7 +2836,7 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.serializeBinaryToWriter = function(
     writer.writeMessage(
       2,
       f,
-      proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.serializeBinaryToWriter
+      proto.edu.gla.kail.ad.LoggedBotInteraction.Content.serializeBinaryToWriter
     );
   }
 };
@@ -2902,12 +2853,12 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.serializeBinaryToWriter = function(
  * @extends {jspb.Message}
  * @constructor
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent = function(opt_data) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent, jspb.Message);
+goog.inherits(proto.edu.gla.kail.ad.LoggedBotInteraction.Content, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.displayName = 'proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent';
+  proto.edu.gla.kail.ad.LoggedBotInteraction.Content.displayName = 'proto.edu.gla.kail.ad.LoggedBotInteraction.Content';
 }
 
 
@@ -2922,8 +2873,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.toObject = function(opt_includeInstance) {
-  return proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.toObject(opt_includeInstance, this);
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.toObject = function(opt_includeInstance) {
+  return proto.edu.gla.kail.ad.LoggedBotInteraction.Content.toObject(opt_includeInstance, this);
 };
 
 
@@ -2932,15 +2883,15 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.proto
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent} msg The msg instance to transform.
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction.Content} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.toObject = function(includeInstance, msg) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.toObject = function(includeInstance, msg) {
   var f, obj = {
-    query: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    context: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    rewrittenQuery: jspb.Message.getFieldWithDefault(msg, 3, "")
+    issuedQuery: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    botResponse: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    botRewrittenResponse: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -2954,23 +2905,23 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.toObj
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent}
+ * @return {!proto.edu.gla.kail.ad.LoggedBotInteraction.Content}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deserializeBinary = function(bytes) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent;
-  return proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.edu.gla.kail.ad.LoggedBotInteraction.Content;
+  return proto.edu.gla.kail.ad.LoggedBotInteraction.Content.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent} msg The message object to deserialize into.
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction.Content} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent}
+ * @return {!proto.edu.gla.kail.ad.LoggedBotInteraction.Content}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deserializeBinaryFromReader = function(msg, reader) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -2979,15 +2930,15 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deser
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setQuery(value);
+      msg.setIssuedQuery(value);
       break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
-      msg.setContext(value);
+      msg.setBotResponse(value);
       break;
     case 3:
       var value = /** @type {string} */ (reader.readString());
-      msg.setRewrittenQuery(value);
+      msg.setBotRewrittenResponse(value);
       break;
     default:
       reader.skipField();
@@ -3002,9 +2953,9 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.deser
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.serializeBinary = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.serializeBinaryToWriter(this, writer);
+  proto.edu.gla.kail.ad.LoggedBotInteraction.Content.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -3012,27 +2963,27 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.proto
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent} message
+ * @param {!proto.edu.gla.kail.ad.LoggedBotInteraction.Content} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.serializeBinaryToWriter = function(message, writer) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getQuery();
+  f = message.getIssuedQuery();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getContext();
+  f = message.getBotResponse();
   if (f.length > 0) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getRewrittenQuery();
+  f = message.getBotRewrittenResponse();
   if (f.length > 0) {
     writer.writeString(
       3,
@@ -3043,46 +2994,46 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.seria
 
 
 /**
- * optional string query = 1;
+ * optional string issued_query = 1;
  * @return {string}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.getQuery = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.getIssuedQuery = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.setQuery = function(value) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.setIssuedQuery = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional string context = 2;
+ * optional string bot_response = 2;
  * @return {string}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.getContext = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.getBotResponse = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.setContext = function(value) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.setBotResponse = function(value) {
   jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
- * optional string rewritten_query = 3;
+ * optional string bot_rewritten_response = 3;
  * @return {string}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.getRewrittenQuery = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.getBotRewrittenResponse = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.prototype.setRewrittenQuery = function(value) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.Content.prototype.setBotRewrittenResponse = function(value) {
   jspb.Message.setProto3StringField(this, 3, value);
 };
 
@@ -3091,34 +3042,34 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.proto
  * optional string id = 1;
  * @return {string}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.getId = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.getId = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.setId = function(value) {
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.setId = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional LoggedCastQueryRewriteContent content = 2;
- * @return {?proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent}
+ * optional Content content = 2;
+ * @return {?proto.edu.gla.kail.ad.LoggedBotInteraction.Content}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.getContent = function() {
-  return /** @type{?proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent} */ (
-    jspb.Message.getWrapperField(this, proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent, 2));
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.getContent = function() {
+  return /** @type{?proto.edu.gla.kail.ad.LoggedBotInteraction.Content} */ (
+    jspb.Message.getWrapperField(this, proto.edu.gla.kail.ad.LoggedBotInteraction.Content, 2));
 };
 
 
-/** @param {?proto.edu.gla.kail.ad.LoggedCastQueryRewrite.LoggedCastQueryRewriteContent|undefined} value */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.setContent = function(value) {
+/** @param {?proto.edu.gla.kail.ad.LoggedBotInteraction.Content|undefined} value */
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.setContent = function(value) {
   jspb.Message.setWrapperField(this, 2, value);
 };
 
 
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.clearContent = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.clearContent = function() {
   this.setContent(undefined);
 };
 
@@ -3127,424 +3078,7 @@ proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.clearContent = function()
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.edu.gla.kail.ad.LoggedCastQueryRewrite.prototype.hasContent = function() {
-  return jspb.Message.getField(this, 2) != null;
-};
-
-
-
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
-};
-goog.inherits(proto.edu.gla.kail.ad.LoggedCastSearcherSelection, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  proto.edu.gla.kail.ad.LoggedCastSearcherSelection.displayName = 'proto.edu.gla.kail.ad.LoggedCastSearcherSelection';
-}
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto suitable for use in Soy templates.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.toObject = function(opt_includeInstance) {
-  return proto.edu.gla.kail.ad.LoggedCastSearcherSelection.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    content: (f = msg.getContent()) && proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.toObject(includeInstance, f)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.edu.gla.kail.ad.LoggedCastSearcherSelection;
-  return proto.edu.gla.kail.ad.LoggedCastSearcherSelection.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setId(value);
-      break;
-    case 2:
-      var value = new proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent;
-      reader.readMessage(value,proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.deserializeBinaryFromReader);
-      msg.setContent(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.edu.gla.kail.ad.LoggedCastSearcherSelection.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getId();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getContent();
-  if (f != null) {
-    writer.writeMessage(
-      2,
-      f,
-      proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.serializeBinaryToWriter
-    );
-  }
-};
-
-
-
-/**
- * Generated by JsPbCodeGenerator.
- * @param {Array=} opt_data Optional initial data array, typically from a
- * server response, or constructed directly in Javascript. The array is used
- * in place and becomes part of the constructed object. It is not cloned.
- * If no data is provided, the constructed object will be empty, but still
- * valid.
- * @extends {jspb.Message}
- * @constructor
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.repeatedFields_, null);
-};
-goog.inherits(proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent, jspb.Message);
-if (goog.DEBUG && !COMPILED) {
-  proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.displayName = 'proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent';
-}
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.repeatedFields_ = [2,3];
-
-
-
-if (jspb.Message.GENERATE_TO_OBJECT) {
-/**
- * Creates an object representation of this proto suitable for use in Soy templates.
- * Field names that are reserved in JavaScript and will be renamed to pb_name.
- * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
- * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
- * @return {!Object}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.toObject = function(opt_includeInstance) {
-  return proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.toObject(opt_includeInstance, this);
-};
-
-
-/**
- * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
- *     http://goto/soy-param-migration
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent} msg The msg instance to transform.
- * @return {!Object}
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.toObject = function(includeInstance, msg) {
-  var f, obj = {
-    query: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    passageIdList: jspb.Message.getRepeatedField(msg, 2),
-    passageTextList: jspb.Message.getRepeatedField(msg, 3)
-  };
-
-  if (includeInstance) {
-    obj.$jspbMessageInstance = msg;
-  }
-  return obj;
-};
-}
-
-
-/**
- * Deserializes binary data (in protobuf wire format).
- * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.deserializeBinary = function(bytes) {
-  var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent;
-  return proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.deserializeBinaryFromReader(msg, reader);
-};
-
-
-/**
- * Deserializes binary data (in protobuf wire format) from the
- * given reader into the given message object.
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent} msg The message object to deserialize into.
- * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.deserializeBinaryFromReader = function(msg, reader) {
-  while (reader.nextField()) {
-    if (reader.isEndGroup()) {
-      break;
-    }
-    var field = reader.getFieldNumber();
-    switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setQuery(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addPassageId(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addPassageText(value);
-      break;
-    default:
-      reader.skipField();
-      break;
-    }
-  }
-  return msg;
-};
-
-
-/**
- * Serializes the message to binary data (in protobuf wire format).
- * @return {!Uint8Array}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.serializeBinary = function() {
-  var writer = new jspb.BinaryWriter();
-  proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.serializeBinaryToWriter(this, writer);
-  return writer.getResultBuffer();
-};
-
-
-/**
- * Serializes the given message to binary data (in protobuf wire
- * format), writing to the given BinaryWriter.
- * @param {!proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent} message
- * @param {!jspb.BinaryWriter} writer
- * @suppress {unusedLocalVariables} f is only used for nested messages
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.serializeBinaryToWriter = function(message, writer) {
-  var f = undefined;
-  f = message.getQuery();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-  f = message.getPassageIdList();
-  if (f.length > 0) {
-    writer.writeRepeatedString(
-      2,
-      f
-    );
-  }
-  f = message.getPassageTextList();
-  if (f.length > 0) {
-    writer.writeRepeatedString(
-      3,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string query = 1;
- * @return {string}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.getQuery = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.setQuery = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * repeated string passage_id = 2;
- * @return {!Array<string>}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.getPassageIdList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 2));
-};
-
-
-/** @param {!Array<string>} value */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.setPassageIdList = function(value) {
-  jspb.Message.setField(this, 2, value || []);
-};
-
-
-/**
- * @param {!string} value
- * @param {number=} opt_index
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.addPassageId = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
-};
-
-
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.clearPassageIdList = function() {
-  this.setPassageIdList([]);
-};
-
-
-/**
- * repeated string passage_text = 3;
- * @return {!Array<string>}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.getPassageTextList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 3));
-};
-
-
-/** @param {!Array<string>} value */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.setPassageTextList = function(value) {
-  jspb.Message.setField(this, 3, value || []);
-};
-
-
-/**
- * @param {!string} value
- * @param {number=} opt_index
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.addPassageText = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 3, value, opt_index);
-};
-
-
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.prototype.clearPassageTextList = function() {
-  this.setPassageTextList([]);
-};
-
-
-/**
- * optional string id = 1;
- * @return {string}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.getId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/** @param {string} value */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional LoggedCastSearcherSelectionContent content = 2;
- * @return {?proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.getContent = function() {
-  return /** @type{?proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent} */ (
-    jspb.Message.getWrapperField(this, proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent, 2));
-};
-
-
-/** @param {?proto.edu.gla.kail.ad.LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent|undefined} value */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.setContent = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.clearContent = function() {
-  this.setContent(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {!boolean}
- */
-proto.edu.gla.kail.ad.LoggedCastSearcherSelection.prototype.hasContent = function() {
+proto.edu.gla.kail.ad.LoggedBotInteraction.prototype.hasContent = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 

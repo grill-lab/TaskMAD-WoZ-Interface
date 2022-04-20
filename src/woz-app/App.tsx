@@ -32,7 +32,7 @@ import {
   dataSourceForURL,
   IConfigurationEditorCallback,
 } from "./ConfigurationEditor"
-import { InteractionType, LoggedCastQueryRewrite, LoggedCastSearcherSelection } from "./connector/agent-dialogue/generated/client_pb"
+import { InteractionType, LoggedBotInteraction } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
 import { DataSources } from "./DataSource"
 import { Store } from "./Store"
@@ -64,8 +64,7 @@ type AppState =
     woz_message: string
     // Array used to keep track of anything the wizard typed in the search bar. 
     searched_queries: Array<SearchQueryModel>
-    selected_api_paragraphs: Map<string, Map<string, string | string[]>>
-    api_query_rewritten: Map<string, Map<string, string>>
+    logged_bot_interactions: LoggedBotInteraction[]
   }
 
 
@@ -83,8 +82,7 @@ export default class App extends React.Component<{}, AppState> {
       selected_buttons: [],
       woz_message: "",
       searched_queries: [],
-      selected_api_paragraphs: new Map(),
-      api_query_rewritten: new Map()
+      logged_bot_interactions: []
     }
 
     localStorage.clear()
@@ -147,8 +145,7 @@ export default class App extends React.Component<{}, AppState> {
         selected_buttons: this.state.selected_buttons,
         woz_message: this.state.woz_message,
         searched_queries: this.state.searched_queries,
-        selected_api_paragraphs: this.state.selected_api_paragraphs,
-        api_query_rewritten: this.state.api_query_rewritten
+        logged_bot_interactions: this.state.logged_bot_interactions
       }
     } else {
       return {
@@ -156,8 +153,7 @@ export default class App extends React.Component<{}, AppState> {
         selected_buttons: this.state.selected_buttons,
         woz_message: this.state.woz_message,
         searched_queries: this.state.searched_queries,
-        selected_api_paragraphs: this.state.selected_api_paragraphs,
-        api_query_rewritten: this.state.api_query_rewritten
+        logged_bot_interactions: this.state.logged_bot_interactions
       }
     }
   }
@@ -259,95 +255,41 @@ export default class App extends React.Component<{}, AppState> {
     }
   }
 
-  private onSearchResultClick = (
+  private onBotUseResponseClick = (
     issued_query?: string,
-    passage_id?: string,
-    passage_text?: string,
-    passageSize?: string) => {
+    bot_response?: string,
+    bot_rewritten_response?: string) => {
+
 
     if (issued_query !== undefined && issued_query.length !== 0 &&
-      passage_id !== undefined && passage_id.length !== 0 &&
-      passage_text !== undefined && passage_text.length !== 0 &&
-      passageSize !== undefined && passageSize.length !== 0) {
+      bot_response !== undefined && bot_response.length !== 0) {
 
-      var map_key: string = generateHashString(`${issued_query.toLowerCase()}_${passageSize}`, 16);
-      if (this.state.selected_api_paragraphs.has(map_key)) {
-        if (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id')?.includes(passage_id)) {
-          this.state.selected_api_paragraphs.get(map_key)?.set('passage_id',
-            (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as []).filter(id => {
-              return id !== passage_id;
-            }))
+      // Generate the ID for this interaction 
+      var interactionId: string = generateHashString(`${issued_query}-${bot_response}-${bot_rewritten_response}`, 16);
+      // If we already have this exacty interaction we skip 
+      var totalInteractionsCount = this.state.logged_bot_interactions.filter(function (i) {
+        return i.getId() === interactionId;
+      });
+      if (totalInteractionsCount.length > 0) return;
 
-          this.state.selected_api_paragraphs.get(map_key)?.set('passage_text',
-            (this.state.selected_api_paragraphs.get(map_key)?.get('passage_text') as []).filter(p => {
-              return p !== passage_text;
-            }))
+      // Create the Logged Interaction Object
+      var loggedBotInteraction: LoggedBotInteraction = new LoggedBotInteraction();
+      loggedBotInteraction.setId(interactionId);
+      var loggedBotInteractionContent: LoggedBotInteraction.Content = new LoggedBotInteraction.Content();
+      loggedBotInteractionContent.setIssuedQuery(issued_query);
+      loggedBotInteractionContent.setBotResponse(bot_response);
+      loggedBotInteractionContent.setBotRewrittenResponse(bot_rewritten_response!);
+      loggedBotInteraction.setContent(loggedBotInteractionContent);
 
-          if (this.state.selected_api_paragraphs.get(map_key)?.get('passage_id')?.length === 0) {
-            this.state.selected_api_paragraphs.delete(map_key);
-          }
-
-          this.selectedCheckboxesSearcherResults = this.selectedCheckboxesSearcherResults.filter(el => {
-            return el !== passage_id
-          });
-
-          this.setState(
-            {
-              selected_api_paragraphs: this.state.selected_api_paragraphs
-            });
-
-        } else {
-          this.state.selected_api_paragraphs.get(map_key)?.set('passage_id', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_id') as [], passage_id])
-          this.state.selected_api_paragraphs.get(map_key)?.set('passage_text', [...this.state.selected_api_paragraphs.get(map_key)?.get('passage_text') as [], passage_text])
-          this.selectedCheckboxesSearcherResults.push(passage_id);
-          this.setState(
-            {
-              woz_message: `${this.state.woz_message} ${passage_text}`,
-              selected_api_paragraphs: this.state.selected_api_paragraphs
-            });
-        }
-
-      } else {
-        this.selectedCheckboxesSearcherResults.push(passage_id);
-
-        var tempMap = new Map();
-        tempMap.set('query', issued_query);
-        tempMap.set("passage_id", [passage_id])
-        tempMap.set("passage_text", [passage_text])
-        this.state.selected_api_paragraphs.set(map_key, tempMap);
-
-        this.setState(
-          {
-            woz_message: `${this.state.woz_message} ${passage_text}`,
-            selected_api_paragraphs: this.state.selected_api_paragraphs
-          });
-
-      }
+      this.state.logged_bot_interactions.push(loggedBotInteraction);
+      this.setState({
+        logged_bot_interactions: this.state.logged_bot_interactions,
+        woz_message: `${this.state.woz_message} ${bot_rewritten_response?.trim() === "" ? bot_response : bot_rewritten_response}`
+      });
 
     }
   }
 
-  private onQueryRewrite = (query: string, context: string, rewritten_query: string) => {
-    if (query !== undefined && query.length !== 0 &&
-      context !== undefined && context.length !== 0 &&
-      rewritten_query !== undefined && rewritten_query.length !== 0) {
-      var unique_id = generateHashString(`${query}${context}${rewritten_query}`, 16);
-      if (!this.state.api_query_rewritten.has(unique_id)) {
-        var tempMap = new Map();
-        tempMap.set("query", query);
-        tempMap.set("context", context);
-        tempMap.set("rewritten_query", rewritten_query);
-
-        this.state.api_query_rewritten.set(unique_id, tempMap);
-
-        this.setState({
-          api_query_rewritten: this.state.api_query_rewritten
-        })
-      }
-    }
-
-
-  }
 
   // Sends a message to the backend. By default the interaction type is text and there are no actions
   // associated
@@ -355,47 +297,11 @@ export default class App extends React.Component<{}, AppState> {
     const value = this.state.woz_message.trim()
 
     if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
-
-      // Need to create a loggedCastQueryRewrite obj from the map
-      var loggedCastQueryRewriteArray: LoggedCastQueryRewrite[] = [];
-
-      for (const [key, value] of this.state.api_query_rewritten.entries()) {
-        var tempLoggedCastQueryRewrite: LoggedCastQueryRewrite = new LoggedCastQueryRewrite()
-        tempLoggedCastQueryRewrite.setId(key);
-        var loggedCastQueryRewriteContent: LoggedCastQueryRewrite.LoggedCastQueryRewriteContent = new LoggedCastQueryRewrite.LoggedCastQueryRewriteContent();
-        loggedCastQueryRewriteContent.setQuery(value.get("query") ?? "");
-        loggedCastQueryRewriteContent.setContext(value.get("context") ?? "")
-        loggedCastQueryRewriteContent.setRewrittenQuery(value.get("rewritten_query") ?? "")
-        tempLoggedCastQueryRewrite.setContent(loggedCastQueryRewriteContent);
-
-        loggedCastQueryRewriteArray.push(tempLoggedCastQueryRewrite);
-
-      }
-
-      // Need to create a loggedCastQueryRewrite obj from the map
-      var loggedCastSearcherSelectionArray: LoggedCastSearcherSelection[] = [];
-
-      for (const [key, value] of this.state.selected_api_paragraphs.entries()) {
-
-        var tempLoggedCastSearcherSelection: LoggedCastSearcherSelection = new LoggedCastSearcherSelection()
-
-        tempLoggedCastSearcherSelection.setId(key);
-        var loggedCastSearcherSelectionContent: LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent = new LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent();
-        loggedCastSearcherSelectionContent.setQuery((value.get("query") as string) ?? "");
-        loggedCastSearcherSelectionContent.setPassageIdList((value.get("passage_id") as []) ?? [])
-        loggedCastSearcherSelectionContent.setPassageTextList((value.get("passage_text") as []) ?? [])
-
-        tempLoggedCastSearcherSelection.setContent(loggedCastSearcherSelectionContent);
-        loggedCastSearcherSelectionArray.push(tempLoggedCastSearcherSelection);
-
-      }
-
       WozConnectors.shared.selectedConnector.onMessageSentLogger(value,
         this.state.selected_buttons,
         this.state.searched_queries,
         interactionType, actions,
-        loggedCastSearcherSelectionArray,
-        loggedCastQueryRewriteArray);
+        this.state.logged_bot_interactions);
     }
     this.onRevert();
   }
@@ -404,7 +310,7 @@ export default class App extends React.Component<{}, AppState> {
   // Simply resets the state
   private onRevert = () => {
     this.selectedCheckboxesSearcherResults = [];
-    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [], selected_api_paragraphs: new Map(), api_query_rewritten: new Map() })
+    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [], logged_bot_interactions: [] })
 
   }
 
@@ -463,11 +369,7 @@ export default class App extends React.Component<{}, AppState> {
             onRevert={this.onRevert}
             wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
-            trackSearchedQueries={this.trackSearchedQueries}
-            onSearchResultClick={this.onSearchResultClick}
-            onQueryRewrite={this.onQueryRewrite}
-            selectedCheckboxesSearcherResults={this.selectedCheckboxesSearcherResults}
-
+            trackSearchedQueries={this.trackSearchedQueries} onBotUseResponseClick={this.onBotUseResponseClick}
           />
         } else {
           content = <WozCollection
@@ -485,9 +387,7 @@ export default class App extends React.Component<{}, AppState> {
             wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
             trackSearchedQueries={this.trackSearchedQueries}
-            onSearchResultClick={this.onSearchResultClick}
-            onQueryRewrite={this.onQueryRewrite}
-            selectedCheckboxesSearcherResults={this.selectedCheckboxesSearcherResults} />
+            onBotUseResponseClick={this.onBotUseResponseClick} />
         }
         break
     }

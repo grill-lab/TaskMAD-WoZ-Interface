@@ -243,15 +243,10 @@ export class InputInteraction extends jspb.Message {
   clearLoggedUserRecipeSelectTimestampList(): InputInteraction;
   addLoggedUserRecipeSelectTimestamp(value: number, index?: number): InputInteraction;
 
-  getLoggedCastQueryRewriteList(): Array<LoggedCastQueryRewrite>;
-  setLoggedCastQueryRewriteList(value: Array<LoggedCastQueryRewrite>): InputInteraction;
-  clearLoggedCastQueryRewriteList(): InputInteraction;
-  addLoggedCastQueryRewrite(value?: LoggedCastQueryRewrite, index?: number): LoggedCastQueryRewrite;
-
-  getLoggedCastSearcherSelectionList(): Array<LoggedCastSearcherSelection>;
-  setLoggedCastSearcherSelectionList(value: Array<LoggedCastSearcherSelection>): InputInteraction;
-  clearLoggedCastSearcherSelectionList(): InputInteraction;
-  addLoggedCastSearcherSelection(value?: LoggedCastSearcherSelection, index?: number): LoggedCastSearcherSelection;
+  getLoggedBotInteractionList(): Array<LoggedBotInteraction>;
+  setLoggedBotInteractionList(value: Array<LoggedBotInteraction>): InputInteraction;
+  clearLoggedBotInteractionList(): InputInteraction;
+  addLoggedBotInteraction(value?: LoggedBotInteraction, index?: number): LoggedBotInteraction;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputInteraction.AsObject;
@@ -283,8 +278,7 @@ export namespace InputInteraction {
     loggedUserRecipeSectionList: Array<string>,
     loggedUserRecipeSectionValueList: Array<string>,
     loggedUserRecipeSelectTimestampList: Array<number>,
-    loggedCastQueryRewriteList: Array<LoggedCastQueryRewrite.AsObject>,
-    loggedCastSearcherSelectionList: Array<LoggedCastSearcherSelection.AsObject>,
+    loggedBotInteractionList: Array<LoggedBotInteraction.AsObject>,
   }
 }
 
@@ -376,107 +370,52 @@ export namespace Result {
   }
 }
 
-export class LoggedCastQueryRewrite extends jspb.Message {
+export class LoggedBotInteraction extends jspb.Message {
   getId(): string;
-  setId(value: string): LoggedCastQueryRewrite;
+  setId(value: string): LoggedBotInteraction;
 
-  getContent(): LoggedCastQueryRewrite.LoggedCastQueryRewriteContent | undefined;
-  setContent(value?: LoggedCastQueryRewrite.LoggedCastQueryRewriteContent): LoggedCastQueryRewrite;
+  getContent(): LoggedBotInteraction.Content | undefined;
+  setContent(value?: LoggedBotInteraction.Content): LoggedBotInteraction;
   hasContent(): boolean;
-  clearContent(): LoggedCastQueryRewrite;
+  clearContent(): LoggedBotInteraction;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): LoggedCastQueryRewrite.AsObject;
-  static toObject(includeInstance: boolean, msg: LoggedCastQueryRewrite): LoggedCastQueryRewrite.AsObject;
-  static serializeBinaryToWriter(message: LoggedCastQueryRewrite, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): LoggedCastQueryRewrite;
-  static deserializeBinaryFromReader(message: LoggedCastQueryRewrite, reader: jspb.BinaryReader): LoggedCastQueryRewrite;
+  toObject(includeInstance?: boolean): LoggedBotInteraction.AsObject;
+  static toObject(includeInstance: boolean, msg: LoggedBotInteraction): LoggedBotInteraction.AsObject;
+  static serializeBinaryToWriter(message: LoggedBotInteraction, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): LoggedBotInteraction;
+  static deserializeBinaryFromReader(message: LoggedBotInteraction, reader: jspb.BinaryReader): LoggedBotInteraction;
 }
 
-export namespace LoggedCastQueryRewrite {
+export namespace LoggedBotInteraction {
   export type AsObject = {
     id: string,
-    content?: LoggedCastQueryRewrite.LoggedCastQueryRewriteContent.AsObject,
+    content?: LoggedBotInteraction.Content.AsObject,
   }
 
-  export class LoggedCastQueryRewriteContent extends jspb.Message {
-    getQuery(): string;
-    setQuery(value: string): LoggedCastQueryRewriteContent;
+  export class Content extends jspb.Message {
+    getIssuedQuery(): string;
+    setIssuedQuery(value: string): Content;
 
-    getContext(): string;
-    setContext(value: string): LoggedCastQueryRewriteContent;
+    getBotResponse(): string;
+    setBotResponse(value: string): Content;
 
-    getRewrittenQuery(): string;
-    setRewrittenQuery(value: string): LoggedCastQueryRewriteContent;
+    getBotRewrittenResponse(): string;
+    setBotRewrittenResponse(value: string): Content;
 
     serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): LoggedCastQueryRewriteContent.AsObject;
-    static toObject(includeInstance: boolean, msg: LoggedCastQueryRewriteContent): LoggedCastQueryRewriteContent.AsObject;
-    static serializeBinaryToWriter(message: LoggedCastQueryRewriteContent, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): LoggedCastQueryRewriteContent;
-    static deserializeBinaryFromReader(message: LoggedCastQueryRewriteContent, reader: jspb.BinaryReader): LoggedCastQueryRewriteContent;
+    toObject(includeInstance?: boolean): Content.AsObject;
+    static toObject(includeInstance: boolean, msg: Content): Content.AsObject;
+    static serializeBinaryToWriter(message: Content, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): Content;
+    static deserializeBinaryFromReader(message: Content, reader: jspb.BinaryReader): Content;
   }
 
-  export namespace LoggedCastQueryRewriteContent {
+  export namespace Content {
     export type AsObject = {
-      query: string,
-      context: string,
-      rewrittenQuery: string,
-    }
-  }
-
-}
-
-export class LoggedCastSearcherSelection extends jspb.Message {
-  getId(): string;
-  setId(value: string): LoggedCastSearcherSelection;
-
-  getContent(): LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent | undefined;
-  setContent(value?: LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent): LoggedCastSearcherSelection;
-  hasContent(): boolean;
-  clearContent(): LoggedCastSearcherSelection;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): LoggedCastSearcherSelection.AsObject;
-  static toObject(includeInstance: boolean, msg: LoggedCastSearcherSelection): LoggedCastSearcherSelection.AsObject;
-  static serializeBinaryToWriter(message: LoggedCastSearcherSelection, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): LoggedCastSearcherSelection;
-  static deserializeBinaryFromReader(message: LoggedCastSearcherSelection, reader: jspb.BinaryReader): LoggedCastSearcherSelection;
-}
-
-export namespace LoggedCastSearcherSelection {
-  export type AsObject = {
-    id: string,
-    content?: LoggedCastSearcherSelection.LoggedCastSearcherSelectionContent.AsObject,
-  }
-
-  export class LoggedCastSearcherSelectionContent extends jspb.Message {
-    getQuery(): string;
-    setQuery(value: string): LoggedCastSearcherSelectionContent;
-
-    getPassageIdList(): Array<string>;
-    setPassageIdList(value: Array<string>): LoggedCastSearcherSelectionContent;
-    clearPassageIdList(): LoggedCastSearcherSelectionContent;
-    addPassageId(value: string, index?: number): LoggedCastSearcherSelectionContent;
-
-    getPassageTextList(): Array<string>;
-    setPassageTextList(value: Array<string>): LoggedCastSearcherSelectionContent;
-    clearPassageTextList(): LoggedCastSearcherSelectionContent;
-    addPassageText(value: string, index?: number): LoggedCastSearcherSelectionContent;
-
-    serializeBinary(): Uint8Array;
-    toObject(includeInstance?: boolean): LoggedCastSearcherSelectionContent.AsObject;
-    static toObject(includeInstance: boolean, msg: LoggedCastSearcherSelectionContent): LoggedCastSearcherSelectionContent.AsObject;
-    static serializeBinaryToWriter(message: LoggedCastSearcherSelectionContent, writer: jspb.BinaryWriter): void;
-    static deserializeBinary(bytes: Uint8Array): LoggedCastSearcherSelectionContent;
-    static deserializeBinaryFromReader(message: LoggedCastSearcherSelectionContent, reader: jspb.BinaryReader): LoggedCastSearcherSelectionContent;
-  }
-
-  export namespace LoggedCastSearcherSelectionContent {
-    export type AsObject = {
-      query: string,
-      passageIdList: Array<string>,
-      passageTextList: Array<string>,
+      issuedQuery: string,
+      botResponse: string,
+      botRewrittenResponse: string,
     }
   }
 

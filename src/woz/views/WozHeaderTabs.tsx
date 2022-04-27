@@ -195,16 +195,17 @@ export class WozHeaderTabs extends React.Component<IWozHeaderTabsProperties, IWo
       this.dropDownOptions = this.props.dialogue.messages.map((message, i) => {
 
         if (message.messageType === InteractionType.TEXT && !isStringImagePath(message.text) && !isStringVideoPath(message.text)) {
-          if (this.dropdownSelected.includes(i) === false) {
-            if (this.dropdownSelected.length >= 3) {
-              this.dropdownSelected.shift();
-            }
-            this.dropdownSelected.push(i);
-            if (message.userID === WozConnectors.shared.selectedConnector.chatUserID && !this.dropdownLabelsToHighlight.includes(i)) {
-              this.dropdownLabelsToHighlight.push(i);
-            }
+          // if (this.dropdownSelected.includes(i) === false) {
+          //   if (this.dropdownSelected.length >= 3) {
+          //     this.dropdownSelected.shift();
+          //   }
+          //   this.dropdownSelected.push(i);
 
 
+
+          // }
+          if (message.userID === WozConnectors.shared.selectedConnector.chatUserID && !this.dropdownLabelsToHighlight.includes(i)) {
+            this.dropdownLabelsToHighlight.push(i);
           }
           return { key: i, text: message.text, value: i }
         }

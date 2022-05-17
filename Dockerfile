@@ -12,27 +12,10 @@ COPY package.json ./
 RUN npm install
 RUN npm install fetch
 
-# START - PROTOBUF INSTALLATION
 RUN apt-get update && \
     apt-get -y install git unzip build-essential autoconf libtool
 
-
-# RUN git clone https://github.com/google/protobuf.git && \
-#     cd protobuf && \
-#     ./autogen.sh && \
-#     ./configure && \
-#     make && \
-#     make install && \
-#     ldconfig && \
-#     make clean && \
-#     cd .. && \
-#     rm -r protobuf
-
-# RUN curl -OL https://github.com/grpc/grpc-web/releases/download/1.2.1/protoc-gen-grpc-web-1.2.1-linux-x86_64
-# RUN mv protoc-gen-grpc-web-1.2.1-linux-x86_64 /usr/bin/protoc-gen-grpc-web
-# RUN chmod +x /usr/bin/protoc-gen-grpc-web
-# END - PROTOBUF INSTALLATION
-
+# START - PROTOBUF INSTALLATION
 # Download proto zip
 ENV PROTOC_ZIP=protoc-3.14.0-linux-x86_64.zip
 RUN curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/${PROTOC_ZIP}
@@ -50,6 +33,9 @@ RUN curl -OL https://github.com/grpc/grpc-web/releases/download/1.2.1/${GRPC_WEB
 # Copy into path
 RUN mv ${GRPC_WEB} ${GRPC_WEB_PATH}
 RUN chmod +x ${GRPC_WEB_PATH}
+# END - PROTOBUF INSTALLATION
+
+
 
 # COPY PROJECT FILES 
 COPY . ./

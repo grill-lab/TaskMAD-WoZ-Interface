@@ -243,6 +243,9 @@ export class InputInteraction extends jspb.Message {
   clearLoggedUserRecipeSelectTimestampList(): InputInteraction;
   addLoggedUserRecipeSelectTimestamp(value: number, index?: number): InputInteraction;
 
+  getAudioBase64(): string;
+  setAudioBase64(value: string): InputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: InputInteraction): InputInteraction.AsObject;
@@ -273,6 +276,7 @@ export namespace InputInteraction {
     loggedUserRecipeSectionList: Array<string>,
     loggedUserRecipeSectionValueList: Array<string>,
     loggedUserRecipeSelectTimestampList: Array<number>,
+    audioBase64: string,
   }
 }
 
@@ -301,6 +305,11 @@ export class OutputInteraction extends jspb.Message {
   hasUnstructuredResult(): boolean;
   clearUnstructuredResult(): OutputInteraction;
 
+  getInteractionTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setInteractionTime(value?: google_protobuf_timestamp_pb.Timestamp): OutputInteraction;
+  hasInteractionTime(): boolean;
+  clearInteractionTime(): OutputInteraction;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): OutputInteraction.AsObject;
   static toObject(includeInstance: boolean, msg: OutputInteraction): OutputInteraction.AsObject;
@@ -317,6 +326,7 @@ export namespace OutputInteraction {
     type: InteractionType,
     resultList: Array<Result.AsObject>,
     unstructuredResult?: google_protobuf_struct_pb.Struct.AsObject,
+    interactionTime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
   }
 }
 

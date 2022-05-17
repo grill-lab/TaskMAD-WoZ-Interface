@@ -53,7 +53,7 @@ message InteractionResponse {
     ClientId client_id = 3; // The ID of the client the request is sent from.
     repeated OutputInteraction interaction = 4;
     ClientMessageStatus message_status = 5; // The status of the message received from the agent-dialogue-core.
-    string error_message = 6; // The error message informing the user about the particular error that occurred.
+    string error_message = 6; // The error message informing the user about the particular error that occured.
     string user_id = 7; // The unique ID of the user that the response is sent to.
     string session_id = 8; // The unique ID of the session that the response is sent within.
 }
@@ -91,6 +91,7 @@ message InputInteraction {
     repeated string logged_user_recipe_section = 18; // The list the sections associated to the checkboxes clicked
     repeated string logged_user_recipe_section_value = 19; // The list of checkboxes text associated to the checboxes clicked
     repeated int64 logged_user_recipe_select_timestamp = 20; // The list of timestamps associated to the checkboxes clicked
+    string audio_base64 = 21; // The message sent to the agent in base64 format
 }
 
 // Message sent back by agent.
@@ -101,7 +102,7 @@ message OutputInteraction {
     InteractionType type = 4;
     repeated Result result = 5; // To allow search results and similar output
     google.protobuf.Struct unstructured_result = 6; // General unstructured result used to handle responses in different format (e.g. json)
-    google.protobuf.Timestamp interaction_time = 7;
+    google.protobuf.Timestamp interaction_time = 7; // The time of the creation of the response.
 }
 
 message Result {

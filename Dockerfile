@@ -17,16 +17,16 @@ RUN apt-get update && \
     apt-get -y install git unzip build-essential autoconf libtool
 
 
-RUN git clone https://github.com/google/protobuf.git && \
-    cd protobuf && \
-    ./autogen.sh && \
-    ./configure && \
-    make && \
-    make install && \
-    ldconfig && \
-    make clean && \
-    cd .. && \
-    rm -r protobuf
+# RUN git clone https://github.com/google/protobuf.git && \
+#     cd protobuf && \
+#     ./autogen.sh && \
+#     ./configure && \
+#     make && \
+#     make install && \
+#     ldconfig && \
+#     make clean && \
+#     cd .. && \
+#     rm -r protobuf
 
 RUN curl -OL https://github.com/grpc/grpc-web/releases/download/1.2.1/protoc-gen-grpc-web-1.2.1-linux-x86_64
 RUN mv protoc-gen-grpc-web-1.2.1-linux-x86_64 /usr/bin/protoc-gen-grpc-web

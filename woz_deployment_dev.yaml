@@ -11,7 +11,7 @@ spec:
   selector:
     app: woz-app
   type: LoadBalancer
-  loadBalancerIP: "34.118.99.86"
+  loadBalancerIP: "34.111.50.148"
 ---
 apiVersion: apps/v1
 kind: Deployment

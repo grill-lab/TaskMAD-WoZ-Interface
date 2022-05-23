@@ -2,11 +2,11 @@
 steps:
 # Build the chat image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}', '.']
+  args: ['build', '-t', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}', '.']
 
 # Push the image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}']
+  args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}']
 
 # deploy container image to GKE
 - name: 'gcr.io/cloud-builders/kubectl'
@@ -18,17 +18,17 @@ steps:
   - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
   - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
 
-- name: 'gcr.io/cloud-builders/kubectl'
-  args:
-  - apply
-  - -f
-  - ${_INGRESS_FILE}
-  env:
-  - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
-  - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args:
+#   - apply
+#   - -f
+#   - ${_INGRESS_FILE}
+#   env:
+#   - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
+#   - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
 
 substitutions:
-  _REPOSITORY: agent-dialogue-system 
+  _ARTIFACT_REGISTRY_REPOSITORY: task-mad-images-repository 
   _IMAGE_NAME: woz
   _IMAGE_VERSION: latest
   _K8_FILE: woz_deployment_nginx.yaml

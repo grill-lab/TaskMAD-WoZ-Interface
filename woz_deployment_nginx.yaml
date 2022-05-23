@@ -33,6 +33,7 @@ spec:
       - name: woz
         image: europe-west2-docker.pkg.dev/agentdialogue-2cd4b/task-mad-images-repository/woz:latest
         #imagePullPolicy: Never
+        imagePullPolicy: Always
         stdin: true
         ports:
           - containerPort: 80

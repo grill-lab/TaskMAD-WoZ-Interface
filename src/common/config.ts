@@ -1,1 +1,1 @@
-export const SERVER_IP = 'http://34.116.152.174'
+export const SERVER_IP = 'https://backend-server.online'

@@ -10,8 +10,7 @@ spec:
     name: http
   selector:
     app: woz-app
-  type: LoadBalancer
-  loadBalancerIP: "34.118.60.174"
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -5,7 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: woz-ip
     # Enable this flag if we want to use the self-managed certificate
-    # networking.gke.io/managed-certificates: woz-managed-cert
+    networking.gke.io/managed-certificates: woz-managed-cert
     kubernetes.io/ingress.class: "gce"
 spec:
   defaultBackend:

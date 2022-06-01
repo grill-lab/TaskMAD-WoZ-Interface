@@ -46,7 +46,7 @@ export class Store implements IStore {
       agentDialogue: {
         conversationId: "test",
         serverURL: SERVER_IP,
-        userId: "ADwizardtest",
+        userId: "agent",
       },
       generateScreenNavigation: true,
       knownSpreadsheets: {

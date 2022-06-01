@@ -10,8 +10,7 @@ spec:
     name: http
   selector:
     app: woz-app
-  type: LoadBalancer
-  loadBalancerIP: "34.111.50.148"
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,8 +29,9 @@ spec:
     spec:
       containers:
       - name: woz
-        image: europe-west2-docker.pkg.dev/agentdialoguesystem/agent-dialogue-system/woz:latest
+        image: europe-west2-docker.pkg.dev/agentdialogue-2cd4b/task-mad-images-repository/woz:latest
         #imagePullPolicy: Never
+        imagePullPolicy: Always
         stdin: true
         ports:
           - containerPort: 3000

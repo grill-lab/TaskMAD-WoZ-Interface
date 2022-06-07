@@ -9,6 +9,16 @@ steps:
   args: ['push', 'europe-west2-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPOSITORY}/${_IMAGE_NAME}:${_IMAGE_VERSION}']
 
 # deploy container image to GKE
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - apply
+  - -f
+  - ${_ROOT_FOLDER}/${_FRONTEND_CONFIG_FILE}
+  env:
+  - CLOUDSDK_COMPUTE_REGION=${_CLUSTER_LOCATION}
+  - CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}
+
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
   - apply
@@ -31,6 +41,7 @@ substitutions:
   _ARTIFACT_REGISTRY_REPOSITORY: task-mad-images-repository 
   _IMAGE_NAME: woz
   _IMAGE_VERSION: latest
+  _FRONTEND_CONFIG_FILE: frontend_config.yaml
   _K8_FILE: woz_deployment_nginx.yaml
   _INGRESS_FILE: woz_managed_cert_ingress.yaml
   _CLUSTER_LOCATION: europe-central2-b

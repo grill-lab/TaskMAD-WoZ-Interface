@@ -49,13 +49,13 @@ export class SearchResultModal
 
         // Perform a request and extract the page associated to the specific paragraph. 
         let apiResponse: Object = await WozConnectors.shared.selectedConnector.onAgentInteractionApiRequest(Struct.fromJavaScript({
-            "service_name":"search_api",
+            "service_name": "search_api",
             "api_endpoint": "page",
             "request_body": {
                 "knowledge_source": this.props.clickedButton.buttonOriginEnumToString(),
                 "section_id": this.props.clickedButton.id
             }
-        }), "SearchAPI");
+        }), "ExternalServices");
 
 
         // Check if the response returned something (and not a null object)
@@ -147,7 +147,7 @@ export class SearchResultModal
                         : (<Checkbox key={key} label={paragraph_content} onChange={() => {
                             this.props.onParagraphClicked(paragraphButtonModel);
                             console.log(paragraphButtonModel);
-                            
+
                         }}
                             defaultChecked={this.props.selectedButtons.filter(button => button.hashedId === paragraphButtonModel.hashedId).length === 1}
                             className={styles(css.modalCheckBox, highlightParagraph)}></Checkbox>)

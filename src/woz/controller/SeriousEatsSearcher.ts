@@ -40,7 +40,7 @@ export class SeriousEatsSearcher extends Searcher {
                 "knowledge_source": "seriouseats",
                 "query": request.query.trim()
             }
-        }), "SearchAPI");
+        }), "ExternalServices");
 
         // Check if the response returned something 
         // and check if the response has the proper format 

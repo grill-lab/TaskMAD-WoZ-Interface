@@ -41,7 +41,7 @@ export class WikiSearcher extends Searcher {
                 "knowledge_source": "wikipedia",
                 "query": request.query.trim()
             }
-        }), "SearchAPI");
+        }), "ExternalServices");
 
         // Check if the response returned something 
         // and check if the response has the proper format 

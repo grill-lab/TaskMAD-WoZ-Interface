@@ -41,7 +41,7 @@ export class StackExchangeCookingSearcher extends Searcher {
                 "knowledge_source": "stack_exchange_cooking",
                 "query": request.query.trim()
             }
-        }), "SearchAPI");
+        }), "ExternalServices");
 
         // Check if the response returned something 
         // and check if the response has the proper format 

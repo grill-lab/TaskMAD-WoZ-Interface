@@ -173,75 +173,10 @@ export class InputInteraction extends jspb.Message {
   getLanguageCode(): string;
   setLanguageCode(value: string): InputInteraction;
 
-  getLoggedSearchQueriesList(): Array<string>;
-  setLoggedSearchQueriesList(value: Array<string>): InputInteraction;
-  clearLoggedSearchQueriesList(): InputInteraction;
-  addLoggedSearchQueries(value: string, index?: number): InputInteraction;
-
-  getLoggedSearchQueriesTimestampList(): Array<number>;
-  setLoggedSearchQueriesTimestampList(value: Array<number>): InputInteraction;
-  clearLoggedSearchQueriesTimestampList(): InputInteraction;
-  addLoggedSearchQueriesTimestamp(value: number, index?: number): InputInteraction;
-
-  getLoggedPageIdsList(): Array<string>;
-  setLoggedPageIdsList(value: Array<string>): InputInteraction;
-  clearLoggedPageIdsList(): InputInteraction;
-  addLoggedPageIds(value: string, index?: number): InputInteraction;
-
-  getLoggedParagraphIdsList(): Array<string>;
-  setLoggedParagraphIdsList(value: Array<string>): InputInteraction;
-  clearLoggedParagraphIdsList(): InputInteraction;
-  addLoggedParagraphIds(value: string, index?: number): InputInteraction;
-
-  getLoggedParagraphTextsList(): Array<string>;
-  setLoggedParagraphTextsList(value: Array<string>): InputInteraction;
-  clearLoggedParagraphTextsList(): InputInteraction;
-  addLoggedParagraphTexts(value: string, index?: number): InputInteraction;
-
-  getLoggedPageOriginsList(): Array<string>;
-  setLoggedPageOriginsList(value: Array<string>): InputInteraction;
-  clearLoggedPageOriginsList(): InputInteraction;
-  addLoggedPageOrigins(value: string, index?: number): InputInteraction;
-
-  getLoggedPageTitlesList(): Array<string>;
-  setLoggedPageTitlesList(value: Array<string>): InputInteraction;
-  clearLoggedPageTitlesList(): InputInteraction;
-  addLoggedPageTitles(value: string, index?: number): InputInteraction;
-
-  getLoggedSectionTitlesList(): Array<string>;
-  setLoggedSectionTitlesList(value: Array<string>): InputInteraction;
-  clearLoggedSectionTitlesList(): InputInteraction;
-  addLoggedSectionTitles(value: string, index?: number): InputInteraction;
-
-  getLoggedParagraphTimestampList(): Array<number>;
-  setLoggedParagraphTimestampList(value: Array<number>): InputInteraction;
-  clearLoggedParagraphTimestampList(): InputInteraction;
-  addLoggedParagraphTimestamp(value: number, index?: number): InputInteraction;
-
-  getLoggedUserRecipePageIdsList(): Array<string>;
-  setLoggedUserRecipePageIdsList(value: Array<string>): InputInteraction;
-  clearLoggedUserRecipePageIdsList(): InputInteraction;
-  addLoggedUserRecipePageIds(value: string, index?: number): InputInteraction;
-
-  getLoggedUserRecipePageTitleList(): Array<string>;
-  setLoggedUserRecipePageTitleList(value: Array<string>): InputInteraction;
-  clearLoggedUserRecipePageTitleList(): InputInteraction;
-  addLoggedUserRecipePageTitle(value: string, index?: number): InputInteraction;
-
-  getLoggedUserRecipeSectionList(): Array<string>;
-  setLoggedUserRecipeSectionList(value: Array<string>): InputInteraction;
-  clearLoggedUserRecipeSectionList(): InputInteraction;
-  addLoggedUserRecipeSection(value: string, index?: number): InputInteraction;
-
-  getLoggedUserRecipeSectionValueList(): Array<string>;
-  setLoggedUserRecipeSectionValueList(value: Array<string>): InputInteraction;
-  clearLoggedUserRecipeSectionValueList(): InputInteraction;
-  addLoggedUserRecipeSectionValue(value: string, index?: number): InputInteraction;
-
-  getLoggedUserRecipeSelectTimestampList(): Array<number>;
-  setLoggedUserRecipeSelectTimestampList(value: Array<number>): InputInteraction;
-  clearLoggedUserRecipeSelectTimestampList(): InputInteraction;
-  addLoggedUserRecipeSelectTimestamp(value: number, index?: number): InputInteraction;
+  getInteractionLogs(): InteractionLogs | undefined;
+  setInteractionLogs(value?: InteractionLogs): InputInteraction;
+  hasInteractionLogs(): boolean;
+  clearInteractionLogs(): InputInteraction;
 
   getAudioBase64(): string;
   setAudioBase64(value: string): InputInteraction;
@@ -262,20 +197,7 @@ export namespace InputInteraction {
     type: InteractionType,
     deviceType: string,
     languageCode: string,
-    loggedSearchQueriesList: Array<string>,
-    loggedSearchQueriesTimestampList: Array<number>,
-    loggedPageIdsList: Array<string>,
-    loggedParagraphIdsList: Array<string>,
-    loggedParagraphTextsList: Array<string>,
-    loggedPageOriginsList: Array<string>,
-    loggedPageTitlesList: Array<string>,
-    loggedSectionTitlesList: Array<string>,
-    loggedParagraphTimestampList: Array<number>,
-    loggedUserRecipePageIdsList: Array<string>,
-    loggedUserRecipePageTitleList: Array<string>,
-    loggedUserRecipeSectionList: Array<string>,
-    loggedUserRecipeSectionValueList: Array<string>,
-    loggedUserRecipeSelectTimestampList: Array<number>,
+    interactionLogs?: InteractionLogs.AsObject,
     audioBase64: string,
   }
 }
@@ -366,6 +288,98 @@ export namespace Result {
     shortDescription: string,
     fullText: string,
   }
+}
+
+export class InteractionLogs extends jspb.Message {
+  getSearchQueriesList(): Array<InteractionLogs.SearchQuery>;
+  setSearchQueriesList(value: Array<InteractionLogs.SearchQuery>): InteractionLogs;
+  clearSearchQueriesList(): InteractionLogs;
+  addSearchQueries(value?: InteractionLogs.SearchQuery, index?: number): InteractionLogs.SearchQuery;
+
+  getInteractionSourcesList(): Array<InteractionLogs.InteractionSource>;
+  setInteractionSourcesList(value: Array<InteractionLogs.InteractionSource>): InteractionLogs;
+  clearInteractionSourcesList(): InteractionLogs;
+  addInteractionSources(value?: InteractionLogs.InteractionSource, index?: number): InteractionLogs.InteractionSource;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): InteractionLogs.AsObject;
+  static toObject(includeInstance: boolean, msg: InteractionLogs): InteractionLogs.AsObject;
+  static serializeBinaryToWriter(message: InteractionLogs, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): InteractionLogs;
+  static deserializeBinaryFromReader(message: InteractionLogs, reader: jspb.BinaryReader): InteractionLogs;
+}
+
+export namespace InteractionLogs {
+  export type AsObject = {
+    searchQueriesList: Array<InteractionLogs.SearchQuery.AsObject>,
+    interactionSourcesList: Array<InteractionLogs.InteractionSource.AsObject>,
+  }
+
+  export class SearchQuery extends jspb.Message {
+    getQuery(): string;
+    setQuery(value: string): SearchQuery;
+
+    getEventTimestamp(): number;
+    setEventTimestamp(value: number): SearchQuery;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): SearchQuery.AsObject;
+    static toObject(includeInstance: boolean, msg: SearchQuery): SearchQuery.AsObject;
+    static serializeBinaryToWriter(message: SearchQuery, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): SearchQuery;
+    static deserializeBinaryFromReader(message: SearchQuery, reader: jspb.BinaryReader): SearchQuery;
+  }
+
+  export namespace SearchQuery {
+    export type AsObject = {
+      query: string,
+      eventTimestamp: number,
+    }
+  }
+
+
+  export class InteractionSource extends jspb.Message {
+    getPageId(): string;
+    setPageId(value: string): InteractionSource;
+
+    getPageOrigin(): string;
+    setPageOrigin(value: string): InteractionSource;
+
+    getPageTitle(): string;
+    setPageTitle(value: string): InteractionSource;
+
+    getSectionTitle(): string;
+    setSectionTitle(value: string): InteractionSource;
+
+    getParagraphId(): string;
+    setParagraphId(value: string): InteractionSource;
+
+    getParagraphText(): string;
+    setParagraphText(value: string): InteractionSource;
+
+    getEventTimestamp(): number;
+    setEventTimestamp(value: number): InteractionSource;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): InteractionSource.AsObject;
+    static toObject(includeInstance: boolean, msg: InteractionSource): InteractionSource.AsObject;
+    static serializeBinaryToWriter(message: InteractionSource, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): InteractionSource;
+    static deserializeBinaryFromReader(message: InteractionSource, reader: jspb.BinaryReader): InteractionSource;
+  }
+
+  export namespace InteractionSource {
+    export type AsObject = {
+      pageId: string,
+      pageOrigin: string,
+      pageTitle: string,
+      sectionTitle: string,
+      paragraphId: string,
+      paragraphText: string,
+      eventTimestamp: number,
+    }
+  }
+
 }
 
 export enum ClientId { 

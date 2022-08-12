@@ -26,7 +26,7 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
-import { InteractionType } from "./generated/client_pb"
+import { InteractionLogs, InteractionType } from "./generated/client_pb"
 
 export interface IADConnectorModel {
   readonly conversationId?: string
@@ -184,54 +184,36 @@ export class ADConnector implements IWozConnector {
       return
     }
 
+    let interactionLogs = new InteractionLogs();
+    if(selectedButtons !== undefined){
+      for(let i = 0; i < selectedButtons.length; i++){
+        let interactionSource = new InteractionLogs.InteractionSource();
+        interactionSource.setPageId(selectedButtons[i].pageId!);
+        interactionSource.setPageOrigin(ButtonOrigin[selectedButtons[i].buttonOrigin!]);
+        interactionSource.setPageTitle(selectedButtons[i].pageTitle!);
+        interactionSource.setSectionTitle(selectedButtons[i].sectionTitle!);
+        interactionSource.setParagraphId(selectedButtons[i].paragraphId!);
+        interactionSource.setParagraphText(selectedButtons[i].tooltip);
+        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButtons[i].clickedTimestamp!))
+        interactionLogs.addInteractionSources(interactionSource);
+      }
+    }
+   
+    if(searchedQueries !== undefined){
+      for(let i = 0; i < searchedQueries.length; i++){
+        let searchQuery = new InteractionLogs.SearchQuery();
+        searchQuery.setQuery(searchedQueries[i].searchedQuery);
+        searchQuery.setEventTimestamp(convertDateToTimestamp(searchedQueries[i].searchTimestamp));
+        interactionLogs.addSearchQueries(searchQuery);
+      }
+    }
+
+    
+
     const message = new Message({
       text: buttonModel.tooltip,
       userID: this.model.userId,
-      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
-        return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedSearchQueriesTimestamp: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
-        return selectedQuery.searchTimestamp !== undefined ? convertDateToTimestamp(selectedQuery.searchTimestamp) : convertDateToTimestamp(new Date())
-      }).filter((el) => {
-        return el !== null
-      }) : [],
-      loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.paragraphId !== undefined ? selectedButton.paragraphId : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphTexts: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.tooltip !== undefined ? selectedButton.tooltip : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedPageOrigins: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.buttonOrigin !== undefined ? ButtonOrigin[selectedButton.buttonOrigin] : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedPageTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.pageTitle !== undefined ? selectedButton.pageTitle : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedSectionTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphTimestamp: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.clickedTimestamp !== undefined ? convertDateToTimestamp(selectedButton.clickedTimestamp) : convertDateToTimestamp(new Date())
-      }).filter((el) => {
-        return el !== null
-      }) : [],
+      interactionLogs: interactionLogs
     })
 
     if (this.onMessage !== undefined) {
@@ -253,56 +235,36 @@ export class ADConnector implements IWozConnector {
       return
     }
 
+    let interactionLogs = new InteractionLogs();
+    if(selectedButtons !== undefined){
+      for(let i = 0; i < selectedButtons.length; i++){
+        let interactionSource = new InteractionLogs.InteractionSource();
+        interactionSource.setPageId(selectedButtons[i].pageId!);
+        interactionSource.setPageOrigin(ButtonOrigin[selectedButtons[i].buttonOrigin!]);
+        interactionSource.setPageTitle(selectedButtons[i].pageTitle!);
+        interactionSource.setSectionTitle(selectedButtons[i].sectionTitle!);
+        interactionSource.setParagraphId(selectedButtons[i].paragraphId!);
+        interactionSource.setParagraphText(selectedButtons[i].tooltip);
+        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButtons[i].clickedTimestamp!))
+        interactionLogs.addInteractionSources(interactionSource);
+      }
+    }
+   
+    if(searchedQueries !== undefined){
+      for(let i = 0; i < searchedQueries.length; i++){
+        let searchQuery = new InteractionLogs.SearchQuery();
+        searchQuery.setQuery(searchedQueries[i].searchedQuery);
+        searchQuery.setEventTimestamp(convertDateToTimestamp(searchedQueries[i].searchTimestamp));
+        interactionLogs.addSearchQueries(searchQuery);
+      }
+    }
+
     const message = new Message({
       text: inputValue,
       userID: this.model.userId,
       messageType: interactionType,
       actions: actions,
-      loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
-        return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedSearchQueriesTimestamp: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
-        return selectedQuery.searchTimestamp !== undefined ? convertDateToTimestamp(selectedQuery.searchTimestamp) : convertDateToTimestamp(new Date())
-      }).filter((el) => {
-        return el !== null
-      }) : [],
-      loggedPageIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.pageId !== undefined ? selectedButton.pageId : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphIds: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.paragraphId !== undefined ? selectedButton.paragraphId : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphTexts: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.tooltip !== undefined ? selectedButton.tooltip : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedPageOrigins: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.buttonOrigin !== undefined ? ButtonOrigin[selectedButton.buttonOrigin] : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedPageTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.pageTitle !== undefined ? selectedButton.pageTitle : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedSectionTitles: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.sectionTitle !== undefined ? selectedButton.sectionTitle : ''
-      }).filter((el) => {
-        return el !== ''
-      }) : [],
-      loggedParagraphTimestamp: selectedButtons !== undefined ? selectedButtons.map((selectedButton) => {
-        return selectedButton.clickedTimestamp !== undefined ? convertDateToTimestamp(selectedButton.clickedTimestamp) : convertDateToTimestamp(new Date())
-      }).filter((el) => {
-        return el !== null
-      }) : [],
+      interactionLogs: interactionLogs
     })
 
     if (this.onMessage !== undefined) {

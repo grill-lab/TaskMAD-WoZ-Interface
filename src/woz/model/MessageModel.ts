@@ -16,23 +16,15 @@
 
 import * as uuid from "uuid"
 import {PartialBy} from "../../common/util"
-import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionLogs, InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 
 export interface IMessage {
   id: string
   text: string
   time: Date
   userID?: string
-  loggedSearchQueries?: Array<string>
-  loggedSearchQueriesTimestamp?: Array<number>
-  loggedPageIds?: Array<string>
-  loggedParagraphIds?: Array<string>
-  loggedParagraphTexts?: Array<string>
-  loggedPageOrigins?: Array<string>
-  loggedPageTitles?: Array<string>
-  loggedSectionTitles?: Array<string>
-  loggedParagraphTimestamp?: Array<number>
 
+  interactionLogs?: InteractionLogs
   // Specific type of this message
   messageType?: InteractionType
   actions?: Array<string>
@@ -88,25 +80,7 @@ export class Message implements IMessage {
    * attributes as lists. Each element at index i will correspond to the specific button 
    * fetures (i.e. each button will have a pageId, paragraphId, origin and Text associated).
    */
-  // Attribute used in order to log the queries searched while composing this message
-  public readonly loggedSearchQueries?: Array<string>
-  // Attribute used in order to log the timestamp of queries searched while composing this message
-  public readonly loggedSearchQueriesTimestamp?: Array<number>
-  // Attribute used in order to log the PageIds of the paragraphs associated to the buttons clicked
-  public readonly loggedPageIds?: Array<string>
-  // Attribute used in order to log the Paragraphids of the paragraphs associated to the buttons clicked
-  public readonly loggedParagraphIds?: Array<string>
-  // Attribute used in order to log the Text of the paragraphs associated to the buttons clicked
-  public readonly loggedParagraphTexts?: Array<string>
-  // Attribute used in order to log the Origin (i.e. Excel, Wikipedia, Serious Eats etc...) 
-  // of the paragraphs associated to the buttons clicked
-  public readonly loggedPageOrigins?: Array<string>
-  // Attribute used in order to log the Page Title of the paragraphs associated to the buttons clicked
-  public readonly loggedPageTitles?: Array<string>
-  // Attribute used in order to log the Sction Title of the paragraphs associated to the buttons clicked
-  public readonly loggedSectionTitles?: Array<string>
-  // Attribute used in order to log the timestamp of paragraph clicked while composing this message
-  public readonly loggedParagraphTimestamp?: Array<number>
+  public readonly interactionLogs?: InteractionLogs
   // Type of the specific sent message
   public readonly messageType?: InteractionType
   // Actions to execute in the case InteractionType.ACTION
@@ -114,4 +88,5 @@ export class Message implements IMessage {
 
 
 }
+
 

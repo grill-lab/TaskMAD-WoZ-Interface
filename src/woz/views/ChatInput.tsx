@@ -1,12 +1,12 @@
 import * as React from "react"
 import { Icon } from "semantic-ui-react"
-import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionAction, InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 import css from "./ChatInput.module.css"
 import { ControlledInput } from "./ValueInput"
 
 export interface IChatInputProperties {
   onEnter?: (text: string) => void
-  onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
+  onCommit: (interactionType?: InteractionType, actions?: Array<InteractionAction>) => void
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage: string

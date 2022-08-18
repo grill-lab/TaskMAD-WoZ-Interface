@@ -26,7 +26,7 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
-import { InteractionLogs, InteractionType } from "./generated/client_pb"
+import { InteractionAction, InteractionLogs, InteractionType } from "./generated/client_pb"
 
 export interface IADConnectorModel {
   readonly conversationId?: string
@@ -87,7 +87,8 @@ export class ADConnector implements IWozConnector {
       }
       this.service.terminate()
     }
-    return this.service = new ADConnection(this.model.serverURL)
+    this.service = new ADConnection(this.model.serverURL)
+    return this.service;
   }
 
   public get model(): IADConnectorModel {
@@ -126,7 +127,7 @@ export class ADConnector implements IWozConnector {
       return undefined
     }
 
-    return this.stream = this.connection.subscribe({
+    this.stream = this.connection.subscribe({
       conversationID: this.model.conversationId,
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
@@ -136,7 +137,8 @@ export class ADConnector implements IWozConnector {
         }
       },
       userID: this.model.userId,
-    })
+    });
+    return this.stream;
   }
 
   // noinspection JSUnusedGlobalSymbols
@@ -172,9 +174,9 @@ export class ADConnector implements IWozConnector {
         serverURL: params.serverURL,
         userId: params.userID,
       }
-      return new Promise((resolve) => { resolve(true) })
+      return Promise.resolve(true);
     }
-    return new Promise((resolve) => { resolve(false) })
+    return Promise.resolve(false);
   }
 
 
@@ -186,24 +188,24 @@ export class ADConnector implements IWozConnector {
 
     let interactionLogs = new InteractionLogs();
     if(selectedButtons !== undefined){
-      for(let i = 0; i < selectedButtons.length; i++){
+      for(let selectedButton of selectedButtons){
         let interactionSource = new InteractionLogs.InteractionSource();
-        interactionSource.setPageId(selectedButtons[i].pageId!);
-        interactionSource.setPageOrigin(ButtonOrigin[selectedButtons[i].buttonOrigin!]);
-        interactionSource.setPageTitle(selectedButtons[i].pageTitle!);
-        interactionSource.setSectionTitle(selectedButtons[i].sectionTitle!);
-        interactionSource.setParagraphId(selectedButtons[i].paragraphId!);
-        interactionSource.setParagraphText(selectedButtons[i].tooltip);
-        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButtons[i].clickedTimestamp!))
+        interactionSource.setPageId(selectedButton.pageId!);
+        interactionSource.setPageOrigin(ButtonOrigin[selectedButton.buttonOrigin!]);
+        interactionSource.setPageTitle(selectedButton.pageTitle!);
+        interactionSource.setSectionTitle(selectedButton.sectionTitle!);
+        interactionSource.setParagraphId(selectedButton.paragraphId!);
+        interactionSource.setParagraphText(selectedButton.tooltip);
+        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButton.clickedTimestamp!))
         interactionLogs.addInteractionSources(interactionSource);
       }
     }
    
     if(searchedQueries !== undefined){
-      for(let i = 0; i < searchedQueries.length; i++){
+      for(let query of searchedQueries){
         let searchQuery = new InteractionLogs.SearchQuery();
-        searchQuery.setQuery(searchedQueries[i].searchedQuery);
-        searchQuery.setEventTimestamp(convertDateToTimestamp(searchedQueries[i].searchTimestamp));
+        searchQuery.setQuery(query.searchedQuery);
+        searchQuery.setEventTimestamp(convertDateToTimestamp(query.searchTimestamp));
         interactionLogs.addSearchQueries(searchQuery);
       }
     }
@@ -228,7 +230,7 @@ export class ADConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<InteractionAction>) => {
     
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
@@ -237,24 +239,24 @@ export class ADConnector implements IWozConnector {
 
     let interactionLogs = new InteractionLogs();
     if(selectedButtons !== undefined){
-      for(let i = 0; i < selectedButtons.length; i++){
+      for(let selectedButton of selectedButtons){
         let interactionSource = new InteractionLogs.InteractionSource();
-        interactionSource.setPageId(selectedButtons[i].pageId!);
-        interactionSource.setPageOrigin(ButtonOrigin[selectedButtons[i].buttonOrigin!]);
-        interactionSource.setPageTitle(selectedButtons[i].pageTitle!);
-        interactionSource.setSectionTitle(selectedButtons[i].sectionTitle!);
-        interactionSource.setParagraphId(selectedButtons[i].paragraphId!);
-        interactionSource.setParagraphText(selectedButtons[i].tooltip);
-        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButtons[i].clickedTimestamp!))
+        interactionSource.setPageId(selectedButton.pageId!);
+        interactionSource.setPageOrigin(ButtonOrigin[selectedButton.buttonOrigin!]);
+        interactionSource.setPageTitle(selectedButton.pageTitle!);
+        interactionSource.setSectionTitle(selectedButton.sectionTitle!);
+        interactionSource.setParagraphId(selectedButton.paragraphId!);
+        interactionSource.setParagraphText(selectedButton.tooltip);
+        interactionSource.setEventTimestamp(convertDateToTimestamp(selectedButton.clickedTimestamp!))
         interactionLogs.addInteractionSources(interactionSource);
       }
     }
    
     if(searchedQueries !== undefined){
-      for(let i = 0; i < searchedQueries.length; i++){
+      for(let query of searchedQueries){
         let searchQuery = new InteractionLogs.SearchQuery();
-        searchQuery.setQuery(searchedQueries[i].searchedQuery);
-        searchQuery.setEventTimestamp(convertDateToTimestamp(searchedQueries[i].searchTimestamp));
+        searchQuery.setQuery(query.searchedQuery);
+        searchQuery.setEventTimestamp(convertDateToTimestamp(query.searchTimestamp));
         interactionLogs.addSearchQueries(searchQuery);
       }
     }
@@ -279,6 +281,6 @@ export class ADConnector implements IWozConnector {
   }
 
   public onAgentInteractionApiRequest = async (requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>  => {
-    return await this.connection.AgentInteractionApi(requestBody, agentName);
+    return this.connection.AgentInteractionApi(requestBody, agentName);
   }
 }

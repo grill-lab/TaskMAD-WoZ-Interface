@@ -25,14 +25,13 @@ import {
   WozCollection,
   WozCollectionState,
 } from "../woz/views/WozCollection"
-// import logo from "./logo.svg";
 import css from "./App.module.css"
 import {
   ConfigurationEditor,
   dataSourceForURL,
   IConfigurationEditorCallback,
 } from "./ConfigurationEditor"
-import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
+import { InteractionAction, InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
 import { DataSources } from "./DataSource"
 import { Store } from "./Store"
@@ -188,8 +187,6 @@ export default class App extends React.Component<{}, AppState> {
     try {
       // const successful =
       document.execCommand("copy")
-      // const msg = successful ? "successful" : "unsuccessful"
-      // console.log("Fallback: Copying text command was " + msg)
     } catch (err) {
       console.error("Fallback: Oops, unable to copy", err)
     }
@@ -223,7 +220,7 @@ export default class App extends React.Component<{}, AppState> {
     buttonClicked.clickedTimestamp = new Date();
 
     // If the button clicked is an image or a video then we simply send the message
-    if(isStringImagePath(buttonClicked.tooltip) || isStringVideoPath(buttonClicked.tooltip)){
+    if (isStringImagePath(buttonClicked.tooltip) || isStringVideoPath(buttonClicked.tooltip)) {
       WozConnectors.shared.selectedConnector.onButtonClickLogger(buttonClicked, this.state.selected_buttons, this.state.searched_queries);
       this.onRevert();
       return
@@ -246,14 +243,14 @@ export default class App extends React.Component<{}, AppState> {
             woz_message: this.state.woz_message + ' ' + buttonClicked.tooltip
           });
       }
-    }    
+    }
   }
 
   // Sends a message to the backend. By default the interaction type is text and there are no actions
   // associated
-  private onMessageSent = (interactionType?: InteractionType, actions?: Array<string>) => {
+  private onMessageSent = (interactionType?: InteractionType, actions?: Array<InteractionAction>) => {
     const value = this.state.woz_message.trim()
-    
+
     if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
       WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
     }
@@ -263,15 +260,15 @@ export default class App extends React.Component<{}, AppState> {
 
   // Simply resets the state
   private onRevert = () => {
-    this.setState({woz_message: "", selected_buttons: [], searched_queries: []})
+    this.setState({ woz_message: "", selected_buttons: [], searched_queries: [] })
   }
 
   // Function used to detect when text in the input box changes
   private onInputBoxChange = (text: string) => {
-    if(text.trim().length === 0){
-      this.setState({selected_buttons: []})
+    if (text.trim().length === 0) {
+      this.setState({ selected_buttons: [] })
     }
-    this.setState({woz_message: text})
+    this.setState({ woz_message: text })
   }
 
   // Function used in order to keep track of the search queries
@@ -282,9 +279,9 @@ export default class App extends React.Component<{}, AppState> {
       searchedQuery: query.trim(),
       searchTimestamp: new Date()
     });
-    if(query !== undefined 
-      && query.trim() !== '' 
-      && this.state.searched_queries.findIndex(query => query.searchedQuery === searchQuery.searchedQuery) === -1){
+    if (query !== undefined
+      && query.trim() !== ''
+      && this.state.searched_queries.findIndex(query => query.searchedQuery === searchQuery.searchedQuery) === -1) {
       this.state.searched_queries.push(searchQuery);
     }
 
@@ -294,7 +291,6 @@ export default class App extends React.Component<{}, AppState> {
     if (window.localStorage === undefined) {
       log.error("local storage is not supported")
     }
-    // log.debug("local storage is supported: ", window.localStorage);
 
     let content: any = null
 
@@ -336,7 +332,7 @@ export default class App extends React.Component<{}, AppState> {
             onCommit={this.onMessageSent}
             onChange={this.onInputBoxChange}
             onRevert={this.onRevert}
-            wozMessage={this.state.woz_message} 
+            wozMessage={this.state.woz_message}
             onParagraphClicked={this.onButtonClick}
             trackSearchedQueries={this.trackSearchedQueries} />
         }

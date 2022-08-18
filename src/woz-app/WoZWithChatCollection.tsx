@@ -15,19 +15,19 @@
  */
 
 import * as React from "react"
-import {Grid} from "semantic-ui-react"
-import {Dialogue} from "../woz/model/DialogueModel"
-import {ChatTranscript} from "../woz/views/ChatTranscript"
+import { Grid } from "semantic-ui-react"
+import { Dialogue } from "../woz/model/DialogueModel"
+import { ChatTranscript } from "../woz/views/ChatTranscript"
 import {
   IWozCollectionProperties, WozCollection,
 } from "../woz/views/WozCollection"
 import css from "./App.module.css"
-import {WozConnectors} from "./connector/Connector"
-import {ChatInput} from "../woz/views/ChatInput"
-import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
+import { WozConnectors } from "./connector/Connector"
+import { ChatInput } from "../woz/views/ChatInput"
+import { InteractionAction, InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 
 export interface IWoZWithCharCollectionProperties
-    extends IWozCollectionProperties {
+  extends IWozCollectionProperties {
   dialogue?: Dialogue
 }
 
@@ -37,19 +37,20 @@ interface IWoZWithCharCollectionState {
 
 interface IChatComponentProperties {
   dialogue?: Dialogue
-  onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
+  onCommit: (interactionType?: InteractionType, actions?: Array<InteractionAction>) => void
   onChange: (text: string) => void
   onRevert: () => void
-  wozMessage:string
+  wozMessage: string
 }
 
 class ChatComponent extends React.Component<IChatComponentProperties,
-    IWoZWithCharCollectionState> {
+  IWoZWithCharCollectionState> {
 
   constructor(props: IChatComponentProperties) {
     super(props)
     this.state = {
-      dialogue: props.dialogue || new Dialogue({messages: []})}
+      dialogue: props.dialogue || new Dialogue({ messages: [] })
+    }
 
     WozConnectors.shared.selectedConnector.onMessage = (message) => {
       this.setState((prev) => {
@@ -63,25 +64,25 @@ class ChatComponent extends React.Component<IChatComponentProperties,
       <ChatTranscript
         dialogue={this.state.dialogue}
         us={WozConnectors.shared.selectedConnector.chatUserID}
-        them={[]}/>
-        <ChatInput {...this.props}/>
-       </div>
+        them={[]} />
+      <ChatInput {...this.props} />
+    </div>
   }
 }
 
 // tslint:disable-next-line:max-classes-per-file
 export class WoZWithCharCollection
-    extends React.Component<IWoZWithCharCollectionProperties, {}> {
+  extends React.Component<IWoZWithCharCollectionProperties, {}> {
 
   public render() {
     const { dialogue, ...wozProps } = this.props
 
     return <Grid id={css.appGroupId}>
       <Grid.Column width={5}>
-        <ChatComponent dialogue={dialogue} {...this.props}/>
+        <ChatComponent dialogue={dialogue} {...this.props} />
       </Grid.Column>
       <Grid.Column width={11}>
-        <WozCollection {...wozProps}/>
+        <WozCollection {...wozProps} />
       </Grid.Column>
     </Grid>
   }

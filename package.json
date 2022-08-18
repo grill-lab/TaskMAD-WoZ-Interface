@@ -10,7 +10,7 @@
     "@types/lunr": "^2.3.3",
     "crypto-js": "^4.1.1",
     "fetch": "^1.1.0",
-    "google-protobuf": "4.0.0-rc.2",
+    "google-protobuf": "^3.14.0",
     "grpc-web": "1.2.0",
     "lunr": "^2.3.8",
     "react": "^16.13.1",

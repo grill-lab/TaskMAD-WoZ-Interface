@@ -5,7 +5,7 @@ import * as grpcWeb from "grpc-web"
 import { Omit } from "../../../common/util"
 import { IMessage } from "../../../woz/model/MessageModel"
 import {
-  ClientId, InputInteraction, InteractionLogs, InteractionRequest,
+  ClientId, InputInteraction, InteractionAction, InteractionLogs, InteractionRequest,
   InteractionResponse,
   InteractionType,
 } from "./generated/client_pb"
@@ -15,7 +15,7 @@ export interface IInputInteractionArguments {
   languageCode?: string
   text?: string
   messageType?: InteractionType,
-  actions?: Array<string>
+  actions?: Array<InteractionAction>
   interactionLogs?: InteractionLogs
 }
 
@@ -125,7 +125,7 @@ export class ADConnection {
     input.setText(args.text || "")
     input.setLanguageCode(args.languageCode || "en-US")
     input.setType(args.messageType || InteractionType.TEXT)
-    input.setActionList(args.actions || []);
+    input.setActionTypeList(args.actions || []);
 
     // Set the loggin attributes
     input.setInteractionLogs(args.interactionLogs || new InteractionLogs());
@@ -189,8 +189,9 @@ export class ADConnection {
   private getClient = (): AgentDialogueClient => {
     if (this._client !== undefined) { return this._client }
     // noinspection SpellCheckingInspection
-    return this._client = new AgentDialogueClient(
+    this._client = new AgentDialogueClient(
       this._hostURL, null)
+    return this._client;
   }
 
 
@@ -248,8 +249,8 @@ export class ADConnection {
       request.setChosenAgentsList([agent])
       request.setAgentRequestParameters(requestBody);
 
-      var response: { [key: string]: JavaScriptValue; };
-      var callback = (_err: grpcWeb.Error,
+      let response: { [key: string]: JavaScriptValue; };
+      let callback = (_err: grpcWeb.Error,
         _response: InteractionResponse,) => {
 
         // If the response is successfull        

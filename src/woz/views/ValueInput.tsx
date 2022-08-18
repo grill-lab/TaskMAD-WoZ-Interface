@@ -1,12 +1,12 @@
 /* tslint:disable:max-classes-per-file */
 import * as React from "react"
 import { Button, Grid, InputProps, TextArea } from "semantic-ui-react"
-import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionAction, InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 import css from "./ChatInput.module.css"
 
 export interface IControlledComponent {
   onChanget: (newValue: string) => void
-  onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
+  onCommit: (interactionType?: InteractionType, actions?: Array<InteractionAction>) => void
   onRevert: () => void
   wozMessage: string
   displayInteractionButtons: boolean
@@ -20,12 +20,12 @@ export const ControlledInput
 
 
     // Interaction buttons used by the wizard to control the user interface 
-    var interactionButtons = displayInteractionButtons ? <Grid className={css.wozInteractionGrid}>
+    let interactionButtons = displayInteractionButtons ? <Grid className={css.wozInteractionGrid}>
       <Grid.Column width={8} className={css.wozInteractionColumns}>
-        <Button className={css.wozInteractionButton} onClick={() => onCommit(InteractionType.ACTION, ["prev"])}>Previous</Button>
+        <Button className={css.wozInteractionButton} onClick={() => onCommit(InteractionType.ACTION, [InteractionAction.PREVIOUS_STEP])}>Previous</Button>
       </Grid.Column>
       <Grid.Column width={8} className={css.wozInteractionColumns}>
-        <Button className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, ["next"])}>Next</Button>
+        <Button className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, [InteractionAction.NEXT_STEP])}>Next</Button>
       </Grid.Column>
     </Grid> : null;
     return (

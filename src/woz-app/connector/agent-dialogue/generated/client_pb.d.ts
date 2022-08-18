@@ -159,13 +159,13 @@ export class InputInteraction extends jspb.Message {
   getAudioBytes(): string;
   setAudioBytes(value: string): InputInteraction;
 
-  getActionList(): Array<string>;
-  setActionList(value: Array<string>): InputInteraction;
-  clearActionList(): InputInteraction;
-  addAction(value: string, index?: number): InputInteraction;
-
   getType(): InteractionType;
   setType(value: InteractionType): InputInteraction;
+
+  getActionTypeList(): Array<InteractionAction>;
+  setActionTypeList(value: Array<InteractionAction>): InputInteraction;
+  clearActionTypeList(): InputInteraction;
+  addActionType(value: InteractionAction, index?: number): InputInteraction;
 
   getDeviceType(): string;
   setDeviceType(value: string): InputInteraction;
@@ -193,8 +193,8 @@ export namespace InputInteraction {
   export type AsObject = {
     text: string,
     audioBytes: string,
-    actionList: Array<string>,
     type: InteractionType,
+    actionTypeList: Array<InteractionAction>,
     deviceType: string,
     languageCode: string,
     interactionLogs?: InteractionLogs.AsObject,
@@ -209,10 +209,10 @@ export class OutputInteraction extends jspb.Message {
   getAudioBytes(): string;
   setAudioBytes(value: string): OutputInteraction;
 
-  getActionList(): Array<string>;
-  setActionList(value: Array<string>): OutputInteraction;
-  clearActionList(): OutputInteraction;
-  addAction(value: string, index?: number): OutputInteraction;
+  getActionTypeList(): Array<InteractionAction>;
+  setActionTypeList(value: Array<InteractionAction>): OutputInteraction;
+  clearActionTypeList(): OutputInteraction;
+  addActionType(value: InteractionAction, index?: number): OutputInteraction;
 
   getType(): InteractionType;
   setType(value: InteractionType): OutputInteraction;
@@ -244,7 +244,7 @@ export namespace OutputInteraction {
   export type AsObject = {
     text: string,
     audioBytes: string,
-    actionList: Array<string>,
+    actionTypeList: Array<InteractionAction>,
     type: InteractionType,
     resultList: Array<Result.AsObject>,
     unstructuredResult?: google_protobuf_struct_pb.Struct.AsObject,
@@ -301,6 +301,11 @@ export class InteractionLogs extends jspb.Message {
   clearInteractionSourcesList(): InteractionLogs;
   addInteractionSources(value?: InteractionLogs.InteractionSource, index?: number): InteractionLogs.InteractionSource;
 
+  getUserInteractionSelectionsList(): Array<InteractionLogs.UserInteractionSelection>;
+  setUserInteractionSelectionsList(value: Array<InteractionLogs.UserInteractionSelection>): InteractionLogs;
+  clearUserInteractionSelectionsList(): InteractionLogs;
+  addUserInteractionSelections(value?: InteractionLogs.UserInteractionSelection, index?: number): InteractionLogs.UserInteractionSelection;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InteractionLogs.AsObject;
   static toObject(includeInstance: boolean, msg: InteractionLogs): InteractionLogs.AsObject;
@@ -313,6 +318,7 @@ export namespace InteractionLogs {
   export type AsObject = {
     searchQueriesList: Array<InteractionLogs.SearchQuery.AsObject>,
     interactionSourcesList: Array<InteractionLogs.InteractionSource.AsObject>,
+    userInteractionSelectionsList: Array<InteractionLogs.UserInteractionSelection.AsObject>,
   }
 
   export class SearchQuery extends jspb.Message {
@@ -380,6 +386,41 @@ export namespace InteractionLogs {
     }
   }
 
+
+  export class UserInteractionSelection extends jspb.Message {
+    getPageId(): string;
+    setPageId(value: string): UserInteractionSelection;
+
+    getPageTitle(): string;
+    setPageTitle(value: string): UserInteractionSelection;
+
+    getSectionTitle(): string;
+    setSectionTitle(value: string): UserInteractionSelection;
+
+    getParagraphText(): string;
+    setParagraphText(value: string): UserInteractionSelection;
+
+    getEventTimestamp(): number;
+    setEventTimestamp(value: number): UserInteractionSelection;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): UserInteractionSelection.AsObject;
+    static toObject(includeInstance: boolean, msg: UserInteractionSelection): UserInteractionSelection.AsObject;
+    static serializeBinaryToWriter(message: UserInteractionSelection, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): UserInteractionSelection;
+    static deserializeBinaryFromReader(message: UserInteractionSelection, reader: jspb.BinaryReader): UserInteractionSelection;
+  }
+
+  export namespace UserInteractionSelection {
+    export type AsObject = {
+      pageId: string,
+      pageTitle: string,
+      sectionTitle: string,
+      paragraphText: string,
+      eventTimestamp: number,
+    }
+  }
+
 }
 
 export enum ClientId { 
@@ -394,4 +435,8 @@ export enum InteractionType {
   AUDIO = 2,
   ACTION = 3,
   STATUS = 4,
+}
+export enum InteractionAction { 
+  NEXT_STEP = 0,
+  PREVIOUS_STEP = 1,
 }

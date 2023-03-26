@@ -4,6 +4,7 @@
   "homepage": "./",
   "private": true,
   "dependencies": {
+    "@types/babel__traverse": "7.14.2",
     "@stomp/stompjs": "^5.4.4",
     "@types/crypto-js": "^4.0.2",
     "@types/google-protobuf": "3.7.2",

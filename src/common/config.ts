@@ -1,1 +1,1 @@
-export const SERVER_IP = 'https://backend-server.online'
+export const SERVER_IP = 'https://taskmad-backend.grill.science'

@@ -44,16 +44,16 @@ export class Store implements IStore {
 
     this.defaults = {
       agentDialogue: {
-        conversationId: "test",
+        conversationId: "",
         serverURL: SERVER_IP,
-        userId: "agent",
+        userId: "",
       },
       generateScreenNavigation: true,
       knownSpreadsheets: {
         [defaultID]: {title: "Basic WoZ Test", lastAccess: new Date()},
       },
       selectedSpreadsheetID: undefined,
-      showChatTranscript: false,
+      showChatTranscript: true,
       vhmsg: {address: "127.0.0.1", scope: VHMSG.DEFAULT_SCOPE, secure: false},
     }
 

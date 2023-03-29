@@ -76,8 +76,8 @@ export class WozConnectors {
 
   constructor() {
     this.all = [
-      new ConsoleConnector(),
       new ADConnector(),
+      new ConsoleConnector(),
       new VHMSGConnector(),
     ]
   }

@@ -246,56 +246,6 @@ export class ConfigurationEditor
                   }}/>
             </Menu>
           </Grid.Row>
-
-          <Divider horizontal>Or</Divider>
-
-          <Grid.Row>
-            <Header>
-              Enter a new WoZ spreadsheet URL
-            </Header>
-          </Grid.Row>
-          <Grid.Row style={{paddingTop: "0"}}>
-            <Input
-                disabled={this.state.state !== ConfigurationEditorState.NONE}
-                loading={this.state.state
-                         === ConfigurationEditorState.LOADING_URL}
-                style={{width: "90%"}} fluid
-                placeholder={"Spreadsheet URL (Google or Excel format)"}
-                onChange={(_e, data) => {
-                  this.setState({error: undefined})
-                  this.coalescer.append(
-                      () => {
-                        this._loadSpreadsheetWithURL((data.value as string).trim())
-                      },
-                      500)
-                }}/>
-          </Grid.Row>
-          {errorMessage}
-          <Divider horizontal>Or</Divider>
-          <Grid.Row>
-            <Input
-                style={{width: "90%"}} fluid>
-              <input
-                  type="file"
-                  id="excel"
-                  // hide the input control
-                  style={{display: "none"}}
-                  onChange={(e) => {
-                    this._loadLocalSpreadsheet(e.currentTarget.files)
-                  }}/>
-              <Button
-                  disabled={this.state.state !== ConfigurationEditorState.NONE}
-                  loading={this.state.state
-                           === ConfigurationEditorState.LOADING_FILE}
-                  as="label"
-                  htmlFor="excel"
-                  primary
-                  // this and the Input style stretch the button
-                  style={{maxWidth: "90%", lineHeight: "normal", backgroundColor: "var(--main-color)"}}
-                  size="medium"
-              ><Icon name="upload"/>Upload Excel spreadsheet</Button>
-            </Input>
-          </Grid.Row>
         </Grid>
     )
   }

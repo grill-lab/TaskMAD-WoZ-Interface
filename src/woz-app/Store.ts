@@ -37,9 +37,6 @@ export class Store implements IStore {
 
   constructor() {
 
-    // noinspection SpellCheckingInspection
-    const defaultID = "1xaWdhQboriqFU3YLDqe4GXFPRPaO9QGtYoR9ZKk8oOo"
-
     // Important!!! Only use constant expressions here.
 
     this.defaults = {
@@ -50,7 +47,7 @@ export class Store implements IStore {
       },
       generateScreenNavigation: true,
       knownSpreadsheets: {
-        [defaultID]: {title: "Basic WoZ Test", lastAccess: new Date()},
+        [process.env.REACT_APP_SPREADSHEET_URL]: {title: "Topics", lastAccess: new Date()},
       },
       selectedSpreadsheetID: undefined,
       showChatTranscript: true,

@@ -7,6 +7,9 @@ WORKDIR /app
 # Add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
+ARG spreadsheet_url
+ENV REACT_APP_SPREADSHEET_URL=${spreadsheet_url:-"http://gem.cs.ru.nl/grad-pkg/self-dialogue_input_excel.xlsx"}
+
 # Install node dependencies
 COPY package.json ./
 RUN npm install

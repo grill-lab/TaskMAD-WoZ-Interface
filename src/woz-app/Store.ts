@@ -31,6 +31,7 @@ interface IStore {
   knownSpreadsheets: { [s: string]: IStoredSpreadsheet }
   selectedConnectorID?: string
   vhmsg: IVHMSGModel
+  topicName: string
 }
 
 export class Store implements IStore {
@@ -52,6 +53,7 @@ export class Store implements IStore {
       selectedSpreadsheetID: undefined,
       showChatTranscript: true,
       vhmsg: {address: "127.0.0.1", scope: VHMSG.DEFAULT_SCOPE, secure: false},
+      topicName: "",
     }
 
     return new Proxy(this, {
@@ -101,4 +103,6 @@ export class Store implements IStore {
 
   // @ts-ignore
   public agentDialogue: IFirebaseConnectorModel
+
+  public topicName: string
 }

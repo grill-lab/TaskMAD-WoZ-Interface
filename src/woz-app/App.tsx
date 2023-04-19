@@ -85,10 +85,16 @@ export default class App extends React.Component<{}, AppState> {
 
     const params: StringMap = {}
 
+    // build map of URL parameters
     new URL(window.location.href)
       .searchParams.forEach((value, key) => {
         params[key] = value
       })
+
+
+    // this is the new "topic" URL parameter, which is used in
+    // place of a dropdown like in the chat UI
+    Store.shared.topicName = params.topic;
 
     const dataSource = DataSources.shared.selectedDataSource
 
@@ -125,6 +131,7 @@ export default class App extends React.Component<{}, AppState> {
 
     this.state = this._newState(dataSource)
   }
+
 
   private _newState = (dataSource: IWozDataSource | undefined): AppState => {
     if (dataSource !== undefined) {

@@ -22,8 +22,6 @@ import {StringMap} from "../App"
 import {Store} from "../Store"
 import {ADConnector} from "./agent-dialogue/ADConnector"
 import { InteractionType } from "./agent-dialogue/generated/client_pb"
-import {ConsoleConnector} from "./console/ConsoleConnector"
-import {VHMSGConnector} from "./vhmsg/VHMSGConnector"
 
 export interface IWozConnector {
   readonly id: string
@@ -32,6 +30,8 @@ export interface IWozConnector {
   readonly props: { [index: string]: any | undefined }
 
   onMessage?: (message: IMessage) => void
+
+  onStepChange?: (newStepIndex: number) => void
 
   connect(params: StringMap): Promise<boolean>
 
@@ -77,8 +77,6 @@ export class WozConnectors {
   constructor() {
     this.all = [
       new ADConnector(),
-      new ConsoleConnector(),
-      new VHMSGConnector(),
     ]
   }
 

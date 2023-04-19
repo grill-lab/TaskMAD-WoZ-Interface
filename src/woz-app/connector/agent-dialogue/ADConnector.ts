@@ -68,6 +68,8 @@ export class ADConnector implements IWozConnector {
 
   public onMessage?: (message: IMessage) => void
 
+  public onStepChange?: (newStepIndex: number) => void
+
   public _model: IADConnectorModel
 
   public component = (): any => {
@@ -132,6 +134,22 @@ export class ADConnector implements IWozConnector {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
           const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType() })
+
+          // this is a bit hacky: when the "Next" button is clicked in the WoZ UI, it sends a message through the
+          // backend to the chat UI. The chat UI uses this to update its current step, and then it sends back a STATUS
+          // message containing the text 'User moved to "Step n".'
+          //
+          // This just extracts the "n" from the message so we can update the info panel on this side and
+          // keep it in sync with what the user is seeing
+            if(message.messageType == InteractionType.STATUS && message.text.startsWith("User moved to")) {
+                var text = message.text;
+                const stepIndex = parseInt(text.substr(text.indexOf("Step")+5, text.lastIndexOf('"') - text.indexOf('Step')-5))
+                console.log("Updating stepIndex to " + stepIndex)
+                // call the onStepChange callback to notify the UI component it needs to update its state
+                if(this.onStepChange !== undefined) {
+                    this.onStepChange(stepIndex)
+                }
+            }
           this.onMessage(message)
         }
       },
@@ -163,8 +181,9 @@ export class ADConnector implements IWozConnector {
     log.debug("clicked:", "'" + buttonModel.id + "'", buttonModel.tooltip)
   }
 
-  public connect(params: StringMap): Promise<boolean> {
-    if (params.userID !== undefined
+  public async connect(params: StringMap): Promise<boolean> {
+
+      if (params.userID !== undefined
       && params.conversationID !== undefined
       && params.serverURL !== undefined) {
       this.model = {

@@ -10,6 +10,7 @@ export interface IChatInputProperties {
   onChange: (text: string) => void
   onRevert: () => void
   wozMessage:string
+  disableNextButton: boolean
 }
 
 interface IChatInputState {
@@ -26,6 +27,7 @@ export class ChatInput
       onRevert={this.props.onRevert}
       onChanget={this.props.onChange}
       wozMessage={this.props.wozMessage}
+      disableNextButton={this.props.disableNextButton}
 
       icon={<Icon
         name="send" inverted circular link

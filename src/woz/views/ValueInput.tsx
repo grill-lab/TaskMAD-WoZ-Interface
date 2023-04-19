@@ -10,13 +10,14 @@ export interface IControlledComponent {
   onRevert: () => void
   wozMessage: string
   displayInteractionButtons: boolean
+  disableNextButton: boolean
 }
 
 export const ControlledInput
   : React.FunctionComponent<InputProps & IControlledComponent>
   = (props) => {
 
-    const { onChanget, onCommit, onRevert, wozMessage, displayInteractionButtons, ...inherited } = props
+    const { onChanget, onCommit, onRevert, wozMessage, displayInteractionButtons, disableNextButton, ...inherited } = props
 
 
     // Interaction buttons used by the wizard to control the user interface 
@@ -25,7 +26,7 @@ export const ControlledInput
         <Button className={css.wozInteractionButton} onClick={() => onCommit(InteractionType.ACTION, ["prev"])}>Previous</Button>
       </Grid.Column>
       <Grid.Column width={8} className={css.wozInteractionColumns}>
-        <Button className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, ["next"])}>Next</Button>
+        <Button disabled={disableNextButton} className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, ["next"])}>Next</Button>
       </Grid.Column>
     </Grid> : null;
     return (

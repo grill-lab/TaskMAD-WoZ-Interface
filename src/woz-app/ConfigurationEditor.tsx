@@ -87,19 +87,7 @@ const _extractSpreadsheetID = (url: string): string => {
 }
 
 export const dataSourceForURL = (url: string): IWozDataSource | undefined => {
-  const lowercasedURL = url.toLowerCase()
-
-  // noinspection SpellCheckingInspection
-  if (lowercasedURL.endsWith(".xlsx") || lowercasedURL.endsWith(".xls")) {
     return new ExcelURLDataSource({url})
-  }
-
-  const spreadsheetID = _extractSpreadsheetID(url)
-  if (spreadsheetID === "") {
-    return undefined
-  }
-
-  return new GoogleSheetWozDataSource({spreadsheetID})
 }
 
 export class ConfigurationEditor

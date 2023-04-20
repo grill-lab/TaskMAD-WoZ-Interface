@@ -156,9 +156,9 @@ export class WoZWithCharCollection
     private getContent() {
         let ad = Store.shared.agentDialogue
         if(ad !== undefined) {
-            if("steps_sentences" in this.state.topicData) {
+            if("steps_sentences_wizard" in this.state.topicData) {
                 // step indices in the messages are 1-n
-                return this.state.topicData["steps_sentences"][this.state.stepIndex - 1]
+                return this.state.topicData["steps_sentences_wizard"][this.state.stepIndex - 1]
             }
         }
         return ""

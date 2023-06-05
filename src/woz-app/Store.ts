@@ -40,6 +40,8 @@ export class Store implements IStore {
 
     // Important!!! Only use constant expressions here.
 
+    let url = process.env["REACT_APP_SPREADSHEET_URL"] as string
+
     this.defaults = {
       agentDialogue: {
         conversationId: "",
@@ -48,7 +50,7 @@ export class Store implements IStore {
       },
       generateScreenNavigation: true,
       knownSpreadsheets: {
-        [process.env.REACT_APP_SPREADSHEET_URL]: {title: "Topics", lastAccess: new Date()},
+        [url]: {title: "Topics", lastAccess: new Date()},
       },
       selectedSpreadsheetID: undefined,
       showChatTranscript: true,
@@ -104,5 +106,6 @@ export class Store implements IStore {
   // @ts-ignore
   public agentDialogue: IFirebaseConnectorModel
 
+  // @ts-ignore
   public topicName: string
 }

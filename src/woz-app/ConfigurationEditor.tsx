@@ -17,29 +17,23 @@
 import * as React from "react"
 import {SyntheticEvent} from "react"
 import {
-  Button,
   Checkbox,
-  Divider,
   Dropdown,
   DropdownProps,
   Grid,
   Header,
-  Icon,
-  Input,
   Menu,
   Message,
   Segment,
   Select,
   Image
 } from "semantic-ui-react"
-import {Coalescer} from "../common/Coalescer"
 import {arrayMap} from "../common/util"
 import appMetadata from "../metadata.json"
 import {IWozCollectionModel, IWozDataSource} from "../woz/model/Model"
 import {WozModel} from "../woz/model/WozModel"
 import {ExcelFileDataSource} from "../woz/provider/excel/ExcelFileDataSource"
 import {ExcelURLDataSource} from "../woz/provider/excel/ExcelURLDataSource"
-import {GoogleSheetWozDataSource} from "../woz/provider/google/GoogleSheetWozDataSource"
 import {
   collectionLoading,
   WozCollectionState,
@@ -78,14 +72,6 @@ interface IConfigurationEditorState {
   error?: Error
 }
 
-const _extractSpreadsheetID = (url: string): string => {
-  return url.trim().split("/")
-            .reduce((previousValue, currentValue) => {
-              return previousValue.length > currentValue.trim().length
-                     ? previousValue : currentValue.trim()
-            }, "")
-}
-
 export const dataSourceForURL = (url: string): IWozDataSource | undefined => {
     return new ExcelURLDataSource({url})
 }
@@ -112,8 +98,6 @@ export class ConfigurationEditor
       state: ConfigurationEditorState.NONE,
     }
   }
-
-  private readonly coalescer = new Coalescer()
 
   private _connectorEditor = () => {
     const connectors = arrayMap(WozConnectors.shared.all, (c) => {
@@ -354,8 +338,7 @@ export class ConfigurationEditor
     }
 
     const version = () => {
-      return appMetadata.major + "." + appMetadata.minor
-             + " (" + appMetadata.build + ")"
+      return appMetadata.major + " (" + appMetadata.build + ")"
     }
 
     const docPath = "./doc"

@@ -42,15 +42,13 @@ export class Dialogue implements IDialogue {
     const messages: Message[] = [message]
     const time = message.time
     if (this.messages.length !== 0 && durationBetweenDatesInSec !== 0) {
-      const lastMessageTime = this.messages[this.messages.length - 1].time
-      if (lastMessageTime.getTime()
-          < (time.getTime() - durationBetweenDatesInSec * 1000)) {
-        messages.unshift(new Message(time))
-      }
+        const lastMessageTime = this.messages[this.messages.length - 1].time
+        if (lastMessageTime.getTime() < (time.getTime() - durationBetweenDatesInSec * 1000)) {
+            messages.unshift(new Message(time))
+        }
     }
-    return new Dialogue({
-      messages: this.messages.concat(messages),
-    })
+    this.messages = this.messages.concat(message)
+    return this
   }
 }
 

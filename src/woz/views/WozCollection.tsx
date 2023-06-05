@@ -63,6 +63,7 @@ export interface IWozCollectionProperties {
   wozMessage:string
   onParagraphClicked: (buttnClicked: IButtonModel) => void
   trackSearchedQueries: (query: string) => void 
+  topicData: {}
 }
 
 interface ILoadingCollection {

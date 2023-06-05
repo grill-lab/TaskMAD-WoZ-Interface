@@ -2,11 +2,11 @@ import * as React from "react"
 import { Embed, Message } from "semantic-ui-react"
 import { isStringImagePath, isStringVideoPath } from "../../common/util"
 import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
-import { IDialogue } from "../model/DialogueModel"
+import { Dialogue } from "../model/DialogueModel"
 import css from "./ChatTranscript.module.css"
 
 export interface IChatTranscriptProperties {
-  dialogue: IDialogue
+  dialogue: Dialogue
   us: string
   them: string[],
   showWizardNotifications?: boolean

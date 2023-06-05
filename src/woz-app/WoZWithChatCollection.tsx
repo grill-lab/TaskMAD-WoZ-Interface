@@ -16,8 +16,9 @@
 
 import * as React from "react"
 import {Grid} from "semantic-ui-react"
-import { Button, Checkbox, Container, Header, Icon, Message } from "semantic-ui-react"
+import {Container} from "semantic-ui-react"
 import {Dialogue} from "../woz/model/DialogueModel"
+import {Message} from "../woz/model/MessageModel"
 import {ChatTranscript} from "../woz/views/ChatTranscript"
 import {
     IWozCollectionProperties, WozCollection,
@@ -28,229 +29,202 @@ import {ChatInput} from "../woz/views/ChatInput"
 import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 import { Store } from "./Store"
 
-export interface IWoZWithCharCollectionProperties
-extends IWozCollectionProperties {
-    dialogue?: Dialogue
-}
+export interface IWoZWithCharCollectionProperties extends IWozCollectionProperties {}
 
 interface IWoZWithCharCollectionState {
-dialogue: Dialogue
+    dialogue: Dialogue
+    disableNextButton: boolean
+    stepIndex: number
+    messagesPerStep: Map<number, number>
+    lastMessageFromUser: boolean
 }
 
 interface IChatComponentProperties {
-    dialogue?: Dialogue
+    dialogue: Dialogue
+    disableNextButton: boolean
     onCommit: (interactionType?: InteractionType, actions?: Array<string>) => void
     onChange: (text: string) => void
     onRevert: () => void
-    wozMessage:string
+    wozMessage: string
+    disableSendButton: boolean
 }
 
-class ChatComponent extends React.Component<IChatComponentProperties,
-    IWoZWithCharCollectionState> {
-
-    constructor(props: IChatComponentProperties) {
-        super(props)
-        this.state = {
-            dialogue: props.dialogue || new Dialogue({messages: []}),
-            stepDone: false,
-        }
-
-        WozConnectors.shared.selectedConnector.onMessage = (message) => {
-            this.setState((prev) => {
-                return { dialogue: prev.dialogue.appending(message, 300) }
-            })
-        }
-    }
-
-    private shouldDisableNextButton(dialogue) {
-        // The idea here is to selectively enable/disable the "Next" button in the ChatInput
-        // component based on the message history, with the goal being to prevent the user
-        // from repeatedly clicking "Next" to reach the end of the task without actually
-        // going through a conversation. 
-        //
-        // The "Next" button should become enabled after at least one message has been exchanged
-        // in each direction during the current step. There are two cases to check for:
-        //
-        //  1. We're at the beginning of the dialogue, so there are no previous "step changed"
-        //      messages and we just want to check for messages sent since the conversation began.
-        //  2. We're in the middle of the dialogue, in which case we want to check back until we
-        //      find the most recent "step changed" message, and count the messages since then.
-        if(dialogue === undefined) {
-            return true;
-        }
-
-        // if less than 2 messages, button must be disabled
-        if(dialogue.messages.length < 2) {
-            return true;
-        }
-
-        // already reached this step
-        if(this.state.stepDone) {
-            console.log("already reached step, button is enabled")
-            return false;
-        }
-
-        let messageIndex = dialogue.messages.length;
-        let textMessagesUs = 0;
-        let textMessagesThem = 0;
-        let shouldDisable = true;
-
-        // work through the messages in the dialogue object, starting from most recent
-        while(messageIndex > 0) {
-            messageIndex--;
-
-            const message = dialogue.messages[messageIndex];
-            // ignore non-STATUS/TEXT messages
-            if(message.messageType != InteractionType.STATUS && message.messageType != InteractionType.TEXT) {
-                continue;
-            }
-
-            // if it's a TEXT message, check who sent it and increment the counter
-            if (message.messageType == InteractionType.TEXT) {
-                if(message.userID == WozConnectors.shared.selectedConnector.chatUserID) {
-                    textMessagesUs++;
-                } else {
-                    textMessagesThem++;
-                }
-            } else {
-                // if it's a STATUS message, check if it's a step change and break out if so
-                if(message.text.startsWith("User moved to")) {
-                    break
-                }
-            }
-        }
-
-        // by this point either we've found a previous step change STATUS message, or run out of
-        // messages. in either case now want to check how many text messages were found in the
-        // dialogue up to that point, and enable the button if we have at least 1 in each direction
-        shouldDisable = (textMessagesUs >= 1 && textMessagesThem >= 1) ? false : true;
-        console.log("disableButton? Us %o / Them %o, result %o", textMessagesUs, textMessagesThem, shouldDisable)
-
-        return shouldDisable;
-    }
-
+// this component is the parent of the ChatTranscript (responsible for displaying
+// the chat message history) and the the ChatInput (responsible for the Previous and
+// Next buttons plus the input field and Send button)
+class ChatComponent extends React.Component<IChatComponentProperties, {}> {
 
     public render() {
         return <div className={css.chat_input}>
             <ChatTranscript
-                    dialogue={this.state.dialogue}
+                    dialogue={this.props.dialogue}
                     us={WozConnectors.shared.selectedConnector.chatUserID}
                     them={[]}/>
-                <ChatInput disableNextButton={this.shouldDisableNextButton(this.state.dialogue)} {...this.props}/>
+                <ChatInput {...this.props}/>
             </div>
     }
 }
 
 // tslint:disable-next-line:max-classes-per-file
-export class WoZWithCharCollection
-extends React.Component<IWoZWithCharCollectionProperties, {}> {
+export class WoZWithCharCollection extends React.Component<IWoZWithCharCollectionProperties, IWoZWithCharCollectionState> {
 
-    constructor(props) {
+    constructor(props: IWoZWithCharCollectionProperties) {
         super(props)
-        this.state = {topicData: {}, stepIndex: 1, stepsDone: new Set()}
-
-        this._chatComponent = React.createRef()
-
-    }
-
-    async componentDidMount() {
-        // handler for "step changed" events, based on STATUS messages received
-        // from the chat webapp 
-        WozConnectors.shared.selectedConnector.onStepChange = (newStepIndex) => {
+        this.state = {
+            disableNextButton: true,
+            stepIndex: 1,
+            messagesPerStep: new Map<number, number>(),
+            dialogue: new Dialogue({messages: []}),
+            lastMessageFromUser: true, // default to true to enable sending when initiating a new conversation
+        }
+    
+        // handler for incoming messages
+        WozConnectors.shared.selectedConnector.onMessage = (message: Message) => {
             this.setState((prev) => {
-                if(!prev.stepsDone.has(newStepIndex)) {
-                    // update list with any intervening steps but not the new step
-                    // as that isn't "done" yet
-                    let i=1;
-                    for(;i<newStepIndex;i++) {
-                        prev.stepsDone.add(i)
-                    }
+                let currentStep = prev.stepIndex
+                let lastMessageFromUser = prev.lastMessageFromUser
+
+                // special case when we get a "user joined the chat" message: send back an ACTION
+                // message setting the current step 
+                if(message.messageType === InteractionType.STATUS && message.text.indexOf('joined the chat') !== -1) {
+                    console.log('sending back "set" action message')
+                    let actions = Array<string>()
+                    actions.push('step' + currentStep)
+                    WozConnectors.shared.selectedConnector.onMessageSentLogger('', [], [], InteractionType.ACTION, actions)
+                    // update the dialogue object here so the message shows up in the UI
+                    // TODO this should only need to update the dialogue entry?
+                    return { messagesPerStep: prev.messagesPerStep, stepIndex: prev.stepIndex, disableNextButton: prev.disableNextButton, lastMessageFromUser: prev.lastMessageFromUser, dialogue: prev.dialogue.appending(message, 0) }
                 }
-                this._chatComponent.current.setState({stepDone: prev.stepsDone.has(newStepIndex)})
-                return { topicData: prev.topicData, stepIndex: newStepIndex, stepsDone: prev.stepsDone }
+
+                // check if the new message has STATUS type, and if so if it has been sent to indicate that the 
+                // chat app moved to the next step. this is currently used to confirm that the woz app should also
+                // move to the same step, since this message will be sent after the woz user clicks Next, sending a 
+                // message to the chat app (via the backend), updating the chat UI, then replying with a message
+                // like this to report the change in state
+                if(message.messageType === InteractionType.STATUS && message.text.startsWith("User moved to")) {
+                    // the message text will be 'User moved to "Step n".' This just extracts the "n" from the text
+                    // so we can update the info panel on this side and keep it in sync with what the user is seeing
+                    let text = message.text;
+                    currentStep = parseInt(text.substr(text.indexOf("Step") + 5, text.lastIndexOf('"') - text.indexOf('Step') - 5))
+                    console.log("Updating stepIndex to " + currentStep)
+
+                    // now we have the step number, need to do some additional state checking/updating. we
+                    // maintain a list of the number of messages completed in each step. this is 
+                    // required to enable the "Next" button when the minimum required number of message exchanges 
+                    // (a single pair of woz and user messages) have been completed for the current step. 
+                    // the messagesPerStep state variable contains (step number, message count) key-value pairs
+                    // to track this.
+                    //
+                    // if the current step doesn't already appear in messagesPerStep, need to insert a new entry for it
+                    if(!prev.messagesPerStep.has(currentStep) || prev.messagesPerStep.get(currentStep) === -1) {
+                        // this loop just ensures we have inserted entries for all steps before the
+                        // previous step to keep things consistent. 
+                        // TODO probably not needed: this should never normally happen even if we are rejoining
+                        // a partially complete conversation, because existing messages effectively get replayed
+                        // when the ADConnection is created and so this will be triggered for each existing step
+                        // change STATUS message in the order they were originally generated
+                        let i = 1;
+                        while(i < currentStep) {
+                            if(!prev.messagesPerStep.has(i)) {
+                                console.log("IN HERE FOR STEP %o", i)
+                                prev.messagesPerStep.set(i, this.getMinTurnCountForStep(i) * 2)
+                            }
+                            i += 1
+                        }
+                        prev.messagesPerStep.set(currentStep, 0) // no messages so far in the new step
+                    }
+                } else if (message.messageType === InteractionType.TEXT) {
+                    // exchange counting only operates on TEXT messages. when we get a message, we need to 
+                    // update the number of exchanges completed in the current step. this is slightly complicated
+                    // by the fact that a step change can occur after the wizard sends a message OR after the
+                    // user sends a message, e.g. for both:
+                    //      - user message
+                    //      - step change
+                    //      - wizard message
+                    //      - user message
+                    // and
+                    //      - wizard message
+                    //      - step change
+                    //      - user message
+                    //      - wizard message
+                    // the pair of messages after the step change would count as a single exchange, subject to
+                    // the constraint that messages must always alternate between senders. A further constraint
+                    // is that we only want to enable the "Next" button in the UI if it's the wizard's turn.
+                    //
+                    // Also note that due to the way the messages are sent/received, this method will be called
+                    // for incoming AND outgoing messages so we need to check user IDs below
+
+                    // increment the number of messages in the current step
+                    if(prev.messagesPerStep.has(currentStep)) {
+                        let messagesInStep = prev.messagesPerStep.get(currentStep) as number
+                        prev.messagesPerStep.set(currentStep, messagesInStep + 1)
+                    } else {
+                        prev.messagesPerStep.set(currentStep, 1)
+                    }
+                    // note that chatUserID here is the *wizard* user ID!
+                    lastMessageFromUser = !(message.userID === WozConnectors.shared.selectedConnector.chatUserID)
+                    console.log("count now %o from message %o, from user = %o", prev.messagesPerStep.get(currentStep) as number, message, lastMessageFromUser)
+                }
+
+                let disableNextButton = true
+
+                // get the number of individual messages in the current step
+                let messagesInStep = prev.messagesPerStep.get(currentStep) as number
+
+                // need to decide if the Next button in the UI should currently be enabled or disabled. the condition for this 
+                // is that the number of "message exchanges" in the current step should be greater than or equal to the threshold
+                // set in the "min_message_exchange" key in the topic JSON data. an additional condition is that the button
+                // should only be enabled if it is the wizard's turn, meaning that the last message received was from the chat user.
+                // since message exchanges are pairs of messages, want to check if the number of messages divided by 2 is above the
+                // threshold set in the JSON data
+                if(Math.floor(messagesInStep / 2) >= this.getMinTurnCountForStep(currentStep)) {
+                    console.log("min turn count of %o (%o) reached for step %o", this.getMinTurnCountForStep(currentStep), messagesInStep, currentStep)
+                    
+                    // knowing the number of message exchanges is sufficient to enable the button, set the
+                    // state depending on whether its our turn or not (only enable the button if it is). 
+                    // however we ALSO need to consider the case where we've gone back to a previous step.
+                    // in that case I think the button should always be enabled even if the last message
+                    // was from the wizard?
+                    const highestStep = Math.max(...prev.messagesPerStep.keys())
+                    if(currentStep !== highestStep)
+                        disableNextButton = false
+                    else
+                        disableNextButton = !lastMessageFromUser
+                }
+                
+                // TODO this should also check the this.props.wozMessage value which contains the current text in the input
+                // box. If the length is 0 then the button should remain disabled
+                //console.log("wozMessage %o", this.props.wozMessage)
+                console.log({ messagesPerStep: prev.messagesPerStep, stepIndex: currentStep, disableNextButton: disableNextButton, lastMessageFromUser: lastMessageFromUser})
+                return { messagesPerStep: prev.messagesPerStep, stepIndex: currentStep, disableNextButton: disableNextButton, lastMessageFromUser: lastMessageFromUser, dialogue: prev.dialogue.appending(message, 0) }
             })
         }
-
-        // trigger loading of the topic JSON files
-        this.loadTopicData()
     }
 
-    private getContent() {
+    private getContent(): string {
+        // retrieve side-panel text content for the selected topic and step number
         let ad = Store.shared.agentDialogue
         if(ad !== undefined) {
-            if("steps_sentences_wizard" in this.state.topicData) {
+            if("steps_sentences_wizard" in this.props.topicData) {
                 // step indices in the messages are 1-n
-                return this.state.topicData["steps_sentences_wizard"][this.state.stepIndex - 1]
+                return this.props.topicData["steps_sentences_wizard"][this.state.stepIndex - 1]
             }
         }
         return ""
     }
 
-    public getTopicById = async (topicId: string): Promise<object[]> => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Origin': '*' },
-        };
-
-        var dataJson = undefined;
-        try {
-            const topics_url = process.env.REACT_APP_DATA_URL;
-            const response = await fetch(topics_url as string, requestOptions);
-            dataJson = await response.json();
-
-            if (dataJson !== undefined && topicId in dataJson) {
-                return dataJson[topicId]['document']
-            }
-
-        } catch (error) {
-            console.log('Recipe fetch error: %o', error);
+    private getMinTurnCountForStep(stepNumber: number): number {
+        // returns the value of the min_message_exchange array for the current
+        // step number (note that the parameter is assumed to be 1-n, not 0-(n-1))
+        if("min_message_exchange" in this.props.topicData) {
+            // console.log("minTurnCount for %o is %o", stepNumber, this.props.topicData["min_message_exchange"][stepNumber-1])
+            return this.props.topicData["min_message_exchange"][stepNumber - 1]
         }
-
-        return dataJson;
-    }
-
-    public getAllRecipes = async (): Promise<object[]> => {
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Origin': '*' },
-        };
-
-        var dataJson = undefined;
-        try {
-            const recipes_url = process.env.REACT_APP_RECIPE_URL;
-            const response = await fetch(recipes_url as string, requestOptions);
-            dataJson = await response.json();
-
-            if (dataJson !== undefined) {
-                return dataJson['recipes'];
-            }
-
-        } catch (error) {
-            console.log('Recipe fetch error: %o', error);
-        }
-
-        return dataJson;
-    }
-
-    public async loadTopicData() {
-        let info = await this.getAllRecipes()
-        let topicId = "-1";
-        info.every((value) => {
-            if(Store.shared.topicName === value["page_title"]) {
-                topicId = value["id"]
-                return false
-            }
-            return true
-        })
-
-        let data = await this.getTopicById(topicId)
-        Store.shared.agentDialogue.topicData = data;
-
-        this.setState({topicData: data})
+        return -1
     }
 
     public render() {
-        const { dialogue, ...wozProps } = this.props
+        const { ...wozProps } = this.props
 
         return <Grid id={css.appGroupId}>
             <Grid.Column width={5}>
@@ -260,7 +234,7 @@ extends React.Component<IWoZWithCharCollectionProperties, {}> {
                             <div dangerouslySetInnerHTML={{__html: this.getContent()}}></div>
                         </Container>
                     </div>
-                    <ChatComponent ref={this._chatComponent} dialogue={dialogue} {...this.props}/>
+                    <ChatComponent dialogue={this.state.dialogue} disableNextButton={this.state.disableNextButton} disableSendButton={!this.state.lastMessageFromUser} {...this.props}/>
                 </div>
             </Grid.Column>
             <Grid.Column width={11}>

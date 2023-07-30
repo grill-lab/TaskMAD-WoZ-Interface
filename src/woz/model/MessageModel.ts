@@ -23,6 +23,7 @@ export interface IMessage {
   text: string
   time: Date
   userID?: string
+  interactionTime: Date
   loggedSearchQueries?: Array<string>
   loggedSearchQueriesTimestamp?: Array<number>
   loggedPageIds?: Array<string>
@@ -41,7 +42,7 @@ export interface IMessage {
 
 export const ourUserID = "us"
 
-export type IMessageArgument = PartialBy<IMessage, "time" | "id">
+export type IMessageArgument = PartialBy<IMessage, "time" | "id" | "interactionTime">
 
 export class Message implements IMessage {
   constructor(argument: IMessageArgument | Date) {
@@ -76,6 +77,8 @@ export class Message implements IMessage {
   public readonly time!: Date
   // noinspection JSUnusedGlobalSymbols
   public readonly userID?: string
+  // noinspection JSUnusedGlobalSymbols
+  public readonly interactionTime!: Date
 
   /**
    * Attributes used to log the wizard interaction associated to this message

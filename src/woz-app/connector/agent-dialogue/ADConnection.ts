@@ -76,6 +76,7 @@ interface IADTextResponse {
   userID: string
   time: Date
   messageType?: InteractionType
+  interactionTime: Date
 }
 
 declare module "./generated/client_pb" {
@@ -88,13 +89,21 @@ declare module "./generated/client_pb" {
 // noinspection JSUnusedGlobalSymbols
 proto.edu.gla.kail.ad.InteractionResponse.prototype.asTextResponse =
   function (): IADTextResponse {
+
+    // extract the (valid) timestamp from the InteractionResponse.interaction field,
+    // which is a list of OutputInteraction objects
+    const interaction = this.getInteractionList()[0]
+    const timestamp = interaction.getInteractionTime()
     return {
       responseID: this.getResponseId(),
-      text: this.getInteractionList()[0].getText(),
+      text: interaction.getText(),
+      // this doesn't work, the .time field in the InteractionResponse protos
+      // doesn't appear to be getting populated properly (TODO)
       time: new Date(this.getTime().getSeconds() * 1000
         + this.getTime().getNanos() / 1e+6),
       userID: this.getUserId(),
-      messageType: this.getInteractionList()[0].getType()
+      messageType: interaction.getType(),
+      interactionTime: new Date((timestamp.getSeconds() * 1000) + (timestamp.getNanos() / 1e6))
     }
   }
 

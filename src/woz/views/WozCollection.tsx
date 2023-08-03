@@ -303,6 +303,8 @@ export class WozCollection
 
   public render = () => {
     const state = this.state
+
+    /*
     switch (state.kind) {
       case COLLECTION_IS_LOADING:
         return (<LoadingMessage message={"Loading..."}/>)
@@ -373,13 +375,11 @@ export class WozCollection
           selectedButtons={this.props.selectedButtons} 
           onParagraphClicked={this.props.onParagraphClicked}            
         />
-    }
+    }*/
 
     return (
-        <div className={css.searchableTable}>
-          {header}
-          {body}
-        </div>
+        // don't display anything here 
+        <div></div>
     )
   }
 }

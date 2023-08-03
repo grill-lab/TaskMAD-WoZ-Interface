@@ -25,8 +25,11 @@ import css from "./App.module.css"
 import { dataSourceForURL, IConfigurationEditorCallback } from "./ConfigurationEditor"
 import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
+import { LLMResponseData } from "./connector/agent-dialogue/ADConnector"
 import { Store } from "./Store"
 import { WoZWithCharCollection } from "./WoZWithChatCollection"
+import {Message} from "../woz/model/MessageModel"
+import { ExcelURLDataSource } from "../woz/provider/excel/ExcelURLDataSource"
 
 type WOZ = "woz"
 const WOZ: WOZ = "woz"
@@ -61,7 +64,9 @@ type AppState =
 
         // new 
         params: StringMap
-        topicData: {}
+        topic_data: {}
+        input_disabled: boolean
+        llm_response_data: LLMResponseData
     }
 
 // type definition for the JSON entries which define the list of available topics
@@ -69,6 +74,12 @@ type TopicMetadata = {
     id: string
     page_id: string
     page_title: string
+}
+
+// this is just to allow parsing the initial_wizard_message field
+interface TopicDataInterface {
+    initial_wizard_message: string
+    steps_sentences_wizard: string[]
 }
 
 export default class App extends React.Component<{}, AppState> {
@@ -83,13 +94,41 @@ export default class App extends React.Component<{}, AppState> {
             woz_message: "",
             searched_queries: [],
             params: {},
-            topicData: {},
+            topic_data: {},
+            input_disabled: true,
+            llm_response_data: new LLMResponseData()
         }
 
         localStorage.clear()
 
         // to allow referencing state of child component (not sure if this is the best way to do it!)
         this.wozComponentRef = React.createRef()
+
+        // this callback is triggered when a request to the LLM API completes. The 
+        // argument is an instance of LLMResponseData, which contains:
+        //  - message (string): contains the LLM response text
+        //  - role (string): either "assistant" or "system". This indicates if the text can be edited 
+        //      before being sent (assistant) or must be sent unaltered (system)
+        //  - stepNo (integer): used to trigger step changes (forward only?)
+        WozConnectors.shared.selectedConnector.onLLMResponse = async (resp: LLMResponseData) => {
+            console.log("Got an LLM response %o", resp)
+            if(this.state.llm_response_data.stepNo !== resp.stepNo) {
+                // step has changed, simulate clicking the "Next" button
+                // TODO can only increase step number via API or not???
+                console.log("Detected step increase in LLM response, old %o, new %o", this.state.llm_response_data.stepNo, resp.stepNo)
+                this.onMessageSent(InteractionType.ACTION, ["step" + resp.stepNo])
+            }
+            this.setState(
+                {
+                    llm_response_data: resp,
+                    // always want to insert the LLM response text into the text area
+                    woz_message: resp.message,
+                    // only allowed to edit "assistant" messages, so set input_disabled
+                    // to false if the role is different
+                    input_disabled: resp.role !== "assistant",
+                }
+            )
+        }
     }
 
     async componentDidMount () {
@@ -109,35 +148,26 @@ export default class App extends React.Component<{}, AppState> {
         // awaiting the result instead of letting it run in the background
         await this.loadTopicData()
 
-        // TODO this is a mess
-        // this whole thing is just extracting various URL params and then creating
-        // an ADConnection object (which manages the connection to the backend)
-        const dataSourceURL = params.url
-        if (dataSourceURL !== undefined) {
-            const urlDataSource = dataSourceForURL(dataSourceURL)
-                if (urlDataSource !== undefined) {
-                    const connectorID = params.connector
-                        if (connectorID !== undefined) {
-                            const connector = WozConnectors.shared.all.find((value) => (value.id === connectorID))
-                                if (connector !== undefined) {
-                                    Store.shared.generateScreenNavigation = (params.generateScreenNavigation || "true").toLowerCase() === "true"
-                                        Store.shared.showChatTranscript = (params.showChatTranscript || (connectorID === "ADConnector" ? "true" : "false")).toLowerCase() === "true"
-                                        WozConnectors.shared.selectedConnectorID = connectorID
-                                        connector.connect(params).then((result) => {
-                                            console.log(result)
-                                            if (result) {
-                                                this.setState(this._newState(urlDataSource, params))
-                                            }
-                                        }).catch((error: any) => {
-                                            console.error(error)
-                                        })
-                                }
-                        }
-                }
+        const connectorID = params.connector
+        if (connectorID !== undefined) {
+            const connector = WozConnectors.shared.all.find((value) => (value.id === connectorID))
+            if (connector !== undefined) {
+                Store.shared.showChatTranscript = true
+                WozConnectors.shared.selectedConnectorID = connectorID
+                connector.connect(params).then((result) => {
+                    if (result) {
+                        // ignoring the "url" parameter now and just creating an empty datasource since it
+                        // isn't actually used any more
+                        this.setState(this._newState(new ExcelURLDataSource({url: ""}), params))
+                    }
+                }).catch((error: any) => {
+                    console.error(error)
+                })
+            }
         }
     }
 
-    public getTopicById = async (topicId: string): Promise<object[]> => {
+    public getTopicById = async (topicId: string): Promise<TopicDataInterface> => {
         // given a topic ID, retrieve the JSON file containing all the topic data
         // and return the entry for the selected ID
         const requestOptions = {
@@ -152,7 +182,8 @@ export default class App extends React.Component<{}, AppState> {
             dataJson = await response.json();
 
             if (dataJson !== undefined && topicId in dataJson) {
-                return dataJson[topicId]['document']
+                const td: TopicDataInterface = dataJson[topicId]['document']
+                return td
             }
         } catch (error) {
             console.log('Recipe fetch error: %o', error);
@@ -188,6 +219,7 @@ export default class App extends React.Component<{}, AppState> {
         return dataJson;
     }
 
+
     public async loadTopicData() {
         // loads selected topic data based on the topic name supplied in a URL parameter
         let topicMetadata = await this.getAllTopics()
@@ -206,38 +238,30 @@ export default class App extends React.Component<{}, AppState> {
 
         let data = await this.getTopicById(topicId)
         console.log("Loaded topic data %o", data)
+
         // store the data in the state for this component (it's then passed down
         // to the WoZWithChatCollection component via props)
-        this.setState({topicData: data})
+        this.setState({topic_data: data, woz_message: data["initial_wizard_message"], input_disabled: true})
     }
 
-    private _newState = (dataSource: IWozDataSource | undefined, params: StringMap): AppState => {
-        if (dataSource !== undefined) {
-            return {
+    private _newState = (dataSource: IWozDataSource, params: StringMap): AppState => {
+        return {
+            dataSource,
+            kind: WOZ,
+            wozState: collectionLoading(
+            {
                 dataSource,
-                kind: WOZ,
-                wozState: collectionLoading(
-                {
-                    dataSource,
-                    options: {
-                        generateTabs: Store.shared.generateScreenNavigation,
-                    },
-                }),
-                selected_buttons: this.state.selected_buttons,
-                woz_message: this.state.woz_message,
-                searched_queries: this.state.searched_queries,
-                params: params,
-                topicData: this.state.topicData,
-            }
-        } else {
-            return {
-                kind: CONFIG,
-                selected_buttons: this.state.selected_buttons,
-                woz_message: this.state.woz_message,
-                searched_queries: this.state.searched_queries,
-                params: params,
-                topicData: this.state.topicData,
-            }
+                options: {
+                    generateTabs: Store.shared.generateScreenNavigation,
+                },
+           }),
+            selected_buttons: this.state.selected_buttons,
+            woz_message: this.state.woz_message,
+            searched_queries: this.state.searched_queries,
+            params: params,
+            topic_data: this.state.topic_data,
+            input_disabled: this.state.input_disabled,
+            llm_response_data: this.state.llm_response_data,
         }
     }
 
@@ -249,7 +273,7 @@ export default class App extends React.Component<{}, AppState> {
                 wozState,
             }
         })
-    }
+     }
 
     private copyURL = (currentWoz: string) => {
         const props = {
@@ -263,9 +287,6 @@ export default class App extends React.Component<{}, AppState> {
         const query = objectMap(props, ([key, value]) => key + "=" + encodeURIComponent(value.toString())).join("&")
 
         const url = window.location.href + "?" + query
-
-        // console.log(url)
-
         const textArea = document.createElement("textarea")
         textArea.value = url
         document.body.appendChild(textArea)
@@ -284,7 +305,7 @@ export default class App extends React.Component<{}, AppState> {
         document.body.removeChild(textArea)
     }
 
-    private displayWoz = (callback: IConfigurationEditorCallback) => {
+     private displayWoz = (callback: IConfigurationEditorCallback) => {
         this.setState({
             dataSource: callback.dataSource,
             kind: WOZ,
@@ -297,7 +318,6 @@ export default class App extends React.Component<{}, AppState> {
             return {
                 dataSource: prev.dataSource,
                 kind: CONFIG,
-                wozState: undefined,
             }
         })
     }
@@ -334,7 +354,8 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     // Sends a message to the backend. By default the interaction type is text and there are no actions
-    // associated
+    // associated. Note that this may be triggered by the Previous/Next buttons too, in which case
+    // the InteractionType will be ACTION
     private onMessageSent = (interactionType?: InteractionType, actions?: Array<string>) => {
         // if it's not the wizard's turn to send a message, it should be 
         // blocked here. this is done by checking the state of the child component.
@@ -349,7 +370,6 @@ export default class App extends React.Component<{}, AppState> {
             }
         }
         const value = this.state.woz_message.trim()
-
         if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
             WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
         }
@@ -389,50 +409,32 @@ export default class App extends React.Component<{}, AppState> {
         if (window.localStorage === undefined) {
             log.error("local storage is not supported")
         }
-        // log.debug("local storage is supported: ", window.localStorage);
 
         let content: any = null
 
         switch (this.state.kind) {
             case WOZ:
-                if (Store.shared.showChatTranscript) {
                     content = <WoZWithCharCollection
                         ref={this.wozComponentRef}
                         onBack={this.displayConfig}
-                        onCopyURL={this.copyURL}
                         initialState={this.state.wozState}
-                        resultCount={8}
                         onButtonClick={this.onButtonClick}
+                        selectedButtons={this.state.selected_buttons}
+                        onParagraphClicked={this.onButtonClick}
+
+                        onCopyURL={this.copyURL}
+                        resultCount={8}
                         onMount={WozConnectors.shared.selectedConnector.onUIAppear}
                         onError={this.handleError}
-                        selectedButtons={this.state.selected_buttons}
                         onCommit={this.onMessageSent}
                         onChange={this.onInputBoxChange}
                         onRevert={this.onRevert}
                         wozMessage={this.state.woz_message}
-                        onParagraphClicked={this.onButtonClick}
                         trackSearchedQueries={this.trackSearchedQueries}
-                        topicData={this.state.topicData}
+                        topicData={this.state.topic_data}
+                        inputDisabled={this.state.input_disabled}
+                        llmStepIndex={this.state.llm_response_data.stepNo}
                     />
-                } else {
-                    content = <WozCollection
-                        onBack={this.displayConfig}
-                        onCopyURL={this.copyURL}
-                        initialState={this.state.wozState}
-                        resultCount={8}
-                        onButtonClick={this.onButtonClick}
-                        onMount={WozConnectors.shared.selectedConnector.onUIAppear}
-                        onError={this.handleError}
-                        selectedButtons={this.state.selected_buttons}
-                        onCommit={this.onMessageSent}
-                        onChange={this.onInputBoxChange}
-                        onRevert={this.onRevert}
-                        wozMessage={this.state.woz_message} 
-                        onParagraphClicked={this.onButtonClick}
-                        trackSearchedQueries={this.trackSearchedQueries} 
-                        topicData={this.state.topicData}
-                    />
-                }
                 break
         }
 

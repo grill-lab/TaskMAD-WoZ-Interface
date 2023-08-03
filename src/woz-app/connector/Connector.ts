@@ -20,7 +20,7 @@ import {IMessage} from "../../woz/model/MessageModel"
 import { SearchQueryModel } from "../../woz/model/SearchQueryModel"
 import {StringMap} from "../App"
 import {Store} from "../Store"
-import {ADConnector} from "./agent-dialogue/ADConnector"
+import {ADConnector, LLMResponseData} from "./agent-dialogue/ADConnector"
 import { InteractionType } from "./agent-dialogue/generated/client_pb"
 
 export interface IWozConnector {
@@ -50,6 +50,8 @@ export interface IWozConnector {
   onMessageSentLogger(inputValue: string, selectedButtons:Array<IButtonModel>, searchedQueries: Array<SearchQueryModel>, interactionType?: InteractionType, actions?: Array<string>): void
 
   onAgentInteractionApiRequest(requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>
+
+  onLLMResponse?: (response: LLMResponseData) => void
 }
 
 export class WozConnectors {

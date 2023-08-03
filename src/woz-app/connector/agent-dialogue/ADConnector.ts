@@ -26,12 +26,25 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
-import { InteractionType } from "./generated/client_pb"
+import { InteractionType, InteractionRequest } from "./generated/client_pb"
+
 
 export interface IADConnectorModel {
   readonly conversationId?: string
   readonly serverURL: string
   readonly userId?: string
+}
+
+export class LLMResponseData {
+    message: string = "";
+    role: string = "assistant";
+    stepNo: number = 0;
+}
+
+export class LLMResponse {
+    message: string = "";
+    status: string = "";
+    data: LLMResponseData = new LLMResponseData();
 }
 
 /*
@@ -67,6 +80,7 @@ export class ADConnector implements IWozConnector {
   }
 
   public onMessage?: (message: IMessage) => void
+  public onLLMResponse?: (response: LLMResponseData) => void
 
   public _model: IADConnectorModel
 
@@ -131,9 +145,49 @@ export class ADConnector implements IWozConnector {
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
-          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType() })
+          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime })
 
           this.onMessage(message)
+
+          // When a message is received here from the chat app, we now need to forward it to the LLM
+          // API to generate an initial response. However when resuming a conversation, this callback
+          // will be triggered for every message as they are replayed from the Firestore database. So
+          // to ensure we only send requests to the LLM API when we should, we need to check that:
+          //   a) the new message has TEXT type
+          //   b) it comes from the chat user 
+          //   c) it has a timestamp within 10? seconds of the current time 
+          // Note: the Message objects are supposed to have their .time field populated from the .time field of the incoming
+          // InteractionResponse protos, but it seems like this field isn't being set correctly. For now relying on the
+          // .interaction_time field in the OutputInteraction object inside the InteractionResponse
+          const messageTimestampLimit = 15
+          const messageTimestampDiff = (Date.now() - message.interactionTime.getTime()) / 1000
+          if(message.messageType === InteractionType.TEXT && message.userID !== this.model.userId && messageTimestampDiff < messageTimestampLimit) {
+                console.log("SENDING LLM REQUEST")
+
+                // could call the existing onAgentInteractionApiRequest method to do this, but as 
+                // written that "awaits" a response. since the call to the LLM might take many seconds
+                // in some instances and we don't want to block the UI in the meantime, this instead
+                // calls AgentInteractionApi directly. That method is async and returns a Promise, and
+                // the "then" callback handler is triggered with the result of the request.
+                // TODO: error handling
+                // The API endpoint info is configured in the backend, so all we need to send is
+                // the request_body parameter, and at the moment this is a simple JSON blob that
+                // contains the current conversationId
+                let apiResponse: Object = this.connection.AgentInteractionApi(Struct.fromJavaScript({
+                    "request_body": {
+                        "conversationID": this.model.conversationId
+                    }
+                }), "LLMAgent").then((result => {
+                    console.log("Result from LLM %o", result)
+                    const llmresp: LLMResponse = Object.assign(new LLMResponse(), result)
+                    console.log("Parsed %o", llmresp)
+                    if(this.onLLMResponse !== undefined) {
+                        this.onLLMResponse(llmresp.data)
+                    }
+                }))
+          } else if (message.messageType === InteractionType.TEXT && message.userID !== this.model.userId && messageTimestampDiff >= messageTimestampLimit) {
+              console.log("Not sending LLM message because timestamp diff is %o", messageTimestampDiff)
+          }
         }
       },
       userID: this.model.userId,
@@ -316,7 +370,7 @@ export class ADConnector implements IWozConnector {
       conversationID: this.model.conversationId,
     })
 
-    // log.debug("value:", "'" + inputValue + "'")
+     //log.debug("value:", "'" + inputValue + "'")
   }
 
   public onAgentInteractionApiRequest = async (requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>  => {

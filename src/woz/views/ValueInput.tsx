@@ -11,30 +11,33 @@ export interface IControlledComponent {
   wozMessage: string
   displayInteractionButtons: boolean
   disableNextButton: boolean
+  inputDisabled: boolean // true if editing of message text is not currently allowed
 }
 
 export const ControlledInput
   : React.FunctionComponent<InputProps & IControlledComponent>
   = (props) => {
 
-    const { onChanget, onCommit, onRevert, wozMessage, displayInteractionButtons, disableNextButton, ...inherited } = props
+    const { onChanget, onCommit, onRevert, wozMessage, displayInteractionButtons, disableNextButton, inputDisabled, ...inherited } = props
 
 
     // Interaction buttons used by the wizard to control the user interface 
     var interactionButtons = displayInteractionButtons ? <Grid className={css.wozInteractionGrid}>
       <Grid.Column width={8} className={css.wozInteractionColumns}>
-        <Button className={css.wozInteractionButton} onClick={() => onCommit(InteractionType.ACTION, ["prev"])}>Previous</Button>
+        <Button style={{display: "none"}} className={css.wozInteractionButton} onClick={() => onCommit(InteractionType.ACTION, ["prev"])}>Previous step</Button>
       </Grid.Column>
       <Grid.Column width={8} className={css.wozInteractionColumns}>
-        <Button disabled={disableNextButton} className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, ["next"])}>Next</Button>
+        <Button style={{display: "none"}} disabled={disableNextButton} className={css.wozInteractionButton + " " + css.wozInteractionButtonNext} onClick={() => onCommit(InteractionType.ACTION, ["next"])}>Next</Button>
       </Grid.Column>
     </Grid> : null;
+
     return (
       <div>
         {interactionButtons}
         <Grid className={css.wozInteractionGridTwo}>
           <Grid.Column width={13} className={css.wozInteractionColumnsTwo}>
             <TextArea
+              disabled={inputDisabled}
               value={wozMessage}
               {...inherited}
               onChange={(_e) => {

@@ -14,12 +14,23 @@ export interface IControlledComponent {
   inputDisabled: boolean // true if editing of message text is not currently allowed
 }
 
+function getMessage(inputDisabled: boolean, wozMessage: string): string {
+    if(wozMessage.length > 0) {
+        if(inputDisabled) {
+            return "Current message may NOT be edited before sending";
+        } else {
+            return "Current message may be edited before sending";
+        }
+    } else {
+        return "";
+    }
+}
+
 export const ControlledInput
   : React.FunctionComponent<InputProps & IControlledComponent>
   = (props) => {
 
     const { onChanget, onCommit, onRevert, wozMessage, displayInteractionButtons, disableNextButton, inputDisabled, ...inherited } = props
-
 
     // Interaction buttons used by the wizard to control the user interface 
     var interactionButtons = displayInteractionButtons ? <Grid className={css.wozInteractionGrid}>
@@ -34,6 +45,7 @@ export const ControlledInput
     return (
       <div>
         {interactionButtons}
+            <div>{getMessage(inputDisabled, wozMessage)}</div>
         <Grid className={css.wozInteractionGridTwo}>
           <Grid.Column width={13} className={css.wozInteractionColumnsTwo}>
             <TextArea

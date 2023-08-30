@@ -26,3 +26,4 @@ yarn-error.log*
 compiledTypeScriptFiles
 *.css.d.ts
 dist
+src/woz-app/connector/agent-dialogue/generated/*

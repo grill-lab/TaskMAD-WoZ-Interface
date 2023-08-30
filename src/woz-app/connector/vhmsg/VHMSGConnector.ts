@@ -38,10 +38,13 @@ import {VHMSGConnectorComponent} from "./VHMSGConnectorComponent"
 
 export class VHMSGConnector implements IWozConnector {
 
+  public waitingForLLM: boolean
+
   constructor() {
     this.id = "VHMSGConnector"
     this.title = "VHMSG"
     this.vhmsg = new VHMSG(Store.shared.vhmsg)
+    this.waitingForLLM = false;
   }
 
   public get props(): { [index: string]: any | undefined } {

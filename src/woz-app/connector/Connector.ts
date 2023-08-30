@@ -29,6 +29,8 @@ export interface IWozConnector {
   readonly chatUserID: string
   readonly props: { [index: string]: any | undefined }
 
+  waitingForLLM: boolean
+
   onMessage?: (message: IMessage) => void
 
   onStepChange?: (newStepIndex: number) => void
@@ -51,6 +53,7 @@ export interface IWozConnector {
 
   onAgentInteractionApiRequest(requestBody: Struct, agentName:string): Promise<{[key: string]: JavaScriptValue; }>
 
+  onLLMRequest?: () => void
   onLLMResponse?: (response: LLMResponseData) => void
 }
 

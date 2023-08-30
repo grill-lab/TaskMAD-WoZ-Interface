@@ -30,11 +30,13 @@ export class ConsoleConnector implements IWozConnector {
   constructor() {
     this.id = "ConsoleConnector"
     this.title = "None"
+    this.waitingForLLM = false;
   }
 
   public readonly id: string
-
   public readonly title: string
+
+  public waitingForLLM: boolean
 
   public onMessage?: (message: IMessage) => void
 

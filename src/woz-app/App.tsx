@@ -112,6 +112,16 @@ export default class App extends React.Component<{}, AppState> {
         //  - stepNo (integer): used to trigger step changes (forward only?)
         WozConnectors.shared.selectedConnector.onLLMResponse = async (resp: LLMResponseData) => {
             console.log("Got an LLM response %o", resp)
+            // if this is -1, it means the API returned an error and we should
+            // just display the text given in resp, not update the step or anything else
+            if(resp.stepNo === -1) {
+                console.log("Handling invalid response in onLLMResponse")
+                this.setState( { llm_response_data: resp, woz_message: resp.message, input_disabled: false })
+                return;
+            }
+
+            // at this point the response should be valid, so check if it includes a step change
+            console.log("Handling valid LLM response");
             if(this.state.llm_response_data.stepNo !== resp.stepNo) {
                 // step has changed, simulate clicking the "Next" button
                 // TODO can only increase step number via API or not???
@@ -121,13 +131,18 @@ export default class App extends React.Component<{}, AppState> {
             this.setState(
                 {
                     llm_response_data: resp,
-                    // always want to insert the LLM response text into the text area
+                    // always want to insert the LLM response text into the text area immediately
                     woz_message: resp.message,
                     // only allowed to edit "assistant" messages, so set input_disabled
                     // to false if the role is different
                     input_disabled: resp.role !== "assistant",
                 }
             )
+        }
+
+        // Callback triggered when an LLM API request is sent
+        WozConnectors.shared.selectedConnector.onLLMRequest = () => {
+            this.setState({woz_message: "[Please wait while a response is generated...]"});
         }
     }
 

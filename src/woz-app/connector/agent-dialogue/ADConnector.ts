@@ -61,6 +61,9 @@ export class ADConnector implements IWozConnector {
     this.id = "ADConnector"
     this.title = "Agent Dialogue"
     this._model = Store.shared.agentDialogue
+    this.lastMessageFromUser = false;
+    this.timerID = setTimeout(this.messageChecker, 0);
+    this.waitingForLLM = false;
   }
 
   private service?: ADConnection
@@ -69,6 +72,10 @@ export class ADConnector implements IWozConnector {
   public readonly id: string
 
   public readonly title: string
+
+  public lastMessageFromUser: boolean
+  public timerID : ReturnType<typeof setTimeout>
+  public waitingForLLM: boolean
 
   public get props(): { [index: string]: any | undefined } {
     return {
@@ -80,6 +87,7 @@ export class ADConnector implements IWozConnector {
   }
 
   public onMessage?: (message: IMessage) => void
+  public onLLMRequest?: () => void
   public onLLMResponse?: (response: LLMResponseData) => void
 
   public _model: IADConnectorModel
@@ -132,6 +140,71 @@ export class ADConnector implements IWozConnector {
     return this._model.userId || ourUserID
   }
 
+  public messageChecker = () => {
+    clearTimeout(this.timerID);
+    console.log("last message %o", this.lastMessageFromUser);
+    if(this.lastMessageFromUser) {
+        // we haven't received a message in several seconds and the last
+        // message that was sent was from the user, so resend the last
+        // message to the LLM API
+        console.log("Sending a previous message to the LLM API");
+        this.sendLLMRequest();
+    }
+  }
+
+  public sendLLMRequest = () => {
+    console.log("SENDING LLM REQUEST")
+    if(this.onLLMRequest !== undefined) {
+        this.onLLMRequest();
+    }
+    this.waitingForLLM = true;
+    // could call the existing onAgentInteractionApiRequest method to do this, but as 
+    // written that "awaits" a response. since the call to the LLM might take many seconds
+    // in some instances and we don't want to block the UI in the meantime, this instead
+    // calls AgentInteractionApi directly. That method is async and returns a Promise, and
+    // the "then" callback handler is triggered with the result of the request.
+    // TODO: error handling
+    // The API endpoint info is configured in the backend, so all we need to send is
+    // the request_body parameter, and at the moment this is a simple JSON blob that
+    // contains the current conversationId
+    let apiResponse: Object = this.connection.AgentInteractionApi(Struct.fromJavaScript({
+        "request_body": {
+            "conversationID": this.model.conversationId
+        }
+    }), "LLMAgent").then((result => {
+        this.waitingForLLM = false;
+        console.log("Result from LLM %o", result)
+        const llmresp: LLMResponse = Object.assign(new LLMResponse(), result)
+        console.log("Parsed %o", llmresp)
+        if(this.onLLMResponse !== undefined) {
+            // the response has a "status" field which should normally be set to
+            // "success" if the response is valid
+            if(llmresp.status === "success") {
+                this.onLLMResponse(llmresp.data)
+            } else {
+                console.warn("LLM response not successful");
+                // not sure how to handle this? for now return a "fix this yourself"
+                // message to the user
+                const llmdata = new LLMResponseData();
+                llmdata.message = "Failed to generate a response! Please replace this text with a suitable response of your own";
+                llmdata.stepNo = -1;
+                llmdata.role = "assistant";
+                this.onLLMResponse(llmdata);
+            }
+        }
+    })).catch((error => {
+        this.waitingForLLM = false;
+        console.error("LLM API call failed: %o", error);
+        const llmdata = new LLMResponseData();
+        llmdata.message = "Failed to generate a response! Please replace this text with a suitable response of your own";
+        llmdata.stepNo = -1;
+        llmdata.role = "assistant";
+        if(this.onLLMResponse !== undefined) {
+            this.onLLMResponse(llmdata);
+        }
+    }))
+  }
+
   public subscribe = (): ISubscription | undefined => {
     if (this.stream !== undefined) { return this.stream }
 
@@ -148,7 +221,9 @@ export class ADConnector implements IWozConnector {
           const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime })
 
           this.onMessage(message)
-
+          if(message.messageType === InteractionType.TEXT) {
+              this.lastMessageFromUser = this.model.userId !== message.userID;
+          }
           // When a message is received here from the chat app, we now need to forward it to the LLM
           // API to generate an initial response. However when resuming a conversation, this callback
           // will be triggered for every message as they are replayed from the Firestore database. So
@@ -162,31 +237,11 @@ export class ADConnector implements IWozConnector {
           const messageTimestampLimit = 15
           const messageTimestampDiff = (Date.now() - message.interactionTime.getTime()) / 1000
           if(message.messageType === InteractionType.TEXT && message.userID !== this.model.userId && messageTimestampDiff < messageTimestampLimit) {
-                console.log("SENDING LLM REQUEST")
-
-                // could call the existing onAgentInteractionApiRequest method to do this, but as 
-                // written that "awaits" a response. since the call to the LLM might take many seconds
-                // in some instances and we don't want to block the UI in the meantime, this instead
-                // calls AgentInteractionApi directly. That method is async and returns a Promise, and
-                // the "then" callback handler is triggered with the result of the request.
-                // TODO: error handling
-                // The API endpoint info is configured in the backend, so all we need to send is
-                // the request_body parameter, and at the moment this is a simple JSON blob that
-                // contains the current conversationId
-                let apiResponse: Object = this.connection.AgentInteractionApi(Struct.fromJavaScript({
-                    "request_body": {
-                        "conversationID": this.model.conversationId
-                    }
-                }), "LLMAgent").then((result => {
-                    console.log("Result from LLM %o", result)
-                    const llmresp: LLMResponse = Object.assign(new LLMResponse(), result)
-                    console.log("Parsed %o", llmresp)
-                    if(this.onLLMResponse !== undefined) {
-                        this.onLLMResponse(llmresp.data)
-                    }
-                }))
+              this.sendLLMRequest();
           } else if (message.messageType === InteractionType.TEXT && message.userID !== this.model.userId && messageTimestampDiff >= messageTimestampLimit) {
               console.log("Not sending LLM message because timestamp diff is %o", messageTimestampDiff)
+              clearTimeout(this.timerID);
+              this.timerID = setTimeout(this.messageChecker, 5000);
           }
         }
       },

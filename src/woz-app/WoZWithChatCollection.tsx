@@ -31,6 +31,7 @@ export interface IWoZWithCharCollectionProperties extends IWozCollectionProperti
     inputDisabled: boolean
     llmStepIndex: number
     topicData: {}
+    showLlmWaitMessage: boolean
 }
 
 interface IWoZWithCharCollectionState {
@@ -49,6 +50,7 @@ interface IChatComponentProperties {
     wozMessage: string
     disableSendButton: boolean
     inputDisabled: boolean
+    showLlmWaitMessage: boolean
 }
 
 // this component is the parent of the ChatTranscript (responsible for displaying

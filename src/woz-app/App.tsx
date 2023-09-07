@@ -23,7 +23,7 @@ import { SearchQueryModel } from "../woz/model/SearchQueryModel"
 import { collectionLoading, WozCollection, WozCollectionState } from "../woz/views/WozCollection"
 import css from "./App.module.css"
 import { dataSourceForURL, IConfigurationEditorCallback } from "./ConfigurationEditor"
-import { InteractionType } from "./connector/agent-dialogue/generated/client_pb"
+import { InteractionType, InteractionRole } from "./connector/agent-dialogue/generated/client_pb"
 import { WozConnectors } from "./connector/Connector"
 import { LLMResponseData } from "./connector/agent-dialogue/ADConnector"
 import { Store } from "./Store"
@@ -67,6 +67,7 @@ type AppState =
         topic_data: {}
         input_disabled: boolean
         llm_response_data: LLMResponseData
+        show_llm_wait_message: boolean
     }
 
 // type definition for the JSON entries which define the list of available topics
@@ -96,7 +97,8 @@ export default class App extends React.Component<{}, AppState> {
             params: {},
             topic_data: {},
             input_disabled: true,
-            llm_response_data: new LLMResponseData()
+            llm_response_data: new LLMResponseData(),
+            show_llm_wait_message: false,
         }
 
         localStorage.clear()
@@ -112,11 +114,12 @@ export default class App extends React.Component<{}, AppState> {
         //  - stepNo (integer): used to trigger step changes (forward only?)
         WozConnectors.shared.selectedConnector.onLLMResponse = async (resp: LLMResponseData) => {
             console.log("Got an LLM response %o", resp)
+            
             // if this is -1, it means the API returned an error and we should
             // just display the text given in resp, not update the step or anything else
             if(resp.stepNo === -1) {
                 console.log("Handling invalid response in onLLMResponse")
-                this.setState( { llm_response_data: resp, woz_message: resp.message, input_disabled: false })
+                this.setState( { llm_response_data: resp, woz_message: resp.message, input_disabled: false, show_llm_wait_message: false })
                 return;
             }
 
@@ -136,13 +139,15 @@ export default class App extends React.Component<{}, AppState> {
                     // only allowed to edit "assistant" messages, so set input_disabled
                     // to false if the role is different
                     input_disabled: resp.role !== "assistant",
+                    show_llm_wait_message: false,
                 }
             )
         }
 
         // Callback triggered when an LLM API request is sent
         WozConnectors.shared.selectedConnector.onLLMRequest = () => {
-            this.setState({woz_message: "[Please wait while a response is generated...]"});
+            // this.setState({woz_message: "[Please wait while a response is generated...]"});
+            this.setState({show_llm_wait_message: true});
         }
     }
 
@@ -277,6 +282,7 @@ export default class App extends React.Component<{}, AppState> {
             topic_data: this.state.topic_data,
             input_disabled: this.state.input_disabled,
             llm_response_data: this.state.llm_response_data,
+            show_llm_wait_message: this.state.show_llm_wait_message,
         }
     }
 
@@ -449,6 +455,7 @@ export default class App extends React.Component<{}, AppState> {
                         topicData={this.state.topic_data}
                         inputDisabled={this.state.input_disabled}
                         llmStepIndex={this.state.llm_response_data.stepNo}
+                        showLlmWaitMessage={this.state.show_llm_wait_message}
                     />
                 break
         }

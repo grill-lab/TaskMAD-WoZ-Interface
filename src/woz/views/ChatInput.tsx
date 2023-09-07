@@ -13,6 +13,7 @@ export interface IChatInputProperties {
   disableNextButton: boolean
   disableSendButton: boolean
   inputDisabled: boolean
+  showLlmWaitMessage: boolean
 }
 
 interface IChatInputState {
@@ -31,6 +32,7 @@ export class ChatInput
       wozMessage={this.props.wozMessage}
       disableNextButton={this.props.disableNextButton}
       inputDisabled={this.props.inputDisabled}
+      showLlmWaitMessage={this.props.showLlmWaitMessage}
 
       icon={<Icon
         name="send" inverted circular link

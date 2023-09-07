@@ -545,7 +545,8 @@ proto.edu.gla.kail.ad.ServiceProvider = {
   WIZARD: 2,
   SEARCH: 3,
   MODEL_INFERENCE: 4,
-  SPEECH_TO_TEXT: 5
+  SPEECH_TO_TEXT: 5,
+  LLM: 6
 };
 
 goog.object.extend(exports, proto.edu.gla.kail.ad);

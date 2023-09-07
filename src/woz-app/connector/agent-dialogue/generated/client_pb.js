@@ -32,6 +32,7 @@ goog.exportSymbol('proto.edu.gla.kail.ad.InputInteraction', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionRequest', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionResponse', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionResponse.ClientMessageStatus', null, global);
+goog.exportSymbol('proto.edu.gla.kail.ad.InteractionRole', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.InteractionType', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.OutputInteraction', null, global);
 goog.exportSymbol('proto.edu.gla.kail.ad.Result', null, global);
@@ -1372,7 +1373,8 @@ proto.edu.gla.kail.ad.InputInteraction.toObject = function(includeInstance, msg)
     loggedUserRecipeSectionList: (f = jspb.Message.getRepeatedField(msg, 18)) == null ? undefined : f,
     loggedUserRecipeSectionValueList: (f = jspb.Message.getRepeatedField(msg, 19)) == null ? undefined : f,
     loggedUserRecipeSelectTimestampList: (f = jspb.Message.getRepeatedField(msg, 20)) == null ? undefined : f,
-    audioBase64: jspb.Message.getFieldWithDefault(msg, 21, "")
+    audioBase64: jspb.Message.getFieldWithDefault(msg, 21, ""),
+    role: jspb.Message.getFieldWithDefault(msg, 22, 0)
   };
 
   if (includeInstance) {
@@ -1498,6 +1500,10 @@ proto.edu.gla.kail.ad.InputInteraction.deserializeBinaryFromReader = function(ms
     case 21:
       var value = /** @type {string} */ (reader.readString());
       msg.setAudioBase64(value);
+      break;
+    case 22:
+      var value = /** @type {!proto.edu.gla.kail.ad.InteractionRole} */ (reader.readEnum());
+      msg.setRole(value);
       break;
     default:
       reader.skipField();
@@ -1672,6 +1678,13 @@ proto.edu.gla.kail.ad.InputInteraction.serializeBinaryToWriter = function(messag
   if (f.length > 0) {
     writer.writeString(
       21,
+      f
+    );
+  }
+  f = message.getRole();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      22,
       f
     );
   }
@@ -2341,6 +2354,24 @@ proto.edu.gla.kail.ad.InputInteraction.prototype.setAudioBase64 = function(value
 };
 
 
+/**
+ * optional InteractionRole role = 22;
+ * @return {!proto.edu.gla.kail.ad.InteractionRole}
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.getRole = function() {
+  return /** @type {!proto.edu.gla.kail.ad.InteractionRole} */ (jspb.Message.getFieldWithDefault(this, 22, 0));
+};
+
+
+/**
+ * @param {!proto.edu.gla.kail.ad.InteractionRole} value
+ * @return {!proto.edu.gla.kail.ad.InputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.InputInteraction.prototype.setRole = function(value) {
+  return jspb.Message.setProto3EnumField(this, 22, value);
+};
+
+
 
 /**
  * List of repeated fields within this message type.
@@ -2387,7 +2418,8 @@ proto.edu.gla.kail.ad.OutputInteraction.toObject = function(includeInstance, msg
     resultList: jspb.Message.toObjectList(msg.getResultList(),
     proto.edu.gla.kail.ad.Result.toObject, includeInstance),
     unstructuredResult: (f = msg.getUnstructuredResult()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
-    interactionTime: (f = msg.getInteractionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
+    interactionTime: (f = msg.getInteractionTime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
+    role: jspb.Message.getFieldWithDefault(msg, 8, 0)
   };
 
   if (includeInstance) {
@@ -2454,6 +2486,10 @@ proto.edu.gla.kail.ad.OutputInteraction.deserializeBinaryFromReader = function(m
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setInteractionTime(value);
+      break;
+    case 8:
+      var value = /** @type {!proto.edu.gla.kail.ad.InteractionRole} */ (reader.readEnum());
+      msg.setRole(value);
       break;
     default:
       reader.skipField();
@@ -2534,6 +2570,13 @@ proto.edu.gla.kail.ad.OutputInteraction.serializeBinaryToWriter = function(messa
       7,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
+    );
+  }
+  f = message.getRole();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      8,
+      f
     );
   }
 };
@@ -2739,6 +2782,24 @@ proto.edu.gla.kail.ad.OutputInteraction.prototype.clearInteractionTime = functio
  */
 proto.edu.gla.kail.ad.OutputInteraction.prototype.hasInteractionTime = function() {
   return jspb.Message.getField(this, 7) != null;
+};
+
+
+/**
+ * optional InteractionRole role = 8;
+ * @return {!proto.edu.gla.kail.ad.InteractionRole}
+ */
+proto.edu.gla.kail.ad.OutputInteraction.prototype.getRole = function() {
+  return /** @type {!proto.edu.gla.kail.ad.InteractionRole} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+};
+
+
+/**
+ * @param {!proto.edu.gla.kail.ad.InteractionRole} value
+ * @return {!proto.edu.gla.kail.ad.OutputInteraction} returns this
+ */
+proto.edu.gla.kail.ad.OutputInteraction.prototype.setRole = function(value) {
+  return jspb.Message.setProto3EnumField(this, 8, value);
 };
 
 
@@ -3041,6 +3102,15 @@ proto.edu.gla.kail.ad.InteractionType = {
   AUDIO: 2,
   ACTION: 3,
   STATUS: 4
+};
+
+/**
+ * @enum {number}
+ */
+proto.edu.gla.kail.ad.InteractionRole = {
+  NOROLE: 0,
+  ASSISTANT: 1,
+  SYSTEM: 2
 };
 
 goog.object.extend(exports, proto.edu.gla.kail.ad);

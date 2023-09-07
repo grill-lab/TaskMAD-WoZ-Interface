@@ -71,4 +71,5 @@ export enum ServiceProvider {
   SEARCH = 3,
   MODEL_INFERENCE = 4,
   SPEECH_TO_TEXT = 5,
+  LLM = 6,
 }

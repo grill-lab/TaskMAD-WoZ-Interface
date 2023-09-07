@@ -16,7 +16,7 @@
 
 import * as uuid from "uuid"
 import {PartialBy} from "../../common/util"
-import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionType, InteractionRole } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 
 export interface IMessage {
   id: string
@@ -37,6 +37,8 @@ export interface IMessage {
   // Specific type of this message
   messageType?: InteractionType
   actions?: Array<string>
+
+  role?: InteractionRole
   
 }
 
@@ -114,7 +116,8 @@ export class Message implements IMessage {
   public readonly messageType?: InteractionType
   // Actions to execute in the case InteractionType.ACTION
   public readonly actions?: Array<string>
-
+  
+  public readonly role?: InteractionRole
 
 }
 

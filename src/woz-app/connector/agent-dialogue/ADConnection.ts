@@ -8,6 +8,7 @@ import {
   ClientId, InputInteraction, InteractionRequest,
   InteractionResponse,
   InteractionType,
+  InteractionRole,
 } from "./generated/client_pb"
 import { AgentDialogueClient } from "./generated/ServiceServiceClientPb"
 
@@ -25,6 +26,7 @@ export interface IInputInteractionArguments {
   loggedPageTitles?: Array<string>
   loggedSectionTitles?: Array<string>
   loggedParagraphTimestamp?: Array<number>
+  role?: InteractionRole
 }
 
 export interface IRequestArguments extends IInputInteractionArguments {
@@ -77,6 +79,7 @@ interface IADTextResponse {
   time: Date
   messageType?: InteractionType
   interactionTime: Date
+  role?: InteractionRole
 }
 
 declare module "./generated/client_pb" {
@@ -103,7 +106,8 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.asTextResponse =
         + this.getTime().getNanos() / 1e+6),
       userID: this.getUserId(),
       messageType: interaction.getType(),
-      interactionTime: new Date((timestamp.getSeconds() * 1000) + (timestamp.getNanos() / 1e6))
+      interactionTime: new Date((timestamp.getSeconds() * 1000) + (timestamp.getNanos() / 1e6)),
+      role: interaction.getRole()
     }
   }
 
@@ -154,6 +158,10 @@ export class ADConnection {
     input.setLoggedPageTitlesList(args.loggedPageTitles || []);
     input.setLoggedSectionTitlesList(args.loggedSectionTitles || []);
     input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
+
+    input.setRole(args.role || InteractionRole.NOROLE);
+
+    console.log("makeInputInteraction: %o", input);
 
     return input
   }

@@ -26,7 +26,7 @@ import { Store } from "../../Store"
 import { IWozConnector } from "../Connector"
 import { ADConnection, ISubscription } from "./ADConnection"
 import { ADConnectorComponent } from "./ADConnectorComponent"
-import { InteractionType, InteractionRequest } from "./generated/client_pb"
+import { InteractionType, InteractionRole } from "./generated/client_pb"
 
 
 export interface IADConnectorModel {
@@ -218,7 +218,7 @@ export class ADConnector implements IWozConnector {
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
-          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime })
+          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime, role: reply.role})
 
           this.onMessage(message)
           if(message.messageType === InteractionType.TEXT) {
@@ -357,7 +357,7 @@ export class ADConnector implements IWozConnector {
   }
 
 
-  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>) => {
+  public onMessageSentLogger = (inputValue: string, selectedButtons?: IButtonModel[], searchedQueries?: SearchQueryModel[], interactionType?: InteractionType, actions?: Array<string>, role?: InteractionRole) => {
     
     if (this.model.userId === undefined
       || this.model.conversationId === undefined) {
@@ -369,6 +369,7 @@ export class ADConnector implements IWozConnector {
       userID: this.model.userId,
       messageType: interactionType,
       actions: actions,
+      role: role,
       loggedSearchQueries: searchedQueries !== undefined ? searchedQueries.map((selectedQuery) => {
         return selectedQuery.searchedQuery !== undefined ? selectedQuery.searchedQuery : ''
       }).filter((el) => {

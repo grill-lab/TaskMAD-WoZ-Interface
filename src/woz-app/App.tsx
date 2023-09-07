@@ -392,7 +392,10 @@ export default class App extends React.Component<{}, AppState> {
         }
         const value = this.state.woz_message.trim()
         if ((value.length > 0 && interactionType === InteractionType.TEXT) || (interactionType !== InteractionType.TEXT && actions!.length > 0)) {
-            WozConnectors.shared.selectedConnector.onMessageSentLogger(value, this.state.selected_buttons, this.state.searched_queries, interactionType, actions);
+            // if the message is being sent through this method and has type TEXT, it MUST have an "assistant" role
+            // because "system" messages are sent automatically. 
+            let role = (interactionType === InteractionType.TEXT) ? InteractionRole.ASSISTANT : InteractionRole.NOROLE;
+            WozConnectors.shared.selectedConnector.onMessageSentLogger(value, [], [], interactionType, actions, role);
         }
         this.onRevert();
     }

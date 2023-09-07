@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Embed, Message } from "semantic-ui-react"
 import { isStringImagePath, isStringVideoPath } from "../../common/util"
-import { InteractionType } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
+import { InteractionType, InteractionRole } from "../../woz-app/connector/agent-dialogue/generated/client_pb"
 import { Dialogue } from "../model/DialogueModel"
 import css from "./ChatTranscript.module.css"
 
@@ -42,7 +42,7 @@ export class ChatTranscript
   public render(): React.ReactNode {
 
     const rows = this.props.dialogue.messages.map((message, index) => {
-      const cellClass = message.userID === undefined
+      let cellClass = message.userID === undefined
         ? css.systemCell
         : message.userID === this.props.us
           ? css.ourCell
@@ -83,6 +83,11 @@ export class ChatTranscript
           if (message.messageType === InteractionType.TEXT) {
             const rexp = /((http|https):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g;
             const message_text = message.text.replace(rexp, '<a href="$1" target="_blank">$1</a>')
+
+            // if the message has a role of "SYSTEM", then want to show it with a different colour to everything else
+            if(message.role === InteractionRole.SYSTEM) {
+                cellClass = css.systemRoleCell;
+            }
             return <div className={css.row + " " + rowClass} key={index}>
               <div className={css.cell + " " + cellClass}>{visibleUserID}<span dangerouslySetInnerHTML={{__html: message_text}}/></div>
             </div>

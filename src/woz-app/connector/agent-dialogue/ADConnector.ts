@@ -153,7 +153,7 @@ export class ADConnector implements IWozConnector {
   }
 
   public sendLLMRequest = () => {
-    console.log("SENDING LLM REQUEST")
+    console.log("SENDING LLM REQUEST at %o", new Date())
     if(this.onLLMRequest !== undefined) {
         this.onLLMRequest();
     }
@@ -173,7 +173,6 @@ export class ADConnector implements IWozConnector {
         }
     }), "LLMAgent").then((result => {
         this.waitingForLLM = false;
-        console.log("Result from LLM %o", result)
         const llmresp: LLMResponse = Object.assign(new LLMResponse(), result)
         console.log("Parsed %o", llmresp)
         if(this.onLLMResponse !== undefined) {
@@ -194,7 +193,7 @@ export class ADConnector implements IWozConnector {
         }
     })).catch((error => {
         this.waitingForLLM = false;
-        console.error("LLM API call failed: %o", error);
+        console.error("LLM API call failed at %o with %o", new Date(), error);
         const llmdata = new LLMResponseData();
         llmdata.message = "Failed to generate a response! Please replace this text with a suitable response of your own";
         llmdata.stepNo = -1;
@@ -218,7 +217,7 @@ export class ADConnector implements IWozConnector {
       onResponse: (response) => {
         if (this.onMessage !== undefined) {
           const reply = response.asTextResponse()
-          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime, role: reply.role})
+          const message = new Message({ ...reply, id: reply.responseID,  messageType: response.getInteractionList()[0].getType(), interactionTime: reply.interactionTime, role: reply.role, actions: [reply.action.trim()]})
 
           this.onMessage(message)
           if(message.messageType === InteractionType.TEXT) {

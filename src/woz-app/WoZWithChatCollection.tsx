@@ -32,6 +32,7 @@ export interface IWoZWithCharCollectionProperties extends IWozCollectionProperti
     llmStepIndex: number
     topicData: {}
     showLlmWaitMessage: boolean
+    replayStepChangedCallback: (stepNumber: number) => void
 }
 
 interface IWoZWithCharCollectionState {
@@ -81,40 +82,28 @@ export class WoZWithCharCollection extends React.Component<IWoZWithCharCollectio
             lastMessageFromUser: true, // default to true to enable sending when initiating a new conversation
         }
 
-    
         // handler for incoming messages
         WozConnectors.shared.selectedConnector.onMessage = async (message: Message) => {
             this.setState((prev) => {
-                let currentStep = this.props.llmStepIndex
                 let lastMessageFromUser = prev.lastMessageFromUser
 
-                // special case when we get a "user joined the chat" message: send back an ACTION
-                // message setting the current step 
-                if(message.messageType === InteractionType.STATUS && message.text.indexOf('joined the chat') !== -1) {
-                    console.log('sending back "set" action message')
-                    let actions = Array<string>()
-                    actions.push('step' + currentStep)
-                    WozConnectors.shared.selectedConnector.onMessageSentLogger('', [], [], InteractionType.ACTION, actions)
-                    // update the dialogue object here so the message shows up in the UI
-                    // TODO this should only need to update the dialogue entry? none of the other state vars
-                    // should need to change here
-                    return { messagesPerStep: prev.messagesPerStep, disableNextButton: prev.disableNextButton, lastMessageFromUser: prev.lastMessageFromUser, dialogue: prev.dialogue.appending(message, 0) }
+                // need to check if the incoming message is an ACTION message with a step change. need to parse
+                // these and update our local step index (the chat app should be doing the same if things are reloaded)
+                if(message.messageType === InteractionType.ACTION && message.actions !== undefined) {
+                    if(message.actions[0].startsWith('step')) {
+                        console.log("Incoming message %o indicating step change: " + message.actions[0], message);
+                        this.props.replayStepChangedCallback(parseInt(message.actions[0].replace("step", "")));
+                    }
                 }
-                
-                // TODO this should also check the this.props.wozMessage value which contains the current text in the input
-                // box. If the length is 0 then the button should remain disabled
-                //console.log("wozMessage %o", this.props.wozMessage)
                 let disableNextButton = false
-                // console.log({ messagesPerStep: prev.messagesPerStep, stepIndex: currentStep, disableNextButton: disableNextButton, lastMessageFromUser: lastMessageFromUser})
 
                 // this has the effect of clearing the text area, which we want to do after sending a message. normally this happens after clicking the
                 // send button, but forcing it here means that we can insert the "initial_wizard_message" text when resuming a conversation and then
                 // have it automatically cleared as later messages are streamed through here
                 if(message.messageType === InteractionType.TEXT && message.userID === WozConnectors.shared.selectedConnector.chatUserID) {
-                    // console.log("Clearing message text")
                     this.props.onChange("")
                 }
-                return { messagesPerStep: prev.messagesPerStep, stepIndex: currentStep, disableNextButton: disableNextButton, lastMessageFromUser: lastMessageFromUser, dialogue: prev.dialogue.appending(message, 0) }
+                return { messagesPerStep: prev.messagesPerStep, disableNextButton: disableNextButton, lastMessageFromUser: lastMessageFromUser, dialogue: prev.dialogue.appending(message, 0) }
             })
         }
     }

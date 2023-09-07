@@ -126,23 +126,20 @@ export default class App extends React.Component<{}, AppState> {
             // at this point the response should be valid, so check if it includes a step change
             console.log("Handling valid LLM response");
             if(this.state.llm_response_data.stepNo !== resp.stepNo) {
-                // step has changed, simulate clicking the "Next" button
-                // TODO can only increase step number via API or not???
+                // step has changed, send an ACTION message 
                 console.log("Detected step increase in LLM response, old %o, new %o", this.state.llm_response_data.stepNo, resp.stepNo)
                 this.onMessageSent(InteractionType.ACTION, ["step" + resp.stepNo])
             }
 
-            this.setState(
-                {
-                    llm_response_data: resp,
-                    // always want to insert the LLM response text into the text area immediately
-                    woz_message: resp.message,
-                    // only allowed to edit "assistant" messages, so set input_disabled
-                    // to false if the role is different
-                    input_disabled: resp.role !== "assistant",
-                    show_llm_wait_message: false,
-                }
-            )
+            this.setState({
+                llm_response_data: resp,
+                // always want to insert the LLM response text into the text area immediately
+                woz_message: resp.message,
+                // only allowed to edit "assisstant" messages, so set input_disabled
+                // to false if the role is different
+                input_disabled: resp.role !== "assistant",
+                show_llm_wait_message: false,
+            })
             
             // if the role is "system" here, we should just send the text message
             // automatically instead of waiting for the user to hit the button
@@ -154,9 +151,16 @@ export default class App extends React.Component<{}, AppState> {
 
         // Callback triggered when an LLM API request is sent
         WozConnectors.shared.selectedConnector.onLLMRequest = () => {
-            // this.setState({woz_message: "[Please wait while a response is generated...]"});
+            // this cause the "Please wait... " message to be displayed until the request completes
             this.setState({show_llm_wait_message: true});
         }
+    }
+
+    replayStepChanged = (stepNumber: number) => {
+        console.log("updating step from " + this.state.llm_response_data.stepNo + " to " + stepNumber)
+        let cur_llm_data = this.state.llm_response_data
+        cur_llm_data.stepNo = stepNumber
+        this.setState({llm_response_data: cur_llm_data})
     }
 
     async componentDidMount () {
@@ -467,6 +471,8 @@ export default class App extends React.Component<{}, AppState> {
                         inputDisabled={this.state.input_disabled}
                         llmStepIndex={this.state.llm_response_data.stepNo}
                         showLlmWaitMessage={this.state.show_llm_wait_message}
+
+                        replayStepChangedCallback={this.replayStepChanged}
                     />
                 break
         }

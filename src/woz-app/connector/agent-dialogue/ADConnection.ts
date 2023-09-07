@@ -80,6 +80,7 @@ interface IADTextResponse {
   messageType?: InteractionType
   interactionTime: Date
   role?: InteractionRole
+  action: string
 }
 
 declare module "./generated/client_pb" {
@@ -107,7 +108,8 @@ proto.edu.gla.kail.ad.InteractionResponse.prototype.asTextResponse =
       userID: this.getUserId(),
       messageType: interaction.getType(),
       interactionTime: new Date((timestamp.getSeconds() * 1000) + (timestamp.getNanos() / 1e6)),
-      role: interaction.getRole()
+      role: interaction.getRole(),
+      action: interaction.getActionList()[0] || ""
     }
   }
 
@@ -160,8 +162,6 @@ export class ADConnection {
     input.setLoggedParagraphTimestampList(args.loggedParagraphTimestamp || []);
 
     input.setRole(args.role || InteractionRole.NOROLE);
-
-    console.log("makeInputInteraction: %o", input);
 
     return input
   }

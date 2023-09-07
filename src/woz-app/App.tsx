@@ -131,6 +131,7 @@ export default class App extends React.Component<{}, AppState> {
                 console.log("Detected step increase in LLM response, old %o, new %o", this.state.llm_response_data.stepNo, resp.stepNo)
                 this.onMessageSent(InteractionType.ACTION, ["step" + resp.stepNo])
             }
+
             this.setState(
                 {
                     llm_response_data: resp,
@@ -142,6 +143,13 @@ export default class App extends React.Component<{}, AppState> {
                     show_llm_wait_message: false,
                 }
             )
+            
+            // if the role is "system" here, we should just send the text message
+            // automatically instead of waiting for the user to hit the button
+            if(resp.role === "system") {
+                console.log("Auto sending system message: %o", resp.message);
+                WozConnectors.shared.selectedConnector.onMessageSentLogger(resp.message, [], [], InteractionType.TEXT, [], InteractionRole.SYSTEM);
+            }
         }
 
         // Callback triggered when an LLM API request is sent

@@ -9,8 +9,8 @@ ENV PATH /app/node_modules/.bin:$PATH
 
 ARG spreadsheet_url
 ENV REACT_APP_SPREADSHEET_URL=${spreadsheet_url:-"set_with_build_arg"}
-ARG recipe_url
-ENV REACT_APP_RECIPE_URL=${recipe_url:-"set_with_build_arg"}
+ARG topic_url
+ENV REACT_APP_TOPIC_URL=${topic_url:-"set_with_build_arg"}
 ARG data_url
 ENV REACT_APP_DATA_URL=${data_url:-"set_with_build_arg"}
 

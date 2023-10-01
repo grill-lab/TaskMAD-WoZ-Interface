@@ -232,19 +232,19 @@ export default class App extends React.Component<{}, AppState> {
             headers: { 'Origin': '*' },
         };
 
-        // TODO update RECIPE_URL name and change Dockerfile/build scripts
         var dataJson = undefined;
         try {
-            const recipes_url = process.env.REACT_APP_RECIPE_URL;
-            const response = await fetch(recipes_url as string, requestOptions);
+            const topics_url = process.env.REACT_APP_TOPIC_URL;
+            const response = await fetch(topics_url as string, requestOptions);
             dataJson = await response.json();
 
             if (dataJson !== undefined) {
+                // TODO update to "topics"
                 return dataJson['recipes'];
             }
 
         } catch (error) {
-            console.log("URL %o", process.env.REACT_APP_RECIPE_URL)
+            console.log("URL %o", process.env.REACT_APP_TOPIC_URL)
                 console.log('Recipe fetch error: %o', error);
         }
 
